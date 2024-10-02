@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}">
+
+<head>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+</head>
+
+<div layout:fragment="content">
+    <h1>test</h1>
+    <form action="/test/modifyUser" method="post">
+        <input name="name" th:value="${dto.name}" readonly>
+        <input type="password" name="password">
+        <input name="address" th:value="${dto.address}">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+        <button type="submit">발송</button>
+    </form>
+
+</div>
+
+</html>
