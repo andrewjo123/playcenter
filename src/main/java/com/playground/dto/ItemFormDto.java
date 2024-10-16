@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.PropertyMap;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
@@ -42,12 +43,29 @@ public class ItemFormDto {
 
     private static ModelMapper modelMapper = new ModelMapper();
 
-    public Item createItem(){
+//    static {
+//        modelMapper.addMappings(new PropertyMap<ItemFormDto, Item>() {
+//            @Override
+//            protected void configure() {
+//                // Skip properties only if they are not needed
+//                skip("company");
+//                skip("tag");
+//            }
+//        });
+//    }
+
+    public Item createItem() {
         return modelMapper.map(this, Item.class);
     }
 
-    public static ItemFormDto of(Item item){
-        return modelMapper.map(item,ItemFormDto.class);
+    public static ItemFormDto of(Item item) {
+        return modelMapper.map(item, ItemFormDto.class);
     }
+
+    @NotBlank(message = "플랫폼을 선택해주세요")
+    private String company;
+
+    @NotBlank(message = "장르를 선택해주세요")
+    private String tag;
 
 }

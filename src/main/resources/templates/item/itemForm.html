@@ -35,6 +35,37 @@
 
         <div class="input-group">
             <div class="input-group-prepend">
+                <span class="input-group-text">플랫폼</span>
+            </div>
+            <select th:field="*{company}" class="custom-select">
+                <option value="steam">스팀</option>
+                <option value="nintendo">닌텐도</option>
+                <option value="ps">플레이 스테이션</option>
+            </select>
+        </div>
+        <p th:if="${#fields.hasErrors('company')}" th:errors="*{company}" class="fieldError">Incorrect data</p>
+
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">장르</span>
+            </div>
+            <label>
+                <input type="radio" th:field="*{tag}" th:value="RPG" th:checked="${category == 'RPG'}"> RPG
+            </label>
+            <label>
+                <input type="radio" th:field="*{tag}" th:value="action" th:checked="${category == 'action'}"> 액션
+            </label>
+            <label>
+                <input type="radio" th:field="*{tag}" th:value="sports" th:checked="${category == 'sports'}"> 스포츠
+            </label>
+            <label>
+                <input type="radio" th:field="*{tag}" th:value="puzzle" th:checked="${category == 'puzzle'}"> 퍼즐
+            </label>
+        </div>
+        <p th:if="${#fields.hasErrors('tag')}" th:errors="*{tag}" class="fieldError">Incorrect data</p>
+
+        <div class="input-group">
+            <div class="input-group-prepend">
                 <span class="input-group-text">가격</span>
             </div>
             <input type="number" th:field="*{price}" class="form-control" placeholder="상품의 가격을 입력해주세요">

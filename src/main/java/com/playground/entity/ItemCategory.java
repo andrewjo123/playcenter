@@ -22,10 +22,10 @@ public class ItemCategory {
     @Column(nullable = false)
     private String tag; // 게임 장르
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String editTag; // 유저가 정하는 게임장르?
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "item_id")
     private Item item; // FK from Item
 }

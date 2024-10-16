@@ -1,6 +1,7 @@
 package com.playground.dto;
 
 import jakarta.persistence.Column;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,9 +10,12 @@ import lombok.Setter;
 public class ItemCategoryDto {
     private Long id;
 
-    private String company; //회사 카테고리
+    // 추가
+    @NotBlank(message = "플랫폼을 선택해주세요")
+    private String company;
 
-    private String tag; // 게임 장르
+    @NotBlank(message = "장르를 선택해주세요")
+    private String tag;
 
     private String editTag; // 유저가 정하는 게임장르?
 }

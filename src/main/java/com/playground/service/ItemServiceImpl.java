@@ -5,7 +5,9 @@ import com.playground.dto.ItemImgDto;
 import com.playground.dto.ItemSearchDto;
 import com.playground.dto.MainItemDto;
 import com.playground.entity.Item;
+import com.playground.entity.ItemCategory;
 import com.playground.entity.ItemImg;
+import com.playground.repository.ItemCategoryRepository;
 import com.playground.repository.ItemImgRepository;
 import com.playground.repository.ItemRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -27,12 +29,21 @@ public class ItemServiceImpl implements ItemService {
     private final ItemRepository itemRepository;
     private final ItemImgService itemImgService;
     private final ItemImgRepository itemImgRepository;
+    private final ItemCategoryRepository categoryRepository;
 
     @Override
+    @Transactional
     public Long saveItem(ItemFormDto itemFormDto, List<MultipartFile> itemImgFileList) throws Exception {
         // Register item
         Item item = itemFormDto.createItem();
         itemRepository.save(item);
+
+        // 추가
+        ItemCategory category=new ItemCategory();
+        category.setCompany(itemFormDto.getCompany());
+        category.setTag(itemFormDto.getTag());
+        category.setItem(item);
+        categoryRepository.save(category);
 
         // Register images
         for (int i = 0; i < itemImgFileList.size(); i++) {
@@ -60,10 +71,16 @@ public class ItemServiceImpl implements ItemService {
                 .orElseThrow(EntityNotFoundException::new);
         ItemFormDto itemFormDto = ItemFormDto.of(item);
         itemFormDto.setItemImgDtoList(itemImgDtoList);
+
+        //추가
+        ItemCategory categories=categoryRepository.findByItemId(itemId);
+        itemFormDto.setCompany(categories.getCompany());
+        itemFormDto.setTag(categories.getTag());
         return itemFormDto;
     }
 
     @Override
+    @Transactional
     public Long updateItem(ItemFormDto itemFormDto, List<MultipartFile> itemImgFileList) throws Exception {
         // Update item
         Item item = itemRepository.findById(itemFormDto.getId())
@@ -75,6 +92,12 @@ public class ItemServiceImpl implements ItemService {
         for (int i = 0; i < itemImgFileList.size(); i++) {
             itemImgService.updateItemImg(itemImgIds.get(i), itemImgFileList.get(i));
         }
+
+        //추가
+        ItemCategory category=categoryRepository.findByItemId(item.getId());
+        category.setCompany(itemFormDto.getCompany());
+        category.setTag(itemFormDto.getTag());
+        categoryRepository.save(category);
 
         return item.getId();
     }
