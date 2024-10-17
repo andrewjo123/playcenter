@@ -22,10 +22,10 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(authorizeHttpRequestsCustomizer -> authorizeHttpRequestsCustomizer
-                        .requestMatchers("/css/**", "/js/**", "/img/**","/**").permitAll()
-                        .requestMatchers("/", "/members/**", "/item/**", "/images/**", "/test/**","/reviews/**").permitAll()
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .anyRequest().authenticated()
+//                        .requestMatchers("/css/**", "/js/**", "/img/**","/**").permitAll()
+//                        .requestMatchers("/", "/members/**", "/item/**", "/images/**", "/test/**","/reviews/**").permitAll()
+//                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .anyRequest().permitAll()
                 ).formLogin(formLoginCustomizer -> formLoginCustomizer
                         .loginPage("/members/login")
                         .defaultSuccessUrl("/")
