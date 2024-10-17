@@ -25,7 +25,11 @@ public interface ReviewService {
 
         Review itemReview = Review.builder()
                 .id(itemReviewDto.getReviewnum())
+<<<<<<< HEAD
                 .item(Item.builder().id(itemReviewDto.getMember_id()).build())
+=======
+                .item(Item.builder().id(itemReviewDto.getId()).build())
+>>>>>>> 신영
                 .member(Member.builder().id(itemReviewDto.getMember_id()).build())
                 .grade(itemReviewDto.getGrade())
                 .text(itemReviewDto.getText())
@@ -38,8 +42,13 @@ public interface ReviewService {
 
         ReviewDto itemReviewDto = ReviewDto.builder()
                 .reviewnum(itemReview.getId())
+<<<<<<< HEAD
                 .id(itemReview.getItem().getId())
                 .id(itemReview.getMember().getId())                
+=======
+                .member_id(itemReview.getMember().getId())
+                .id(itemReview.getItem().getId())              
+>>>>>>> 신영
                 .email(itemReview.getMember().getEmail())
                 .grade(itemReview.getGrade())
                 .text(itemReview.getText())
