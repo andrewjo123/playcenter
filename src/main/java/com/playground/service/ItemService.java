@@ -20,4 +20,6 @@ public interface ItemService {
     Page<Item> getAdminItemPage(ItemSearchDto itemSearchDto, Pageable pageable);
 
     Page<MainItemDto> getMainItemPage(ItemSearchDto itemSearchDto, Pageable pageable);
+    //물품삭제
+    void deleteItem(Long itemId);
 }
