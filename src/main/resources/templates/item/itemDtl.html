@@ -8,6 +8,9 @@
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <link th:href="@{/css/shop.css}" rel="stylesheet">
+    <!-- Font Awesome 링크 추가 -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
 </head>
 
 
@@ -60,6 +63,16 @@
     <div class="jumbotron jumbotron-fluid mgt-30">
         <div>플랫폼: <span th:text="${item.company}"></span></div>
         <div>장르: <span th:text="${item.tag}"></span></div>
+        <div>  별점: 
+            <span th:text="${#numbers.formatDecimal(item.avg, 1, 0)}"></span></br>
+            <span th:each="i : ${#numbers.sequence(1, item.avg)}">
+                <i class="fas fa-star"></i>
+            </span>
+            <span th:each="i : ${#numbers.sequence(item.avg + 1, 5)}">
+                <i class="far fa-star"></i>
+            </span></div>
+        <div>리뷰수: <span th:text="${item.allReview}"></span></div>
+        
         <div class="container">
             <h4 class="display-5">상품 상세 설명</h4>
             <hr class="my-4">
@@ -283,7 +296,7 @@
 
 
             $('.reviewSaveBtn').click(function() {
-
+                console.log("id:"+id);
                 var data = {id:id, grade:grade, text:inputText.val(), member_id: inputMid.val() };
 
                 console.log(data);
@@ -298,7 +311,7 @@
 
                         console.log("result: " + result);
 
-                        self.location.reload();
+                        //self.location.reload();
 
                     }
                 })
