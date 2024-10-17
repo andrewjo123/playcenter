@@ -32,7 +32,6 @@ public class ReviewController {
     @PostMapping("/{id}")
     public ResponseEntity<Long> addReview(@RequestBody ReviewDto itemReviewDto){
         log.info("--------------add Review---------------");
-<<<<<<< HEAD
         log.info("ReviewDto: " + itemReviewDto);
         System.out.println("###################################");
 
