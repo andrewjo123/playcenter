@@ -27,10 +27,4 @@ public interface ItemRepository extends JpaRepository<Item, Long>,
             "%:itemDetail% order by i.price desc", nativeQuery = true)
     List<Item> findByItemDetailByNative(@Param("itemDetail") String itemDetail);
 
-    @Query("select avg(coalesce(r.grade,0)), count(r) " +
-    "from Item i " +
-    "left outer join Review r on r.item = i " +
-    "where i.id = :itemId")
-        List<Object[]> getAvgAndCount(Long itemId);
-
 }

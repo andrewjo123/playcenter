@@ -68,10 +68,4 @@ public class ItemFormDto {
     @NotBlank(message = "장르를 선택해주세요")
     private String tag;
 
-<<<<<<< HEAD
-=======
-    private Double avg;
-    private Long allReview;
-
->>>>>>> 신영
 }

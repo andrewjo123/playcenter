@@ -32,11 +32,7 @@ public class ReviewController {
     @PostMapping("/{id}")
     public ResponseEntity<Long> addReview(@RequestBody ReviewDto itemReviewDto){
         log.info("--------------add Review---------------");
-<<<<<<< HEAD
         log.info("ReviewDto: " + itemReviewDto);
-=======
-        log.info("ReviewDto: " + itemReviewDto.getId());
->>>>>>> 신영
         System.out.println("###################################");
 
         Long reviewnum = reviewService.register(itemReviewDto);

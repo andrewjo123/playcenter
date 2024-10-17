@@ -21,11 +21,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.ArrayList;
 import java.util.List;
 
-<<<<<<< HEAD
-=======
-import javax.print.DocPrintJob;
-
->>>>>>> 신영
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -63,11 +58,7 @@ public class ItemServiceImpl implements ItemService {
         return item.getId();
     }
 
-<<<<<<< HEAD
     @Transactional(readOnly = true)
-=======
-  
->>>>>>> 신영
     @Override
     public ItemFormDto getItemDtl(Long itemId) {
         List<ItemImg> itemImgList = itemImgRepository.findByItemIdOrderByIdAsc(itemId);
@@ -85,30 +76,6 @@ public class ItemServiceImpl implements ItemService {
         ItemCategory categories=categoryRepository.findByItemId(itemId);
         itemFormDto.setCompany(categories.getCompany());
         itemFormDto.setTag(categories.getTag());
-<<<<<<< HEAD
-=======
-        
-        // 리뷰 추가
-        List<Object[]>result=itemRepository.getAvgAndCount(itemId);
-
-        if (result != null && result.get(0).length == 2) {
-            Double avg = (Double) result.get(0)[0]; // Average grade
-            Long allReview = (Long) result.get(0)[1];   // Count of reviews
-            
-            System.out.println("Average: " + avg);
-            System.out.println("Count: " + allReview);
-
-            itemFormDto.setAvg(avg);
-            itemFormDto.setAllReview(allReview);
-        } else {
-            // Handle cases where there are no reviews or the item does not exist
-            System.out.println("No reviews found or item does not exist.");
-            itemFormDto.setAvg(0D);
-            itemFormDto.setAllReview(0L);
-        }
-
-        
->>>>>>> 신영
         return itemFormDto;
     }
 
