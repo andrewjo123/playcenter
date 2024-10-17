@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}">
+
+<head>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+</head>
+
+<div layout:fragment="content">
+    <h1>이메일 전송</h1>
+    <form action="/test/sendEmail" method="post">
+        <span th:text="보낼주소"></span><input name="toEmail" th:value="${toEmail}">
+        <span th:text="제목"></span><input name="subject" th:value="${subject}">
+        <span th:text="내용"></span><input name="body" th:value="${body}">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+        <button type="submit">발송</button>
+    </form>
+
+</div>
+
+</html>
