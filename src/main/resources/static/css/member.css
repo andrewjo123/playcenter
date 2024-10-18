@@ -2,7 +2,36 @@
 .memberForm.fieldError {
     color: #bd2130;
 }
+
 /* memberLoginForm--------------------------------------------------------*/
 .memberLoginForm-.error {
     color: #bd2130;
+}
+
+/* findEmail--------------------------------------------------------*/
+.memberForm.none {
+    display: none;
+}
+
+/* findPw--------------------------------------------------------*/
+/* id ------------------*/
+#errorMessages {
+    color: red;
+}
+
+/* 버튼종류 가운데 정렬--------------------------------------------------------*/
+.memberForm.center {
+    text-align: center
+}
+
+/* 회원정보수정/삭제--------------------------------------------------------*/
+.memberForm.addrbtn {
+    width: 150px;
+}
+
+/* id ------------------*/
+
+#getAddressNum {
+    width: 200px;
+    display: inline;
 }

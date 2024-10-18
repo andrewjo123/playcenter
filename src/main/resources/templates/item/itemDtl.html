@@ -1,32 +1,29 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layouts/layout1}"
-      class="itemDtl">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layouts/layout1}" class="itemDtl">
 
 <head>
-    <meta name="_csrf" th:content="${_csrf.token}"/>
-    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
     <link th:href="@{/css/shop.css}" rel="stylesheet">
-    <!-- Font Awesome 링크 추가 -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
 </head>
 
 
-<div layout:fragment="content" style="margin-left:25%;margin-right:25%">
+<div layout:fragment="content">
 
     <input type="hidden" id="itemId" th:value="${item.id}">
 
-    <div class="d-flex">
+    <div class="d-flex itemdtl">
         <div class="repImgDiv">
-            <img th:src="${item.itemImgDtoList[0].imgUrl}" class = "rounded repImg" th:alt="${item.itemNm}">
+            <img th:src="${item.itemImgDtoList[0].imgUrl}" class="rounded repImg" th:alt="${item.itemNm}">
         </div>
         <div class="wd50">
-            <span th:if="${item.itemSellStatus == T(com.playground.constant.ItemSellStatus).SELL}" class="badge badge-primary mgb-15">
+            <span th:if="${item.itemSellStatus == T(com.playground.constant.ItemSellStatus).SELL}"
+                class="badge badge-primary mgb-15">
                 판매중
             </span>
-            <span th:unless="${item.itemSellStatus == T(com.playground.constant.ItemSellStatus).SELL}" class="badge btn-danger mgb-15" >
+            <span th:unless="${item.itemSellStatus == T(com.playground.constant.ItemSellStatus).SELL}"
+                class="badge btn-danger mgb-15">
                 품절
             </span>
             <div class="h4" th:text="${item.itemNm}"></div>
@@ -51,28 +48,17 @@
                 <h3 name="totalPrice" id="totalPrice" class="font-weight-bold"></h3>
             </div>
             <div th:if="${item.itemSellStatus == T(com.playground.constant.ItemSellStatus).SELL}" class="text-right">
-                <button type="button" class="btn btn-light border border-primary btn-lg" onclick="addCart()">장바구니 담기</button>
+                <button type="button" class="btn btn-light border border-primary btn-lg" onclick="addCart()">장바구니
+                    담기</button>
                 <button type="button" class="btn btn-primary btn-lg" onclick="order()">주문하기</button>
             </div>
-            <div th:unless="${item.itemSellStatus == T(com.playground.constant.ItemSellStatus).SELL}" class="text-right">
+            <div th:unless="${item.itemSellStatus == T(com.playground.constant.ItemSellStatus).SELL}"
+                class="text-right">
                 <button type="button" class="btn btn-danger btn-lg">품절</button>
             </div>
         </div>
     </div>
 
-    <div class="jumbotron jumbotron-fluid mgt-30">
-        <div>플랫폼: <span th:text="${item.company}"></span></div>
-        <div>장르: <span th:text="${item.tag}"></span></div>
-        <div>  별점: 
-            <span th:text="${#numbers.formatDecimal(item.avg, 1, 0)}"></span></br>
-            <span th:each="i : ${#numbers.sequence(1, item.avg)}">
-                <i class="fas fa-star"></i>
-            </span>
-            <span th:each="i : ${#numbers.sequence(item.avg + 1, 5)}">
-                <i class="far fa-star"></i>
-            </span></div>
-        <div>리뷰수: <span th:text="${item.allReview}"></span></div>
-        
         <div class="container">
             <h4 class="display-5">상품 상세 설명</h4>
             <hr class="my-4">
@@ -81,7 +67,8 @@
     </div>
 
     <div th:each="itemImg : ${item.itemImgDtoList}" class="text-center">
-        <img th:if="${not #strings.isEmpty(itemImg.imgUrl)}" th:src="${itemImg.imgUrl}" class="rounded mgb-15" width="800">
+        <img th:if="${not #strings.isEmpty(itemImg.imgUrl)}" th:src="${itemImg.imgUrl}" class="rounded mgb-15"
+            width="800">
     </div>
 
     <!--리뷰카운트 빠짐-->
@@ -107,16 +94,16 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label >Reviewer ID</label>
-                        <input type="text" class="form-control" name="email" >
+                        <label>Reviewer ID</label>
+                        <input type="text" class="form-control" name="email">
                     </div>
                     <div class="form-group">
-                        <label >Grade <span class="grade"></span></label>
+                        <label>Grade <span class="grade"></span></label>
                         <div class='starrr'></div>
                     </div>
                     <div class="form-group">
-                        <label >Review Text</label>
-                        <input type="text" class="form-control" name="text" placeholder="Good Movie!" >
+                        <label>Review Text</label>
+                        <input type="text" class="form-control" name="text" placeholder="Good Movie!">
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -157,55 +144,55 @@
     <!-- 사용자 스크립트 추가 -->
     <th:block layout:fragment="script">
         <script th:inline="javascript">
-            $(document).ready(function(){
+            $(document).ready(function () {
 
                 calculateToalPrice();
 
-                $("#count").change( function(){
+                $("#count").change(function () {
                     calculateToalPrice();
                 });
             });
 
-            function calculateToalPrice(){
+            function calculateToalPrice() {
                 var count = $("#count").val();
                 var price = $("#price").val();
-                var totalPrice = price*count;
+                var totalPrice = price * count;
                 $("#totalPrice").html(totalPrice + '원');
             }
 
-            function order(){
+            function order() {
                 var token = $("meta[name='_csrf']").attr("content");
                 var header = $("meta[name='_csrf_header']").attr("content");
 
                 var url = "/order";
                 var paramData = {
-                    itemId : $("#itemId").val(),
-                    count : $("#count").val()
+                    itemId: $("#itemId").val(),
+                    count: $("#count").val()
                 };
 
                 var param = JSON.stringify(paramData);
 
                 $.ajax({
-                    url      : url,
-                    type     : "POST",
-                    contentType : "application/json",
-                    data     : param,
-                    beforeSend : function(xhr){
+                    url: url,
+                    type: "POST",
+                    contentType: "application/json",
+                    data: param,
+                    beforeSend: function (xhr) {
                         /* 데이터를 전송하기 전에 헤더에 csrf값을 설정 */
                         xhr.setRequestHeader(header, token);
                     },
-                    dataType : "json",
-                    cache   : false,
-                    success  : function(result, status){
+                    dataType: "json",
+                    cache: false,
+                    success: function (result, status) {
                         alert("주문이 완료 되었습니다.");
-                        location.href='/';
+                        location.href = '/';
                     },
-                    error : function(jqXHR, status, error){
+                    error: function (jqXHR, status, error) {
 
-                        if(jqXHR.status == '401'||jqXHR.status == '200'){
+                        if (jqXHR.status == '401' || jqXHR.status == '200') {
                             alert('로그인 후 이용해주세요');
-                            location.href='/members/login';
-                        } else{
+                            location.href = '/members/login';
+                        } else {
                             alert(jqXHR.responseText);
                         }
 
@@ -213,39 +200,39 @@
                 });
             }
 
-            function addCart(){
+            function addCart() {
                 var token = $("meta[name='_csrf']").attr("content");
                 var header = $("meta[name='_csrf_header']").attr("content");
 
                 var url = "/cart";
                 var paramData = {
-                    itemId : $("#itemId").val(),
-                    count : $("#count").val()
+                    itemId: $("#itemId").val(),
+                    count: $("#count").val()
                 };
 
                 var param = JSON.stringify(paramData);
 
                 $.ajax({
-                    url      : url,
-                    type     : "POST",
-                    contentType : "application/json",
-                    data     : param,
-                    beforeSend : function(xhr){
+                    url: url,
+                    type: "POST",
+                    contentType: "application/json",
+                    data: param,
+                    beforeSend: function (xhr) {
                         /* 데이터를 전송하기 전에 헤더에 csrf값을 설정 */
                         xhr.setRequestHeader(header, token);
                     },
-                    dataType : "json",
-                    cache   : false,
-                    success  : function(result, status){
+                    dataType: "json",
+                    cache: false,
+                    success: function (result, status) {
                         alert("상품을 장바구니에 담았습니다.");
-                        location.href='/';
+                        location.href = '/';
                     },
-                    error : function(jqXHR, status, error){
+                    error: function (jqXHR, status, error) {
 
-                        if(jqXHR.status == '401'||jqXHR.status == '200'){
+                        if (jqXHR.status == '401' || jqXHR.status == '200') {
                             alert('로그인 후 이용해주세요');
-                            location.href='/members/login';
-                        } else{
+                            location.href = '/members/login';
+                        } else {
                             alert(jqXHR.responseText);
                         }
 
@@ -257,25 +244,25 @@
     </th:block>
 
     <script>
-        $(document).ready(function(e) {
+        $(document).ready(function (e) {
 
             var grade = 0;
-            var id = [[${item.id}]];
+            var id = [[${ item.id }]];
 
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content')
                 }
             });
-             $('.starrr').starrr({
-                 rating: grade,
-                 change: function(e, value){
-                     if (value) {
-                         console.log(value);
-                         grade = value;
-                     }
-                 }
-             });
+            $('.starrr').starrr({
+                rating: grade,
+                change: function (e, value) {
+                    if (value) {
+                        console.log(value);
+                        grade = value;
+                    }
+                }
+            });
 
             //$(".reviewModal").modal("show"); 미리 보기용
 
@@ -295,19 +282,19 @@
             });
 
 
-            $('.reviewSaveBtn').click(function() {
-                console.log("id:"+id);
-                var data = {id:id, grade:grade, text:inputText.val(), member_id: inputMid.val() };
+            $('.reviewSaveBtn').click(function () {
+
+                var data = { id: id, grade: grade, text: inputText.val(), member_id: inputMid.val() };
 
                 console.log(data);
 
                 $.ajax({
-                    url:'/reviews/'+id,
-                    type:"POST",
-                    data:JSON.stringify(data),
-                    contentType:"application/json; charset=utf-8",
-                    dataType:"text",
-                    success: function(result){
+                    url: '/reviews/' + id,
+                    type: "POST",
+                    data: JSON.stringify(data),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "text",
+                    success: function (result) {
 
                         console.log("result: " + result);
 
@@ -322,7 +309,7 @@
 
             //페이지가 열리면 바로 리뷰 데이터들을 가져와서 사용한다.
             function getMovieReviews() {
-                function formatTime(str){
+                function formatTime(str) {
                     var date = new Date(str);
 
                     return date.getFullYear() + '/' +
@@ -331,37 +318,37 @@
                         date.getHours() + ':' +
                         date.getMinutes();
                 }
-                console.log("id"+id);
+                console.log("id" + id);
                 $.ajax({
-                url: "/reviews/" + id + "/all", // 요청할 URL
-                method: "GET", // 요청 방식
-                dataType: "json", // 응답 데이터 타입
-                success: function(arr) {
-                    console.log("??????????????");
-                    var str = "";
+                    url: "/reviews/" + id + "/all", // 요청할 URL
+                    method: "GET", // 요청 방식
+                    dataType: "json", // 응답 데이터 타입
+                    success: function (arr) {
+                        console.log("??????????????");
+                        var str = "";
 
-                    $.each(arr, function(idx, review) {
-                        console.log(review);
+                        $.each(arr, function (idx, review) {
+                            console.log(review);
 
-                        str += '    <div class="card-body" data-reviewnum=' + review.reviewnum + ' data-mid=' + review.mid + '>';
-                        str += '    <h5 class="card-title">' + review.text + ' <span class="reviewgrade" data-grade2=' + review.grade + '></span></h5>';
-                        str += '    <h6 class="card-subtitle mb-2 text-muted">' + review.email + '</h6>';
-                        str += '    <p class="card-text">' + formatTime(review.regTime) + '</p>';
-                        str += '    </div>';
-                    });
+                            str += '    <div class="card-body" data-reviewnum=' + review.reviewnum + ' data-mid=' + review.mid + '>';
+                            str += '    <h5 class="card-title">' + review.text + ' <span class="reviewgrade" data-grade2=' + review.grade + '></span></h5>';
+                            str += '    <h6 class="card-subtitle mb-2 text-muted">' + review.email + '</h6>';
+                            str += '    <p class="card-text">' + formatTime(review.regTime) + '</p>';
+                            str += '    </div>';
+                        });
 
-                    $(".reviewList").html(str);
-                    // 리뷰 별모양으로 나오게하기
-                    $(".reviewgrade").each(function(idx,o){
-                        console.log(o);
-                        $(this).starrr({rating:$(this).data("grade2"),readOnly: true});
-                    });
-                }, error: function(xhr, status, error) {
-                    console.error("Error: " + error);
-                    console.error("Response Text: " + xhr.responseText);
-                }
-            });
-        }
+                        $(".reviewList").html(str);
+                        // 리뷰 별모양으로 나오게하기
+                        $(".reviewgrade").each(function (idx, o) {
+                            console.log(o);
+                            $(this).starrr({ rating: $(this).data("grade2"), readOnly: true });
+                        });
+                    }, error: function (xhr, status, error) {
+                        console.error("Error: " + error);
+                        console.error("Response Text: " + xhr.responseText);
+                    }
+                });
+            }
 
             //리뷰목록 바로 보이게 하기
             getMovieReviews();
@@ -371,7 +358,7 @@
 
             var reviewnum;
 
-            $(".reviewList").on("click", ".card-body", function() {
+            $(".reviewList").on("click", ".card-body", function () {
 
                 $(".reviewSaveBtn").hide();
                 $(".removeBtn , .modifyBtn").show();
@@ -380,7 +367,7 @@
                 var targetReview = $(this);
 
                 reviewnum = targetReview.data("reviewnum");
-                console.log("reviewnum: "+ reviewnum);
+                console.log("reviewnum: " + reviewnum);
                 inputMid.val(targetReview.data("mid"));
                 inputText.val(targetReview.find('.card-title').clone().children().remove().end().text());
 
@@ -391,19 +378,19 @@
             });
 
 
-            $(".modifyBtn").on("click", function(){
+            $(".modifyBtn").on("click", function () {
 
-                var data = {reviewnum: reviewnum, id:id, grade:grade, text:inputText.val(), email: inputMid.val() };
+                var data = { reviewnum: reviewnum, id: id, grade: grade, text: inputText.val(), email: inputMid.val() };
 
                 console.log(data);
 
                 $.ajax({
-                    url:'/reviews/'+id +"/"+ reviewnum ,
-                    type:"PUT",
-                    data:JSON.stringify(data),
-                    contentType:"application/json; charset=utf-8",
-                    dataType:"text",
-                    success: function(result){
+                    url: '/reviews/' + id + "/" + reviewnum,
+                    type: "PUT",
+                    data: JSON.stringify(data),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "text",
+                    success: function (result) {
 
                         console.log("result: " + result);
 
@@ -414,18 +401,18 @@
                 reviewModal.modal('hide');
             });
 
-            $(".removeBtn").on("click", function(){
+            $(".removeBtn").on("click", function () {
 
-                var data = {reviewnum: reviewnum};
+                var data = { reviewnum: reviewnum };
 
                 console.log(data);
 
                 $.ajax({
-                    url:'/reviews/'+id +"/"+ reviewnum ,
-                    type:"DELETE",
-                    contentType:"application/json; charset=utf-8",
-                    dataType:"text",
-                    success: function(result){
+                    url: '/reviews/' + id + "/" + reviewnum,
+                    type: "DELETE",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "text",
+                    success: function (result) {
 
                         console.log("result: " + result);
 
@@ -436,13 +423,13 @@
                 reviewModal.modal('hide');
             });
 
-            $(".uploadResult li").click(function() {
+            $(".uploadResult li").click(function () {
 
                 var file = $(this).data('file');
 
                 console.log(file);
 
-                $('.imageModal .modal-body').html("<img style='width:100%' src='/display?fileName="+file+"&size=1' >")
+                $('.imageModal .modal-body').html("<img style='width:100%' src='/display?fileName=" + file + "&size=1' >")
 
                 $(".imageModal").modal("show");
 

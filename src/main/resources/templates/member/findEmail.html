@@ -1,25 +1,27 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layouts/layout1}">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layouts/layout1}" class="memberLoginForm">
 
 <head>
-  <meta name="_csrf" th:content="${_csrf.token}"/>
-  <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+  <link th:href="@{/css/member.css}" rel="stylesheet">
+  <meta name="_csrf" th:content="${_csrf.token}" />
+  <meta name="_csrf_header" th:content="${_csrf.headerName}" />
 </head>
 
 <div layout:fragment="content">
   <h1>아이디 찾기</h1>
 
   <div class="form-group">
-    <label th:for="name">이름</label><input class="setInput" name="name" th:value="${name}" placeholder="이름을 입력해 주세요" required>
+    <label th:for="name">이름</label><input class="setInput form-control" name="name" th:value="${name}"
+      placeholder="이름을 입력해 주세요" required>
   </div>
   <div class="form-group">
-    <label th:for="phone">전화번호</label><input class="setInput" name="phone" th:value="${phone}" placeholder="전화번호를 입력해 주세요" required>
+    <label th:for="phone">전화번호</label><input class="setInput form-control" name="phone" th:value="${phone}"
+      placeholder="전화번호를 입력해 주세요" required>
   </div>
   <button type="button" class="btn btn-info checkBtn">아이디 찾기</button>
 
-  <div class="form-group showEmail" style="display:none;">
+  <div class="form-group showEmail none">
     <label>이메일</label>
     <ul class="emailList">
 
@@ -31,62 +33,62 @@
   <button type="button" class="btn btn-success" onClick="location.href='/members/findPw'">비밀번호 찾기</button>
 
   <script th:inline="javascript">
-    $(document).ready(function(){
+    $(document).ready(function () {
 
 
-    $(".checkBtn").on('click',function(){
-        var name=$("input[name='name']").val();
-        var phone=$("input[name='phone']").val();
+      $(".checkBtn").on('click', function () {
+        var name = $("input[name='name']").val();
+        var phone = $("input[name='phone']").val();
         const nameRegex = /^[가-힣]{2,}$/;
         const phoneRegex = /^(01[016789])-(\d{3,4})-(\d{4})$/;
 
-        if(name==""||name==null){
+        if (name == "" || name == null) {
           alert("이름을 입력해 주세요");
           return;
         }
-        if(phone==""||phone==null){
+        if (phone == "" || phone == null) {
           alert("전화번호를 입력해 주세요");
           return;
         }
-        if(!nameRegex.test(name)){
+        if (!nameRegex.test(name)) {
           alert("이름을 정확히 입력해주세요. ex)홍길동");
           return;
         }
-        if(!phoneRegex.test(phone)){
+        if (!phoneRegex.test(phone)) {
           alert("전화번호를 형식에 맞게 입력해주세요. ex)000-0000-0000");
           return;
         }
 
         $.ajax({
-           url:'/members/getEmail',
-           type:"GET",
-           data:{name:name, phone:phone},
-           contentType:"application/json; charset=utf-8",
-           dataType:"json",
-           success: function(result) {
-              $(".showEmail").show();
-              $(".emailList").empty();
+          url: '/members/getEmail',
+          type: "GET",
+          data: { name: name, phone: phone },
+          contentType: "application/json; charset=utf-8",
+          dataType: "json",
+          success: function (result) {
+            $(".showEmail").show();
+            $(".emailList").empty();
 
-              if (result.length > 0) {
-                  result.forEach(function(email) {
-                      var hideEmail=email.replace(/(..)(.*)(@.*)/, '$1****$3');
-                      $(".emailList").append('<li>' + hideEmail + '</li>');
-                  });
-              } else {
-                  $(".emailList").append('<li>해당하는 정보로 가입된 기록이 없습니다.</li>');
-              }
-          }, error: function() {
-              alert("오류가 발생했습니다. 다시 시도해주세요.");
+            if (result.length > 0) {
+              result.forEach(function (email) {
+                var hideEmail = email.replace(/(..)(.*)(@.*)/, '$1****$3');
+                $(".emailList").append('<li>' + hideEmail + '</li>');
+              });
+            } else {
+              $(".emailList").append('<li>해당하는 정보로 가입된 기록이 없습니다.</li>');
+            }
+          }, error: function () {
+            alert("오류가 발생했습니다. 다시 시도해주세요.");
           }
         });
-    });
+      });
 
-    $(".setInput").on('input',function(){
-      $(".emailList").empty();
-      $(".showEmail").hide();
-    });
+      $(".setInput").on('input', function () {
+        $(".emailList").empty();
+        $(".showEmail").hide();
+      });
 
-});
+    });
 
   </script>
 
