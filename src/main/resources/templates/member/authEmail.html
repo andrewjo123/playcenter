@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<head>
+    <meta charset="UTF-8">
+    <title>이메일 확인</title>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+    <!-- CSS only -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<style>
+    body {
+        margin-bottom: 100px;
+        margin-top: 50px;
+        margin-left: 200px;
+        margin-right: 200px;
+    }
+
+    .email {
+        width: 200px;
+        display: inline;
+    }
+
+    .code {
+        width: 200px;
+    }
+
+    .none {
+        display: none;
+    }
+</style>
+
+<body>
+    <div>
+        <input type="email" th:value="${email}" id="emailInput" class="form-control email">
+        <input type="hidden" th:value="${result}" id="hiddenResult">
+        <button id="chkDupl" class="btn btn-light">중복체크</button>
+    </div>
+    <div>
+        <span id="duplResult" class="none"></span>
+        <button id="sendEmail" class="btn none">코드발송</button>
+    </div>
+    <div class="getCode none">이메일로 발송된 코드를 입력하세요</div>
+    <div>
+        <input class="getCode form-control code none" type="text" placeholder="코드를 입력하세요">
+        <button class="getCode authBtn btn btn-light none" type="button">인증확인</button>
+        <button class="clear btn btn-light none">이메일 사용하기</button>
+
+    </div>
+
+
+    <script th:inline="javascript">
+        function duplMessage(result) {
+            var duplResult = $("#duplResult");
+            if (result == "exist") {
+                duplResult.text("이미 가입된 이메일입니다.").show();
+            } else if (result == "none") {
+                duplResult.text("사용 가능한 이메일입니다.").show();
+                $("#sendEmail").show();
+            }
+        }
+
+        $(document).ready(function () {
+            var result = $('#hiddenResult').val();
+            var token = $("meta[name='_csrf']").attr("content");
+            var header = $("meta[name='_csrf_header']").attr("content");
+
+            duplMessage(result);
+
+            $("#chkDupl").click(function () {
+                var email = $('#emailInput').val();
+                const emailRegex = /^[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$/;
+                if (!emailRegex.test(email)) {
+                    alert("올바른 이메일 형식이 아닙니다. 확인해 주세요");
+                    return;
+                }
+                $.ajax({
+                    url: '/members/checkEmail',
+                    type: "GET",
+                    data: { email: email },
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "Text",
+                    success: function (result) {
+                        duplMessage(result);
+                    }
+                });
+            });
+
+            $("input[type='email']").on('input', function () {
+                $("#chkDupl").show();
+                $("#duplResult").hide();
+                $("#sendEmail").hide();
+                $(".getCode").hide();
+                $(".clear").hide();
+                $("input[type='text']").val("");
+            });
+
+            $("#sendEmail").on('click', function () {
+                var email = $('#emailInput').val();
+                $.ajax({
+                    type: 'GET',
+                    url: '/members/sendCode',
+                    data: { email: email },
+                    success: function (result) {
+                        alert('메일이 발송되었습니다.');
+                        $(".getCode").show();
+                    }, error: function () {
+                        alert('죄송합니다. 잠시 후 다시 시도해 보시길 바랍니다');
+                    }
+                });
+            });
+
+            $(".authBtn").on('click', function () {
+                var email = $('#emailInput').val();
+                var code = $("input[type='text']").val();
+                var data = { email: email, code: code };
+                $.ajax({
+                    type: 'GET',
+                    url: '/members/authCode',
+                    data: data,
+                    success: function (result) {
+                        if (result == "ok") {
+                            $(".clear").show();
+                            $("#sendEmail").hide();
+                            $(".getCode").hide();
+                            $("input[type='text']").val("");
+                        } else {
+                            alert(result + "코드 번호가 일치하지 않습니다.");
+                        }
+                    }, error: function () {
+                        alert('죄송합니다. 잠시 후 다시 시도해 보시길 바랍니다');
+                    }
+                })
+            });
+
+            $(".clear").on('click', function () {
+                var email = $('#emailInput').val();
+                $.ajax({
+                    type: 'DELETE',
+                    url: '/members/authDelete',
+                    data: { email: email },
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader(header, token);
+                    },
+                    success: function (result) {
+                        window.close();
+                        $(window.opener.document).find("#isAuth").val("auth");
+                        $(window.opener.document).find("#inputEmail").val(email).prop('readonly', true);
+                    }, error: function (jqXHR, textStatus, errorThrown) {
+                        console.error('AJAX 요청 실패:', {
+                            status: jqXHR.status,
+                            statusText: jqXHR.statusText,
+                            responseText: jqXHR.responseText,
+                            error: errorThrown
+                        });
+                        alert('죄송합니다. 잠시 후 다시 시도해 보시길 바랍니다');
+                    }
+
+                });
+
+            });
+
+
+        });
+
+
+    </script>
+</body>
+
+</html>

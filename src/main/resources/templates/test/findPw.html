@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}">
+
+<head>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+</head>
+
+<div layout:fragment="content">
+    <h1>비밀번호 email로 찾기</h1>
+    <form action="/test/findPw" method="post">
+        <input class="pwfind" name="toEmail" th:value="${toEmail}" placeholder="바꿀 email(id), 회원가입 된걸로" >
+        <input  type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+        <button type="submit">발송</button>
+    </form>
+
+</div>
+
+</html>
