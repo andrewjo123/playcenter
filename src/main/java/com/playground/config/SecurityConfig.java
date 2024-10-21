@@ -11,6 +11,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import com.playground.security.handler.PlayLoginSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -37,9 +38,15 @@ public class SecurityConfig {
                         .logoutSuccessUrl("/members/login")
                 ).oauth2Login(oauth2->oauth2
                         .loginPage("/members/login")
+                        .successHandler(playLoginSuccessHandler())
                 );
 
             return http.build();
+    }
+
+    @Bean
+    public PlayLoginSuccessHandler playLoginSuccessHandler() {
+        return new PlayLoginSuccessHandler(passwordEncoder());
     }
 
     @Bean

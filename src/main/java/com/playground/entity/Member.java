@@ -12,6 +12,9 @@ import lombok.ToString;
 import org.hibernate.annotations.ColumnDefault;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Table(name="member")
 @Getter @Setter
@@ -48,6 +51,18 @@ public class Member extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    private boolean fromSocial; //소셜로그인 추가
+
+//  @ElementCollection(fetch = FetchType.LAZY)
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Builder.Default
+    private Set<Role> roleSet = new HashSet<>();
+
+    public void addMemberRole(Role playMemberRole){
+
+        roleSet.add(playMemberRole);
+    }
 
     //추가
     @ColumnDefault("false")

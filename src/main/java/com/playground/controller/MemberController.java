@@ -104,6 +104,29 @@ public class MemberController {
         return "redirect:/members/logout";
     }
 
+    //소셜 로그인 전용 수정페이지
+    @GetMapping(value="/modify2")
+    public String modUser2(Model model, Principal principal){
+        String userid = principal.getName();
+        MemberFormDto memberFormDto=memberService.getUser(userid);
+        model.addAttribute("memberFormDto", memberFormDto);
+        return "member/memberModifyAuth";
+    }
+    //소셜 로그인 전용 수정페이지
+    @PostMapping(value="/modify2")
+    public String modifyUser2(@Valid MemberFormDto memberFormDto, BindingResult bindingResult, Principal principal, Model model){
+        if(principal==null){
+            return "/";
+        }
+        if(bindingResult.hasErrors()){
+            model.addAttribute("memberFormDto", memberFormDto);
+            return "member/memberModifyAuth";
+        }
+        memberFormDto.setPassword(passwordEncoder.encode(memberFormDto.getPassword()));
+        memberService.updateMemberAll(memberFormDto);
+        return "redirect:/members/logout";
+    }
+
     //로그인폼 인증버튼클릭
     @RequestMapping(value="/checkEmail",method = {RequestMethod.GET})
     @ResponseBody
