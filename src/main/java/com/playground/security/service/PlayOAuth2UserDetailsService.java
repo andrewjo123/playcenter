@@ -15,6 +15,7 @@ import com.playground.repository.MemberRepository;
 import com.playground.security.dto.PlayAuthMemberDTO;
 
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.playground.constant.Role.USER;
@@ -56,13 +57,20 @@ public class PlayOAuth2UserDetailsService extends DefaultOAuth2UserService {
 
         Member member = saveSocialMember(email); //조금 뒤에 사용
 
+        String role = "ROLE_" + member.getRole().name(); // 역할 이름에 ROLE_ 접두사 추가
+
+        // 단일 권한 생성
+        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(role);
+        log.info("Granted Authority: " + authority);
+
         PlayAuthMemberDTO playAuthMember = new PlayAuthMemberDTO(
                 member.getEmail(),
                 member.getPassword(),
                 true,   //fromSocial
-                member.getRoleSet().stream().map(
-                                role -> new SimpleGrantedAuthority("ROLE_" + role.name()))
-                        .collect(Collectors.toList()),
+                Set.of(authority),
+//                member.getRoleSet().stream().map(
+//                                role -> new SimpleGrantedAuthority("ROLE_" + role.name()))
+//                        .collect(Collectors.toList()),
                 oAuth2User.getAttributes()
         );
         playAuthMember.setName(member.getName());
