@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}">
+
+<head>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+    <script src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+
+<div layout:fragment="content">
+    <h1>결제</h1>
+
+    <table class="table">
+        <colgroup>
+            <col width="15%"/>
+            <col width="70%"/>
+            <col width="15%"/>
+        </colgroup>
+        <thead>
+        <tr class="text-center">
+            <td>상품정보</td>
+            <td>상품금액</td>
+        </tr>
+        </thead>
+        <tbody>
+
+        <th:block th:each="order : ${orders}">
+            <tr th:each="orderItem : ${order.orderItemDtoList}">
+                <td class="d-flex">
+                    <div class="repImgDiv align-self-center">
+                        <img th:src="${orderItem.imgUrl}" class = "rounded repImg" th:alt="${orderItem.itemNm}" style="width:100px;height:100px;">
+                    </div>
+                    <div class="align-self-center">
+                        <span th:text="${orderItem.itemNm}" class="fs24 font-weight-bold itemNm"></span>
+                        <div class="fs18 font-weight-light">
+                                <span class="input-group mt-2">
+                                    <span th:data-price="${orderItem.orderPrice}"
+                                          th:text="${#numbers.formatDecimal(orderItem.orderPrice/0.8,1,0)} + '원'" class="align-self-center mr-2">
+                                    </span>
+
+                                    <input type="number" name="count" th:value="${orderItem.count}" class="form-control mr-2" readonly style="min-width:100px;">
+
+                                </span>
+                        </div>
+                    </div>
+                </td>
+                <td class="text-center align-middle">
+                    <span th:text="${#numbers.formatDecimal(orderItem.orderPrice * orderItem.count / 0.8,1,0)} + '원'" style="text-decoration: line-through red;"></span><br/>
+                    <span name="totalPrice" th:text="${orderItem.orderPrice * orderItem.count} + '원'"></span>
+                </td>
+            </tr>
+        </th:block>
+        </tbody>
+    </table>
+
+    <div>
+        <h2>주문정보</h2>
+        이름: <span th:text="${buyer}" id="orderBuyer"></span><br/>
+        이메일: <span th:text="${email}" id="orderEmail"></span>
+        <h4 class="text-center">
+            총 주문 금액 : <span id="orderTotalPrice" class="text-danger"></span>
+        </h4>
+    </div>
+
+    <div style="text-align: center;">
+        <span id="agreeDetail" style="cursor: pointer; border:1px solid red">결제 약관 보기</span>
+        <span>상기 내용에 동의합니다. <input type="checkbox" id="agreeCheck"></span>
+    </div>
+
+    <button type="button" class="btn btn-primary payBtn" id="kakaopay">카카오결제</button>
+    <button type="button" class="btn btn-danger payBtn" id="html5_inicis">이니시스</button>
+
+    <form action="/order/removeOrder" method="post">
+        <input type="hidden" th:name="orderId" th:value="${orders[0].orderId}" id="orderId">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+        <button type="submit" class="btn btn-warning">취소</button>
+    </form>
+
+    <div class="agreeModal modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    놀이마당 결제 약관
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <ul>환불 정책
+                        <li>고객님께서 구매를 확정하신 후, 모든 상품은 환불이 불가능합니다. 구매 전에 신중히 검토해 주시기 바랍니다.</li>
+                    </ul>
+                    <ul>배송 정책
+                        <li>구매확정을 누르시면 가입한 이메일로 코드가 발송됩니다.</li>
+                        <li>코드발송은 최대 한시간 정도 소요됩니다</li>
+                    </ul>
+                    <ul>개인정보 보호 정책
+                        <li>고객님의 개인정보는 철저히 보호되며, 외부에 유출되지 않습니다.</li>
+                        <li>수집된 정보는 주문 처리 및 고객 서비스 제공 목적으로만 사용됩니다.</li>
+                    </ul>
+                    <ul>동의 사항
+                        <li>본 상품의 구매를 원하며, 결제 후 환불이 불가능함을 이해하고 동의합니다.</li>
+                        <li>결제 정보가 정확함을 확인하였으며, 이로 인한 오류는 저희에게 책임이 없음을 인정합니다.</li>
+                    </ul>
+                    <p style="text-align: center;">내용을 모두 확인하였으며, 동의합니다</p> 
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary agreeBtn">동의</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+        var pg="";//kakaopay, html5_inicis
+        var totalP=0;
+
+        function getOrderTotalPrice(){
+            var orderTotalPrice = 0;
+            $("span[name='totalPrice']").each(function() {
+                var priceEach=$(this).text();
+                console.log(priceEach);
+                var price = parseInt(priceEach.replace('원', '').replace(',', '').trim());
+                orderTotalPrice += price;
+            });
+            totalP=orderTotalPrice;
+            $("#orderTotalPrice").html(orderTotalPrice.toLocaleString()+'원');
+        }
+
+        $(document).ready(function(){
+            //총 결제금액 계산
+            getOrderTotalPrice();
+
+            // 결제동의 모달
+            $("#agreeDetail").on('click',function(){
+                $(".agreeModal").modal('show');
+            });
+            $(".agreeBtn").on('click',function(){
+                $('#agreeCheck').prop('checked', true);
+                $(".agreeModal").modal('hide');
+            });
+
+            //결제
+            $(".payBtn").on("click",function(){
+
+              if(!$('#agreeCheck').is(':checked')){
+                alert("결제동의를 하셔야 결제가 가능합니다");
+                return;
+              }  
+              
+              // Get CSRF token and header name from the meta tags
+              let token = $("meta[name='_csrf']").attr("content");
+              let header = $("meta[name='_csrf_header']").attr("content");
+              pgName=this.id;
+              var orderNumber=$("#orderId").val();
+              var firstItem=$('span.itemNm').first().text();
+              var counting=$('span.itemNm').length-1;
+              var setName = counting > 0 ? firstItem + " 외 " + counting : firstItem;
+              var buyer=$('#orderBuyer').text();
+              var emailText = $('#orderEmail').text();
+
+              IMP.init('imp56101224'); // 가맹점 식별코드로 Iamport 초기화
+
+              IMP.request_pay({ // 결제 요청
+                  pg: pgName,   // PG사 설정
+                  pay_method : "card", // 결제 방법
+                  merchant_uid : orderNumber, // 주문 번호
+                  name : setName, // 상품 이름
+                  amount: totalP, // 결제 가격
+                  buyer_name : buyer, // 구매자 이름 (buyer_ 부분은 꼭 작성하지 않아도된다. (선택사항))
+                  buyer_email : emailText
+              }, function(res) {
+                  // 결제 후
+                  if (res.success) {
+                      // 결제 재검증
+                     $.ajax({
+                        url:'/order/validPay/'+res.imp_uid,
+                        type:"POST",
+                        beforeSend : function(xhr){
+                            xhr.setRequestHeader(header, token);
+                        }
+                     }).done(function(data){
+                        if(res.paid_amount==data.response.amount){
+                            var params=[[${cartId}]];
+                            console.log(params);
+
+                            $.ajax({
+                                url: "/order/validDB",
+                                method: "post",
+                                data:{orderId:orderNumber, totalPrice:totalP, ...params},
+                                dataType:"Text",
+                                beforeSend : function(xhr){
+                                    xhr.setRequestHeader(header, token);
+                                }
+                            }).done(function(res) {
+                                if(res=="ok"){
+                                    alert('결제가 완료되었습니다.');
+                                    location.href="/orders/0";
+                                } else {
+                                    alert('결제가 실패했습니다');
+                                }
+                            }).fail(function(error) {
+                                $.ajax({
+                                    url: "/order/autoCancel",
+                                    method: "post",
+                                    data:{orderId:orderNumber},
+                                    dataType:"Text",
+                                    beforeSend : function(xhr){
+                                        xhr.setRequestHeader(header, token);
+                                    },success(result){
+                                        alert("주문정보 저장을 실패 했습니다.");
+                                    },error(){
+                                        alert("관리자에게 문의해보세요.");
+                                    }
+                                })
+                            });
+                        }
+                    }).fail(function(error) {
+                        alert('결제가 실패하였습니다.');
+                    });
+
+                  } else {
+                    alert("결제가 취소되었습니다.");
+                  }
+              });
+            });
+
+        });
+
+
+    </script>
+</div>
+</html>
