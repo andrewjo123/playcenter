@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layouts/layout1}">
+
+<head>
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+</head>
+
+<div layout:fragment="content">
+    <h1>비밀번호 찾기</h1>
+    <form action="/members/findPw" method="post" id="submitForm" class="form-group">
+        <div>
+            <label for="name">이름</label>
+            <input id="name" name="name" class="form-control" placeholder="이름을 입력해 주세요" required>
+        </div>
+        <div>
+            <label for="phone">전화번호</label>
+            <input id="phone" name="phone" class="form-control" placeholder="전화번호를 입력해 주세요" required>
+        </div>
+        <div>
+            <label for="email">이메일</label>
+            <input id="email" name="email" class="form-control" placeholder="이메일을 입력해주세요" required>
+        </div>
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+        <button class="btn btn-success find">찾기</button>
+    </form>
+
+    <button type="button" class="btn btn-info" onClick="location.href='/members/login'">로그인</button>
+    <button type="button" class="btn btn-primary" onClick="location.href='/members/new'">회원가입</button>
+
+    <div id="errorMessages"></div>
+    <script th:inline="javascript">
+        $(document).ready(function () {
+            var result = [[${ result }]];
+            console.log(result + "123123123123");
+            if (result != null) {
+                if (result == "noEmail") {
+                    $("#errorMessages").text("회원가입되지 않은 이메일입니다.");
+                } else if (result == "notValid") {
+                    $("#errorMessages").text("회원정보가 일치하지 않습니다.");
+                }
+            }
+
+            $(".find").on('click', function (e) {
+                e.preventDefault();
+                var name = $("#name").val();
+                var phone = $("#phone").val();
+                var email = $("#email").val();
+
+                const nameRegex = /^[가-힣]{2,}$/;
+                const phoneRegex = /^(01[016789])-(\d{3,4})-(\d{4})$/;
+                const emailRegex = /^[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$/;
+
+                $("#errorMessages").empty();
+
+                if (!name) {
+                    alert("이름을 입력해 주세요");
+                    return;
+                }
+                if (!phone) {
+                    alert("전화번호를 입력해 주세요");
+                    return;
+                }
+                if (!email) {
+                    alert("이메일을 입력해 주세요");
+                    return;
+                }
+                if (!nameRegex.test(name)) {
+                    alert("이름을 정확히 입력해주세요. ex)홍길동");
+                    return;
+                }
+                if (!phoneRegex.test(phone)) {
+                    alert("전화번호를 형식에 맞게 입력해주세요. ex)000-0000-0000");
+                    return;
+                }
+                if (!emailRegex.test(email)) {
+                    alert("이메일을 형식에 맞게 입력해주세요. ex)hkd123@naver.com");
+                    return;
+                }
+                $("#submitForm").submit();
+            });
+        });
+    </script>
+
+</div>
+
+
+</html>
