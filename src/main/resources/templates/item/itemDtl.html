@@ -64,6 +64,19 @@
     <div class="jumbotron jumbotron-fluid mgt-30 itemdtl">
         <div><span class="dtlinfo">플랫폼:</span> <span th:text="${item.company}"></span></div>
         <div><span class="dtlinfo">장르:</span> <span th:text="${item.tag}"></span></div>
+        <div> 
+            별점:
+            <span th:text="${item.avg}"></span>
+            <span th:each="i : ${#numbers.sequence(1, item.avg)}">
+                <i class="fas fa-star"></i>
+            </span>
+            <span th:each="i : ${#numbers.sequence(item.avg + 1, 5)}">
+                <i class="far fa-star"></i>
+            </span>
+        </div>
+        <div>
+            리뷰수: <span th:text="${item.allReview}"></span>
+        </div>
         <div class="container">
             <h4 class="display-5">상품 상세 설명</h4>
             <hr class="my-4">
@@ -102,7 +115,7 @@
                         <label>Reviewer ID</label>
                         <input type="text" class="form-control" name="email">
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" id="divGrade">
                         <label>Grade <span class="grade"></span></label>
                         <div class='starrr'></div>
                     </div>
@@ -276,8 +289,23 @@
 
 
             $(".addReviewBtn").click(function () {
+                grade=0;
                 inputMid.val("");
                 inputText.val("");
+
+                //.starrr초기화
+                var star=$(".starrr").clone();
+                $(".starrr").remove();
+                $("#divGrade").append(star);
+                $('.starrr').starrr({
+                    rating: grade,
+                    change: function(e, value){
+                        if (value) {
+                            console.log(value);
+                            grade = value;
+                        }
+                    }
+                });
 
                 $(".removeBtn ,  .modifyBtn").hide();
                 $(".reviewSaveBtn").show();
@@ -288,7 +316,7 @@
 
             $('.reviewSaveBtn').click(function () {
 
-                var data = { id: id, grade: grade, text: inputText.val(), member_id: inputMid.val() };
+                var data = { id: id, grade: grade, text: inputText.val(), email: inputMid.val() };
 
                 console.log(data);
 
@@ -334,7 +362,7 @@
                         $.each(arr, function (idx, review) {
                             console.log(review);
 
-                            str += '    <div class="card-body" data-reviewnum=' + review.reviewnum + ' data-mid=' + review.mid + '>';
+                            str += '    <div class="card-body" data-reviewnum=' + review.reviewnum + ' data-mid=' + review.email + '>';
                             str += '    <h5 class="card-title">' + review.text + ' <span class="reviewgrade" data-grade2=' + review.grade + '></span></h5>';
                             str += '    <h6 class="card-subtitle mb-2 text-muted">' + review.email + '</h6>';
                             str += '    <p class="card-text">' + formatTime(review.regTime) + '</p>';
@@ -371,12 +399,26 @@
                 var targetReview = $(this);
 
                 reviewnum = targetReview.data("reviewnum");
-                console.log("reviewnum: " + reviewnum);
+                console.log(targetReview.data("mid"));
                 inputMid.val(targetReview.data("mid"));
-                inputText.val(targetReview.find('.card-title').clone().children().remove().end().text());
+                inputText.val(targetReview.find('.card-title').text().trim());
+                var grade2 = $(this).find(".reviewgrade").data("grade2"); // 리뷰 목록에서 사용
+                console.log(grade2);
 
-                var grade = targetReview.find('.card-title span').html();
-                //$(".starrr a:nth-child("+grade+")").trigger('click');
+                //.starrr초기화
+                var star=$(".starrr").clone();
+                $(".starrr").remove();
+                $("#divGrade").append(star);
+
+                $(".starrr").starrr({
+                rating:grade2,
+                    change: function(e, value){
+                        if (value) {
+                            console.log(value);
+                            grade2 = value;
+                        }
+                    }
+                });
 
                 $('.reviewModal').modal('show');
             });
