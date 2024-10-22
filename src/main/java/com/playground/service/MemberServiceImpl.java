@@ -1,5 +1,6 @@
 package com.playground.service;
 
+import com.playground.constant.Role;
 import com.playground.dto.MemberFormDto;
 import com.playground.entity.Email;
 import com.playground.entity.Member;
@@ -154,6 +155,21 @@ public class MemberServiceImpl implements MemberService {
             return result="valid";
         }
         return result="notValid";
+    }
+
+    @Override
+    public void registSocialMember(MemberFormDto dto) {
+        Member sMember=new Member();
+        sMember.setName(dto.getName());
+        sMember.setEmail(dto.getEmail());
+        sMember.setPassword(dto.getPassword());
+        sMember.setPhone(dto.getPhone());
+        sMember.setAddress(dto.getAddress());
+        sMember.setAddressCode(dto.getAddressCode());
+        sMember.setAddressDetail(dto.getAddressDetail());
+        sMember.setFromSocial(true);
+        sMember.setRole(Role.USER);
+        memberRepository.save(sMember);
     }
     // 추가 끝
 }

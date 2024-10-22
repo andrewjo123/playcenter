@@ -1,4 +1,5 @@
 package com.playground.security.service;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
@@ -10,13 +11,13 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import com.playground.entity.Member;
-import com.playground.constant.Role;
 import com.playground.repository.MemberRepository;
 import com.playground.security.dto.PlayAuthMemberDTO;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static com.playground.constant.Role.USER;
 
@@ -30,7 +31,7 @@ public class PlayOAuth2UserDetailsService extends DefaultOAuth2UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
+    public OAuth2User loadUser(OAuth2UserRequest userRequest){
 
         log.info("=====================================================");
         log.info("userRequest: " + userRequest);
@@ -55,7 +56,17 @@ public class PlayOAuth2UserDetailsService extends DefaultOAuth2UserService {
 
         log.info("EMAIL: " + email);
 
-        Member member = saveSocialMember(email); //조금 뒤에 사용
+        Optional<Member> result = repository.findByEmailAndFromSocial(email, true);
+
+        Member member;
+        if(result.isPresent()){
+            member= result.get();
+        }else{
+            // 세션에 이메일 저장
+            HttpSession session = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest().getSession();
+            session.setAttribute("email", email);
+            throw new OAuth2AuthenticationException("추가 정보가 필요합니다.");
+        }
 
         String role = "ROLE_" + member.getRole().name(); // 역할 이름에 ROLE_ 접두사 추가
 

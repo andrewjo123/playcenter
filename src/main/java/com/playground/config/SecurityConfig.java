@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import com.playground.security.handler.PlayLoginSuccessHandler;
+import com.playground.security.service.PlayOAuth2UserDetailsService;
 
 @Configuration
 @EnableWebSecurity
@@ -30,7 +31,7 @@ public class SecurityConfig {
     }
 
     @Autowired
-    com.playground.service.MemberService memberService;
+    private PlayOAuth2UserDetailsService playOAuth2UserDetailsService;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -43,14 +44,16 @@ public class SecurityConfig {
                 .loginPage("/members/login")
                 .defaultSuccessUrl("/")
                 .usernameParameter("email")
-                .failureUrl("/members/login/error")
                 .failureHandler(new CustomAuthenticationFailureHandler())
         ).logout( logoutCustomizer -> logoutCustomizer
                 .logoutRequestMatcher(new AntPathRequestMatcher("/members/logout"))
                 .logoutSuccessUrl("/members/login")
         ).oauth2Login(oauth2->oauth2
                 .loginPage("/members/login")
+                .userInfoEndpoint(userInfo -> userInfo
+                        .userService(playOAuth2UserDetailsService))
                 .successHandler(playLoginSuccessHandler())
+                .failureHandler(new CustomOAuth2AuthenticationFailureHandler())
         );
 
         return http.build();
@@ -61,16 +64,22 @@ public class SecurityConfig {
         return new PlayLoginSuccessHandler(passwordEncoder);
     }
 
+    @Autowired
+    public void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(playUserDetailsService).passwordEncoder(passwordEncoder);
+    }
+
+
 //    @Bean
 //    public PasswordEncoder passwordEncoder() {
 //        return new BCryptPasswordEncoder();
 //    }
 
-    @Bean
-    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
-        AuthenticationManagerBuilder authBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
-        authBuilder.userDetailsService(playUserDetailsService).passwordEncoder(passwordEncoder);
-        return authBuilder.build();
-    }
+//    @Bean
+//    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
+//        AuthenticationManagerBuilder authBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
+//        authBuilder.userDetailsService(playUserDetailsService).passwordEncoder(passwordEncoder);
+//        return authBuilder.build();
+//    }
 
 }
