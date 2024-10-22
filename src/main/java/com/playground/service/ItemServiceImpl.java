@@ -177,4 +177,9 @@ public class ItemServiceImpl implements ItemService {
     public Page<MainItemDto> getMainItemPage(ItemSearchDto itemSearchDto, Pageable pageable) {
         return itemRepository.getMainItemPage(itemSearchDto, pageable);
     }
+
+    @Override
+    public Page<MainItemDto> getMainItemPage2(String company, ItemSearchDto itemSearchDto, Pageable pageable) {
+        return itemRepository.getMainItemPage2(company, itemSearchDto, pageable);
+    }
 }
