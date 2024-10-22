@@ -1,6 +1,4 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-    layout:decorate="~{layouts/layout1}" class="itemDtl">
 
 <head>
     <meta name="_csrf" th:content="${_csrf.token}" />
@@ -11,11 +9,9 @@
 </head>
 
 
-<div layout:fragment="content">
 
     <input type="hidden" id="itemId" th:value="${item.id}">
 
-    <div class="d-flex itemdtl">
         <div class="repImgDiv">
             <img th:src="${item.itemImgDtoList[0].imgUrl}" class="rounded repImg" th:alt="${item.itemNm}">
         </div>
@@ -61,10 +57,6 @@
         </div>
     </div>
 
-    <div class="jumbotron jumbotron-fluid mgt-30 itemdtl">
-        <div><span class="dtlinfo">플랫폼:</span> <span th:text="${item.company}"></span></div>
-        <div><span class="dtlinfo">장르:</span> <span th:text="${item.tag}"></span></div>
-        <div> 
             별점:
             <span th:text="${item.avg}"></span>
             <span th:each="i : ${#numbers.sequence(1, item.avg)}">
