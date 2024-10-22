@@ -19,8 +19,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import java.util.Optional;
 import java.util.Set;
 
-import static com.playground.constant.Role.USER;
-
 @Log4j2
 @Service
 @RequiredArgsConstructor
@@ -57,14 +55,25 @@ public class PlayOAuth2UserDetailsService extends DefaultOAuth2UserService {
         log.info("EMAIL: " + email);
 
         Optional<Member> result = repository.findByEmailAndFromSocial(email, true);
+        Optional<Member> result2 = repository.findByEmailAndFromSocial(email, false);
 
         Member member;
         if(result.isPresent()){
             member= result.get();
-        }else{
+        } else if (result2.isPresent()) {
+            HttpSession session = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest().getSession();
+            session.setAttribute("email", email);
+            session.setAttribute("error","merge");
+            //다른 소셜로그인 쓸거면 추가
+            if(clientName.equals("Google")){
+                session.setAttribute("site","google");
+            }
+            throw new OAuth2AuthenticationException("계정병합을 하시겠습니까.");
+        } else{
             // 세션에 이메일 저장
             HttpSession session = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest().getSession();
             session.setAttribute("email", email);
+            session.setAttribute("error","add");
             throw new OAuth2AuthenticationException("추가 정보가 필요합니다.");
         }
 
@@ -88,30 +97,6 @@ public class PlayOAuth2UserDetailsService extends DefaultOAuth2UserService {
 
 
         return playAuthMember;
-    }
-
-    private Member saveSocialMember(String email){
-
-        //기존에 동일한 이메일로 가입한 회원이 있는 경우에는 그대로 조회만
-        Optional<Member> result = repository.findByEmailAndFromSocial(email, true);
-
-        if(result.isPresent()){
-            return result.get();
-        }
-
-        //없다면 회원 추가 패스워드는 1111 이름은 그냥 이메일 주소로
-        Member clubMember = Member.builder().email(email)
-                .name("홍길동")
-                .password( passwordEncoder.encode("1111") )
-                .fromSocial(true)
-                .phone("010-1234-5678")
-                .address("주소찾기를 이용해서 입력해주세요.")
-                .addressCode("12345")
-                .role(USER)
-                .build();
-        repository.save(clubMember);
-
-        return clubMember;
     }
 
 }

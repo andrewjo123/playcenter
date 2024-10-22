@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
@@ -222,6 +223,30 @@ public class MemberController {
         return sb.toString();
     }
 
+    @GetMapping("/confirm")
+    public String confirmLogin(Model model, HttpServletRequest request) {
+         // confirm.html로 뷰 설정
+        String email = (String) request.getSession().getAttribute("email");
+        String site=(String) request.getSession().getAttribute("site");
+        model.addAttribute("email", email);
+        model.addAttribute("site",site);
+        request.getSession().removeAttribute("email");
+        request.getSession().removeAttribute("site");
+        return "member/confirm";
+    }
+
+    @PostMapping("/confirm")
+    public String processConfirmation(@RequestParam String email, @RequestParam String site, @RequestParam boolean approve) {
+        if (approve) {
+            // 사용자가 승인한 경우, 비소셜 계정을 소셜 계정으로 업데이트
+            memberService.changeSocial(email);
+            // 로그인 처리 계속
+            return "redirect:/oauth2/authorization/"+site; // 로그인 성공 후 리다이렉트
+        } else {
+            // 사용자가 거부한 경우
+            return "redirect:/members/login/error"; // 로그인 실패로 리다이렉트
+        }
+    }
 
 
     // 정관수 끝

@@ -21,7 +21,8 @@ public interface MemberService extends UserDetailsService {
     public void authDelete(String email);
     public List<String> findEmail(String name, String phone);
     public String validBeforeSendPwd (String email, String name, String phone);
-
-    // 10.22추가
     public void registSocialMember(MemberFormDto dto);
+
+    // 10.22 1600추가
+    public void changeSocial(String email);
 }
