@@ -30,4 +30,6 @@ public class MemberFormDto {
     private String address;
 
     private String addressDetail;
+
+    private boolean fromSocial;
 }

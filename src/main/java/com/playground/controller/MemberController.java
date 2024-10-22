@@ -78,6 +78,7 @@ public class MemberController {
 
     @GetMapping(value = "/login/error")
     public String loginError(Model model){
+        System.out.println("controlerrrrrrrrrrrrrrrrr");
         model.addAttribute("loginErrorMsg", "아이디 또는 비밀번호를 확인해주세요");
         return "member/memberLoginForm";
     }
@@ -102,6 +103,22 @@ public class MemberController {
         memberFormDto.setPassword(passwordEncoder.encode(memberFormDto.getPassword()));
         memberService.updateMemberAll(memberFormDto);
         return "redirect:/members/logout";
+    }
+
+    //소셜 로그인 전용 수정페이지
+    @GetMapping(value="/modify2")
+    public String modUser2(Model model, HttpServletRequest request){
+        String email = (String) request.getSession().getAttribute("email");
+        model.addAttribute("email", email);
+        request.getSession().removeAttribute("email");
+        return "member/memberModifyAuth";
+    }
+    //소셜 로그인 전용 수정페이지
+    @PostMapping(value="/modify2")
+    public String modifyUser2(MemberFormDto memberFormDto, Model model){
+        memberFormDto.setPassword(passwordEncoder.encode(memberFormDto.getPassword()));
+        memberService.registSocialMember(memberFormDto);
+        return "member/memberLoginForm";
     }
 
     //로그인폼 인증버튼클릭

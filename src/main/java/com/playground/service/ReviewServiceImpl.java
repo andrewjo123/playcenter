@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.playground.dto.ReviewDto;
 import com.playground.entity.Item;
 import com.playground.entity.Review;
+import com.playground.repository.MemberRepository;
 import com.playground.repository.ReviewRepository;
 
 import java.util.List;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 public class ReviewServiceImpl implements ReviewService {
 
     private final ReviewRepository reviewRepository;
+    private final MemberRepository memberRepository;
 
     @Override
     public List<ReviewDto> getListOfItem(Long id) {
@@ -33,6 +35,9 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public Long register(ReviewDto itemReviewDto) {
+        String email=itemReviewDto.getEmail();
+        Long memId=memberRepository.findByEmail(email).getId();
+        itemReviewDto.setMember_id(memId);
         Review itemReview=dtoToEntity(itemReviewDto);
         reviewRepository.save(itemReview);
         return itemReview.getId();

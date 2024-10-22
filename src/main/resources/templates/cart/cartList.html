@@ -218,8 +218,8 @@
                 dataType : "json",
                 cache   : false,
                 success  : function(result, status){
-                    alert("주문이 완료 되었습니다.");
-                    location.href='/orders';
+                    var query= dataList.map((item, index) => `item${index}=${item.cartItemId}`).join('&');
+                    location.href = '/order/payment?orderId=' + result + '&' + query;
                 },
                 error : function(jqXHR, status, error){
 

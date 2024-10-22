@@ -13,7 +13,7 @@
     <form action="/members/new" role="form" method="post"  th:object="${memberFormDto}">
         <div class="form-group">
             <label th:for="name">이름</label>
-            <input type="text" th:field="*{name}" class="form-control" placeholder="이름을 입력해주세요" pattern="[가-힣]{2,}" required title="이름은 최소 2자 이상의 한글로 입력해야 합니다.">
+            <input type="text" th:field="*{name}" class="form-control" placeholder="이름을 입력해주세요" pattern="[가-힣]{2,}" required title="이름은 최소 2자 이상의 한글로 입력해야 합니다."/>
         </div>
         <div class="form-group">
             <label th:for="email">이메일주소</label> <button class="btn btn-warning checkBtn" type="button">이메일 중복검사</button>
@@ -34,9 +34,11 @@
         </div>
         <div class="form-group">
             <label th:for="address">주소</label>
-            <input id="getAddressNum" type="text" th:field="*{addressCode}" class="form-control" placeholder="우편번호" style="width:200px;display:inline;" required>
-            <button type="button" class="btn btn-info" onclick="getAddr();" style="width:150px; ">우편번호 검색</button>
-            <input id="getAddress" type="text" th:field="*{address}" class="form-control" placeholder="주소를 입력해주세요" required>
+            <input id="getAddressNum" type="text" th:field="*{addressCode}" class="form-control" placeholder="우편번호"
+                   required>
+            <button type="button" class="btn btn-info addrbtn" onclick="getAddr();">우편번호 검색</button>
+            <input id="getAddress" type="text" th:field="*{address}" class="form-control" placeholder="주소를 입력해주세요"
+                   required>
             <input type="text" th:field="*{addressDetail}" class="form-control" placeholder="상세 주소를 입력해주세요">
         </div>
         <div style="text-align: center">

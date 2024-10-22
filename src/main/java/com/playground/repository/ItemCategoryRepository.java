@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface ItemCategoryRepository extends JpaRepository<ItemCategory, Long> {
     ItemCategory findByItemId(Long itemId);
+    // itemId로 ItemCategory 삭제
+    void deleteByItemId(Long itemId);
 }

@@ -105,4 +105,62 @@ public class OrderServiceImpl implements OrderService {
 
         return order.getId();
     }
+
+    //추가
+    @Override
+    public List<OrderHistDto> getPayList(Long orderId) {
+        List<Order> orders = orderRepository.payOrder(orderId);
+
+        List<OrderHistDto> orderHistDtos = new ArrayList<>();
+        for (Order order : orders) {
+            OrderHistDto orderHistDto = new OrderHistDto(order);
+            List<OrderItem> orderItems = order.getOrderItems();
+            for (OrderItem orderItem : orderItems) {
+                ItemImg itemImg = itemImgRepository.findByItemIdAndRepimgYn(orderItem.getItem().getId(), "Y");
+                OrderItemDto orderItemDto = new OrderItemDto(orderItem, itemImg.getImgUrl());
+                orderHistDto.addOrderItemDto(orderItemDto);
+            }
+            orderHistDtos.add(orderHistDto);
+        }
+        return orderHistDtos;
+    }
+
+    @Override
+    public String findBuyer(Long orderId) {
+        return memberRepository.findBuyer(orderId).getName();
+    }
+
+    @Override
+    public String validpay(Long orderId, Long totalPrice) {
+        List<Order> orders = orderRepository.payOrder(orderId);
+        Long total=0L;
+
+        for (Order order : orders) {
+            total += order.getTotalPrice();
+        }
+        String validation="";
+
+        if(total.equals(totalPrice)){
+            validation="ok";
+        } else{
+            validation="not";
+        }
+
+        return validation;
+    }
+
+    @Override
+    public void payedOrder(Long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new EntityNotFoundException("Order not found with id: " + orderId));
+
+        order.setPayed(true);
+        orderRepository.save(order);
+
+    }
+
+    @Override
+    public void removeList(Long orderId) {
+        orderRepository.deleteById(orderId);
+    }
 }

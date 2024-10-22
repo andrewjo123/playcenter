@@ -7,8 +7,7 @@ import com.playground.dto.MainItemDto;
 import com.playground.entity.Item;
 import com.playground.entity.ItemCategory;
 import com.playground.entity.ItemImg;
-import com.playground.repository.ItemCategoryRepository;
-import com.playground.repository.ItemImgRepository;
+import com.playground.repository.*;
 import com.playground.repository.ItemRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +17,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +36,9 @@ public class ItemServiceImpl implements ItemService {
     private final ItemImgService itemImgService;
     private final ItemImgRepository itemImgRepository;
     private final ItemCategoryRepository categoryRepository;
+    private final ReviewRepository reviewRepository;
+
+
 
     @Override
     @Transactional
@@ -58,6 +65,40 @@ public class ItemServiceImpl implements ItemService {
         }
 
         return item.getId();
+    }
+    //아이템 삭제
+    @Override
+    public void deleteItem(Long itemId) {
+        // 1. 아이템을 찾기.
+        Item item = itemRepository.findById(itemId)
+                .orElseThrow(() -> new EntityNotFoundException("해당 상품을 찾을 수 없습니다."));
+        // 2. 리뷰 삭제
+        reviewRepository.deleteByItemId(itemId);
+        // 3. 아이템 삭제
+        itemRepository.delete(item);
+        // 4. 아이템 카테고리 삭제
+        categoryRepository.deleteByItemId(itemId);
+        // 5. 이미지 삭제
+        itemImgRepository.deleteByItemId(itemId);
+        List<ItemImg> itemImgList = itemImgRepository.findByItemId(itemId);  // itemId와 관련된 모든 이미지를 조회
+        for (ItemImg itemImg : itemImgList) {
+            // 이미지 파일명을 가져옴
+            String imgName = itemImg.getImgName();
+            // 파일명이 null이거나 빈 문자열이 아닌지 확인
+            if (imgName != null && !imgName.trim().isEmpty()) {
+                Path imagePath = Paths.get("C:\\shop\\item\\" + imgName);  // 전체 파일 경로 생성
+                try {
+                    // 파일이 존재하면 삭제
+                    Files.deleteIfExists(imagePath);
+                } catch (IOException e) {
+                    // 파일 삭제 실패 시 예외 처리
+                    e.printStackTrace();
+                }
+            } else {
+                // 파일명이 null이거나 빈 문자열인 경우 로깅
+                System.out.println("유효하지 않은 파일명: " + imgName);
+            }
+        }
     }
 
   
@@ -135,5 +176,10 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public Page<MainItemDto> getMainItemPage(ItemSearchDto itemSearchDto, Pageable pageable) {
         return itemRepository.getMainItemPage(itemSearchDto, pageable);
+    }
+
+    @Override
+    public Page<MainItemDto> getMainItemPage2(String company, ItemSearchDto itemSearchDto, Pageable pageable) {
+        return itemRepository.getMainItemPage2(company, itemSearchDto, pageable);
     }
 }

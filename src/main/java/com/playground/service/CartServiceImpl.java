@@ -113,12 +113,12 @@ public class CartServiceImpl implements CartService {
         }
 
         Long orderId = orderService.orders(orderDtoList, email);
-        for (CartOrderDto cartOrderDto : cartOrderDtoList) {
-            CartItem cartItem = cartItemRepository
-                    .findById(cartOrderDto.getCartItemId())
-                    .orElseThrow(EntityNotFoundException::new);
-            cartItemRepository.delete(cartItem);
-        }
+//        for (CartOrderDto cartOrderDto : cartOrderDtoList) {
+//            CartItem cartItem = cartItemRepository
+//                    .findById(cartOrderDto.getCartItemId())
+//                    .orElseThrow(EntityNotFoundException::new);
+//            cartItemRepository.delete(cartItem);
+//        }
 
         return orderId;
     }

@@ -29,4 +29,6 @@ public class OrderHistDto {
         orderItemDtoList.add(orderItemDto);
     }
 
+    //추가
+    private boolean isPayed;// 결제여부
 }

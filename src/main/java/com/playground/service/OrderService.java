@@ -17,4 +17,11 @@ public interface OrderService {
     void cancelOrder(Long orderId);
 
     Long orders(List<OrderDto> orderDtoList, String email);
+
+    //추가
+    List<OrderHistDto> getPayList(Long orderId);
+    String findBuyer(Long orderId);
+    String validpay(Long orderId, Long totalPrice);
+    void payedOrder(Long orderId);
+    void removeList(Long orderId);
 }
