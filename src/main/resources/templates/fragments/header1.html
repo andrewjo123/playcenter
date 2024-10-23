@@ -1,33 +1,90 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<style>
-    .body {
-        margin: 0px;
-        padding: 0px;
-        background-color: gray;
-    }
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
-    .minheader {
-        text-align: right;
-        color: black;
-    }
-</style>
+    <link th:href="@{/css/fragments.css}" rel="stylesheet">
+
+</head>
 
 <body>
-
-    <div th:fragment="header">
-        <div class="login minheader">
-            <li class="minheader" sec:authorize="isAnonymous()">
-                <a href="/members/login">로그인</a>
-            </li>
-            <li class="minheader" sec:authorize="isAuthenticated()">
-                <a href="/members/modify">회원정보수정</a>
-            </li>
-            <li class="minheader" sec:authorize="isAuthenticated()">
-                <a href="/members/logout">로그아웃</a>
-            </li>
-        </div>
+<div th:fragment="header1" class="hd1">
+    <div class="imgcontent">
     </div>
+
+    <nav class="navbar navbar-expand-sm ">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03"
+                aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <a href="/">
+            <img th:src="@{/img/logo_w.png}" />
+        </a>
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+            <ul class="nav nav-pills">
+                <li class="nav-item" sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
+                    <a class="nav-link" href="/admin/item/new">상품 등록</a>
+                </li>
+                <li class="nav-item" sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
+                    <a class="nav-link" href="/admin/items">상품 관리</a>
+                </li>
+                <li class="nav-item" sec:authorize="isAuthenticated()">
+                    <a class="nav-link" href="/cart">장바구니</a>
+                </li>
+                <li class="nav-item" sec:authorize="isAuthenticated()">
+                    <a class="nav-link" href="/orders">구매이력</a>
+                </li>
+                <li class="nav-item" sec:authorize="isAnonymous()">
+                    <a class="nav-link" href="/members/login">로그인</a>
+                </li>
+                <li class="nav-item" sec:authorize="isAuthenticated()">
+                    <a class="nav-link" href="/members/modify">회원정보수정</a>
+                </li>
+                <li class="nav-item" sec:authorize="isAuthenticated()">
+                    <a class="nav-link" href="/members/logout">로그아웃</a>
+                </li>
+            </ul>
+        </div>
+        <div class="dropdown dropstart ">
+            <button data-bs-toggle="dropdown">
+                    <span class="material-symbols-outlined">
+                        menu
+                        </span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><h5 class="dropdown-header">Dropdown header 1</h5></li>
+                <li><a class="dropdown-item" href="#">Link 1</a></li>
+                <li><a class="dropdown-item" href="#">Link 2</a></li>
+                <li><a class="dropdown-item" href="#">Link 3</a></li>
+                <li><h5 class="dropdown-header">Dropdown header 2</h5></li>
+                <li><a class="dropdown-item" href="#"><span class="material-symbols-outlined">
+                    
+                    </span>logout</a></li>
+            </ul>
+        </div>
+    </nav>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+     const currentUrl = window.location.pathname;
+     const navLinks = document.querySelectorAll('.nav-link');
+
+     navLinks.forEach(link => {
+         const linkUrl = link.getAttribute('href');
+
+         // 현재 URL이 링크 URL로 시작하는지 확인
+         if (currentUrl === linkUrl || currentUrl.startsWith(linkUrl)) {
+             link.classList.add('active');
+             console.log(`Active class added to: ${linkUrl}`);
+         }
+     });
+ });
+
+
+</script>
 </body>
 
 </html>
