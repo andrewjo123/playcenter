@@ -392,6 +392,7 @@
             //modify reveiw
 
             var reviewnum;
+            var grade2;
 
             $(".reviewList").on("click", ".card-body", function () {
 
@@ -405,7 +406,7 @@
                 console.log(targetReview.data("mid"));
                 inputMid.val(targetReview.data("mid"));
                 inputText.val(targetReview.find('.card-title').text().trim());
-                var grade2 = $(this).find(".reviewgrade").data("grade2"); // 리뷰 목록에서 사용
+                grade2 = $(this).find(".reviewgrade").data("grade2"); // 리뷰 목록에서 사용
                 console.log(grade2);
 
                 //.starrr초기화
@@ -429,7 +430,7 @@
 
             $(".modifyBtn").on("click", function () {
 
-                var data = { reviewnum: reviewnum, id: id, grade: grade, text: inputText.val(), email: inputMid.val() };
+                var data = { reviewnum: reviewnum, id: id, grade: grade2, text: inputText.val(), email: inputMid.val() };
 
                 console.log(data);
 
