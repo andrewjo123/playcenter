@@ -94,17 +94,6 @@ public class ItemController {
 
         return "redirect:/";
     }
-    //조민 물품 삭제 추가
-    @PostMapping(value = "/admin/item/delete/{itemId}")
-    public String deleteItem(@PathVariable("itemId") Long itemId, Model model) {
-        try {
-            itemService.deleteItem(itemId);
-        } catch (EntityNotFoundException e) {
-            model.addAttribute("errorMessage", "상품을 삭제하는 중 오류가 발생했습니다.");
-            return "redirect:/admin/items";  // 오류 발생 시 목록 페이지로 리다이렉트
-        }
-        return "redirect:/admin/items";  // 삭제 후 목록 페이지로 리다이렉트
-    }
 
     @GetMapping(value = {"/admin/items", "/admin/items/{page}"})
     public String itemManage(ItemSearchDto itemSearchDto, @PathVariable("page") Optional<Integer> page, Model model){
