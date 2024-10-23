@@ -16,6 +16,8 @@ import com.playground.security.dto.PlayAuthMemberDTO;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -50,6 +52,16 @@ public class PlayOAuth2UserDetailsService extends DefaultOAuth2UserService {
         // 구글외 카카오톡이거나 네이버이면 코드 추가한다. else if
         if(clientName.equals("Google")){
             email = oAuth2User.getAttribute("email");
+        } else if(clientName.equals("Naver")){
+            Map<String, Object> response= oAuth2User.getAttribute("response");
+            if (response != null) {
+                email=(String) response.get("email");
+            }
+        } else if(clientName.equals("Kakao")){
+            Map<String, Object> response= oAuth2User.getAttribute("kakao_account");
+            if (response != null) {
+                email=(String) response.get("email");
+            }
         }
 
         log.info("EMAIL: " + email);
@@ -67,6 +79,10 @@ public class PlayOAuth2UserDetailsService extends DefaultOAuth2UserService {
             //다른 소셜로그인 쓸거면 추가
             if(clientName.equals("Google")){
                 session.setAttribute("site","google");
+            }else if(clientName.equals("Naver")){
+                session.setAttribute("site","naver");
+            }else if(clientName.equals("Kakao")){
+                session.setAttribute("site","kakao");
             }
             throw new OAuth2AuthenticationException("계정병합을 하시겠습니까.");
         } else{
