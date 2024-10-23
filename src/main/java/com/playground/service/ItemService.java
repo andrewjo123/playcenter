@@ -22,6 +22,4 @@ public interface ItemService {
     Page<MainItemDto> getMainItemPage(ItemSearchDto itemSearchDto, Pageable pageable);
 
     Page<MainItemDto> getMainItemPage2(String company, ItemSearchDto itemSearchDto, Pageable pageable);
-    //물품삭제
-    void deleteItem(Long itemId);
 }

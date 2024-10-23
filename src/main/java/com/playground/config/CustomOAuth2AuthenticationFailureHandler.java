@@ -5,13 +5,26 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationFa
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 
 public class CustomOAuth2AuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException {
-        response.sendRedirect("/members/modify2");
+        String error = (String) request.getSession().getAttribute("error");
+        request.getSession().removeAttribute("error");
+
+        String redirectUrl="";
+        if ("add".equals(error)) {
+            request.getSession().removeAttribute("site");
+            redirectUrl = "/members/modify2";
+        } else if ("merge".equals(error)) {
+            redirectUrl = "/members/confirm";
+        } else {
+            request.getSession().removeAttribute("site");
+            request.getSession().removeAttribute("email");
+            redirectUrl = "/members/login/error";
+        }
+        response.sendRedirect(redirectUrl);
     }
 }

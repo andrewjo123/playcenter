@@ -66,41 +66,6 @@ public class ItemServiceImpl implements ItemService {
 
         return item.getId();
     }
-    //아이템 삭제
-    @Override
-    public void deleteItem(Long itemId) {
-        // 1. 아이템을 찾기.
-        Item item = itemRepository.findById(itemId)
-                .orElseThrow(() -> new EntityNotFoundException("해당 상품을 찾을 수 없습니다."));
-        // 2. 리뷰 삭제
-        reviewRepository.deleteByItemId(itemId);
-        // 3. 아이템 삭제
-        itemRepository.delete(item);
-        // 4. 아이템 카테고리 삭제
-        categoryRepository.deleteByItemId(itemId);
-        // 5. 이미지 삭제
-        itemImgRepository.deleteByItemId(itemId);
-        List<ItemImg> itemImgList = itemImgRepository.findByItemId(itemId);  // itemId와 관련된 모든 이미지를 조회
-        for (ItemImg itemImg : itemImgList) {
-            // 이미지 파일명을 가져옴
-            String imgName = itemImg.getImgName();
-            // 파일명이 null이거나 빈 문자열이 아닌지 확인
-            if (imgName != null && !imgName.trim().isEmpty()) {
-                Path imagePath = Paths.get("C:\\shop\\item\\" + imgName);  // 전체 파일 경로 생성
-                try {
-                    // 파일이 존재하면 삭제
-                    Files.deleteIfExists(imagePath);
-                } catch (IOException e) {
-                    // 파일 삭제 실패 시 예외 처리
-                    e.printStackTrace();
-                }
-            } else {
-                // 파일명이 null이거나 빈 문자열인 경우 로깅
-                System.out.println("유효하지 않은 파일명: " + imgName);
-            }
-        }
-    }
-
   
     @Override
     public ItemFormDto getItemDtl(Long itemId) {

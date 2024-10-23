@@ -171,5 +171,13 @@ public class MemberServiceImpl implements MemberService {
         sMember.setRole(Role.USER);
         memberRepository.save(sMember);
     }
+
+    // 1022 1600 추가
+    @Override
+    public void changeSocial(String email) {
+        Member nonSocial = memberRepository.findByEmail(email);
+        nonSocial.setFromSocial(true);
+        memberRepository.save(nonSocial);
+    }
     // 추가 끝
 }
