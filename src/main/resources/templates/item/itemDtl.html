@@ -102,6 +102,9 @@
 
     </div>
 
+     <!-- 로그인 여부에 따라 hidden 필드에 값 설정 -->
+<input type="hidden" id="isLoggedIn" th:value="${email != null ? 'true' : 'false'}">
+
 
     <div class="reviewModal modal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
@@ -290,31 +293,39 @@
             var inputMid = $('input[name="email"]');
             var inputText = $('input[name="text"]');
 
-
             $(".addReviewBtn").click(function () {
-                grade=0;
+    // 로그인 여부 확인
+    var isLoggedIn = $("#isLoggedIn").val();
+    
+    if (isLoggedIn === "false") {
+        // 로그인되지 않았을 경우 팝업 띄우기
+        alert("로그인이 필요합니다. 로그인 페이지로 이동합니다.");
+        window.location.href = "/members/login";  // 로그인 페이지로 리디렉션
+    } else {
+        // 로그인되었을 경우 리뷰 작성 모달창 표시
+        grade = 0;
+        inputText.val("");
 
-                inputText.val("");
+        //.starrr초기화
+        var star = $(".starrr").clone();
+        $(".starrr").remove();
+        $("#divGrade").append(star);
+        $('.starrr').starrr({
+            rating: grade,
+            change: function (e, value) {
+                if (value) {
+                    console.log(value);
+                    grade = value;
+                }
+            }
+        });
 
-                //.starrr초기화
-                var star=$(".starrr").clone();
-                $(".starrr").remove();
-                $("#divGrade").append(star);
-                $('.starrr').starrr({
-                    rating: grade,
-                    change: function(e, value){
-                        if (value) {
-                            console.log(value);
-                            grade = value;
-                        }
-                    }
-                });
+        $(".removeBtn ,  .modifyBtn").hide();
+        $(".reviewSaveBtn").show();
 
-                $(".removeBtn ,  .modifyBtn").hide();
-                $(".reviewSaveBtn").show();
-
-                reviewModal.modal('show');
-            });
+        reviewModal.modal('show');
+    }
+});
 
 
             $('.reviewSaveBtn').click(function () {
