@@ -10,11 +10,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,6 +26,7 @@ public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
     private final EmailRepository emailRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public Member saveMember(Member member) {
@@ -74,9 +77,9 @@ public class MemberServiceImpl implements MemberService {
 
     //추가
     @Override
-    public MemberFormDto getUser(String email){
-        Member member=memberRepository.findByEmail(email);
-        MemberFormDto dto=new MemberFormDto();
+    public MemberFormDto getUser(String email) {
+        Member member = memberRepository.findByEmail(email);
+        MemberFormDto dto = new MemberFormDto();
         dto.setEmail(member.getEmail());
         dto.setAddress(member.getAddress());
         dto.setAddressCode(member.getAddressCode());
@@ -88,12 +91,12 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public String validateEmail(String email) {
-        String result="";
+        String result = "";
         Member findMember = memberRepository.findByEmail(email);
         if (findMember != null) {
-            result="exist";
-        } else{
-            result="none";
+            result = "exist";
+        } else {
+            result = "none";
         }
         return result;
     }
@@ -113,17 +116,17 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public String compareCode(String email,String code) {
-        String result="";
-        Email getInfo=emailRepository.findByEmail(email);
+    public String compareCode(String email, String code) {
+        String result = "";
+        Email getInfo = emailRepository.findByEmail(email);
         System.out.println(getInfo.getAuthCode());
         System.out.println(email);
         System.out.println(code);
         System.out.println("---------------------------");
-        if(getInfo.getAuthCode().equals(code)){
-            result="ok";
-        } else{
-            result="not";
+        if (getInfo.getAuthCode().equals(code)) {
+            result = "ok";
+        } else {
+            result = "not";
         }
         return result;
     }
@@ -135,7 +138,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public List<String> findEmail(String name, String phone) {
-        Object[] emails=memberRepository.findEmail(name,phone);
+        Object[] emails = memberRepository.findEmail(name, phone);
         List<String> emailList = Arrays.stream(emails)
                 .map(Object::toString) // Convert each Object to String
                 .collect(Collectors.toList());
@@ -145,21 +148,21 @@ public class MemberServiceImpl implements MemberService {
     // 비밀번호 변경 이메일 보내기 전 검증
     @Override
     public String validBeforeSendPwd(String email, String name, String phone) {
-        String result="";
+        String result = "";
 
-        Member member=memberRepository.findByEmail(email);
+        Member member = memberRepository.findByEmail(email);
         if (member == null) {
-            return result="noEmail";
+            return result = "noEmail";
         }
-        if(member.getName().equals(name)&&member.getPhone().equals(phone)){
-            return result="valid";
+        if (member.getName().equals(name) && member.getPhone().equals(phone)) {
+            return result = "valid";
         }
-        return result="notValid";
+        return result = "notValid";
     }
 
     @Override
     public void registSocialMember(MemberFormDto dto) {
-        Member sMember=new Member();
+        Member sMember = new Member();
         sMember.setName(dto.getName());
         sMember.setEmail(dto.getEmail());
         sMember.setPassword(dto.getPassword());
@@ -179,5 +182,24 @@ public class MemberServiceImpl implements MemberService {
         nonSocial.setFromSocial(true);
         memberRepository.save(nonSocial);
     }
-    // 추가 끝
+
+    // 1023 1500 추가
+    @Override
+    public String valideResign(MemberFormDto dto) {
+        Member member = memberRepository.findByEmail(dto.getEmail());
+        String result = "";
+        if (member != null && passwordEncoder.matches(dto.getPassword(), member.getPassword())) {
+            result = "success";
+        } else {
+            result = "notFound";
+        }
+        return result;
+    }
+
+    @Override
+    public void changeResign(String email) {
+        Member member = memberRepository.findByEmail(email);
+        member.setResign(!member.isResign());
+        memberRepository.save(member);
+    }
 }

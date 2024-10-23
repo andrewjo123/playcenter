@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -65,6 +66,13 @@ public class PlayOAuth2UserDetailsService extends DefaultOAuth2UserService {
         }
 
         log.info("EMAIL: " + email);
+
+        Optional<Member> isResign=repository.findByEmailAndResign(email, true);
+        if(isResign.isPresent()){
+            HttpSession session = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest().getSession();
+            session.setAttribute("resign", "resign");
+            throw new UsernameNotFoundException("Check User Email or from Social");
+        }
 
         Optional<Member> result = repository.findByEmailAndFromSocial(email, true);
         Optional<Member> result2 = repository.findByEmailAndFromSocial(email, false);

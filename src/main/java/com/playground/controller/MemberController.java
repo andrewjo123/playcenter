@@ -78,9 +78,14 @@ public class MemberController {
     }
 
     @GetMapping(value = "/login/error")
-    public String loginError(Model model){
-        System.out.println("controlerrrrrrrrrrrrrrrrr");
-        model.addAttribute("loginErrorMsg", "아이디 또는 비밀번호를 확인해주세요");
+    public String loginError(Model model,HttpServletRequest request){
+        String site=(String) request.getSession().getAttribute("resign");
+        if(site==null|| site.isEmpty()){
+            model.addAttribute("loginErrorMsg", "아이디 또는 비밀번호를 확인해주세요");
+        } else {
+            request.getSession().removeAttribute("resign");
+            model.addAttribute("loginErrorMsg", "회원 탈퇴 신청된 계정입니다. 복구를 원하시면 관리자에게 문의하세요.");
+        }
         return "member/memberLoginForm";
     }
     // 정관수 추가
@@ -246,6 +251,17 @@ public class MemberController {
             // 사용자가 거부한 경우
             return "redirect:/members/login/error"; // 로그인 실패로 리다이렉트
         }
+    }
+
+    // 회원탈퇴
+    @RequestMapping(value="/resign",method = {RequestMethod.POST})
+    @ResponseBody
+    public ResponseEntity<String> goResign(MemberFormDto dto){
+
+        String result=memberService.valideResign(dto);
+        memberService.changeResign(dto.getEmail());
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
 

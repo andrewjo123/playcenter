@@ -17,4 +17,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     //추가
     @Query("select m from Member m join Order o on o.member=m where o.id = :orderId")
     Member findBuyer(@Param("orderId") Long orderId);
+    //추가 1023 1330
+    Optional<Member> findByEmailAndResign(String email, boolean resign);
 }

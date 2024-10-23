@@ -30,9 +30,15 @@ public class PlayUserDetailsService implements UserDetailsService {
         log.info("PlayUserDetailsService loadUserByUsername " + username);
         Member result = memberRepository.findByEmail(username);
 
+
         // result가 존재하는지 확인하는 로그 추가
         if (result==null) {
             log.warn("No member found with email: " + username + " and fromSocial: false");
+            throw new UsernameNotFoundException("Check User Email or from Social");
+        }
+
+        Optional<Member> isResign=memberRepository.findByEmailAndResign(username, true);
+        if(isResign.isPresent()){
             throw new UsernameNotFoundException("Check User Email or from Social");
         }
 

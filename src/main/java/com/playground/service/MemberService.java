@@ -25,4 +25,8 @@ public interface MemberService extends UserDetailsService {
 
     // 10.22 1600추가
     public void changeSocial(String email);
+
+    // 10.23 1500추가
+    public String valideResign(MemberFormDto dto);
+    public void changeResign(String email);
 }
