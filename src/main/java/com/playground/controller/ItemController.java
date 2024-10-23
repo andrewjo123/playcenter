@@ -3,13 +3,18 @@ package com.playground.controller;
 import com.playground.dto.ItemFormDto;
 import com.playground.dto.ItemSearchDto;
 import com.playground.entity.Item;
+import com.playground.security.service.PlayUserDetailsService;
 import com.playground.service.ItemService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -22,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 public class ItemController {
@@ -109,9 +115,17 @@ public class ItemController {
     }
 
     @GetMapping(value = "/item/{itemId}")
-    public String itemDtl(Model model, @PathVariable("itemId") Long itemId){
+    public String itemDtl(Model model, @PathVariable("itemId") Long itemId, @AuthenticationPrincipal UserDetails userDetails){
         ItemFormDto itemFormDto = itemService.getItemDtl(itemId);
         model.addAttribute("item", itemFormDto);
+
+        // 로그인한 사용자 이메일 추가
+        if (userDetails != null) {
+            String email = userDetails.getUsername();// 이메일 정보 가져오기
+            log.info("로그인한 사람 %%%%% : "+email);
+            model.addAttribute("email", email);
+        }
+
         return "item/itemDtl";
     }
 

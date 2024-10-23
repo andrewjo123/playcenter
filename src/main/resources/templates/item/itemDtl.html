@@ -56,7 +56,7 @@
             </div>
             <div th:unless="${item.itemSellStatus == T(com.playground.constant.ItemSellStatus).SELL}"
                  class="text-right">
-                <button type="button" class="btn btn-danger btn-lg">품절</button>
+                <button type="button" class="btn btn-danger btn-lg no-cursor">품절</button>
             </div>
         </div>
     </div>
@@ -116,7 +116,7 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label>Reviewer ID</label>
-                        <input type="text" class="form-control" name="email">
+                        <input type="text" class="form-control" name="email" th:value="${email}" readonly>
                     </div>
                     <div class="form-group" id="divGrade">
                         <label>Grade <span class="grade"></span></label>
@@ -293,7 +293,7 @@
 
             $(".addReviewBtn").click(function () {
                 grade=0;
-                inputMid.val("");
+
                 inputText.val("");
 
                 //.starrr초기화

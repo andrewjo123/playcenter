@@ -70,6 +70,10 @@
     padding: 10px;
 }
 
+.itemDtl .no-cursor {
+    cursor: default;
+}
+
 
 /* itemForm--------------------------------------------------------*/
 
