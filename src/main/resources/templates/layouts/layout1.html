@@ -19,10 +19,46 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=menu" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
+    <script>
+        function cartCount(){
+            var exist=$("#ppEmail").text();
+            console.log(exist+"123");
+            if(exist!=""&&exist!=null){
+                console.log("1차");
+                $.ajax({
+                    url:'/cartCount',
+                    type:"GET",
+                    data:{email:exist},
+                    dataType:"text",
+                    success:function(result){
+                        console.log("2차");
+                        if(result>0){
+                            console.log("3차");
+                            $("#getCount").text(result);
+                        }
+                    }
+                });
+            }
+        }
+        $(document).ready(function(){
+            cartCount();
+        });
 
-
-    
-
+    <!--    document.addEventListener("DOMContentLoaded", function() {-->
+    <!--        const currentUrl = window.location.pathname;-->
+    <!--        const navLinks = document.querySelectorAll('.nav-link');-->
+    <!--        -->
+    <!--        navLinks.forEach(link => {-->
+    <!--         const linkUrl = link.getAttribute('href');-->
+    <!--        -->
+    <!--         // 현재 URL이 링크 URL로 시작하는지 확인-->
+    <!--         if (currentUrl === linkUrl || currentUrl.startsWith(linkUrl)) {-->
+    <!--             link.classList.add('active');-->
+    <!--             console.log(`Active class added to: ${linkUrl}`);-->
+    <!--         }-->
+    <!--        });-->
+    <!--    });-->
+    </script>
 
     <th:block layout:fragment="script"></th:block>
     <th:block layout:fragment="css"></th:block>
@@ -31,7 +67,6 @@
 </head>
 
 <body>
-
 <div th:replace="~{fragments/header1::header1}"></div>
 
 <div th:replace="~{fragments/header::header}"></div>
