@@ -3,6 +3,9 @@ package com.playground.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.playground.dto.ReviewDto;
@@ -23,13 +26,16 @@ public class ReviewServiceImpl implements ReviewService {
     private final ReviewRepository reviewRepository;
     private final MemberRepository memberRepository;
 
+    //add paging
     @Override
-    public List<ReviewDto> getListOfItem(Long id) {
+    public Page<ReviewDto> getListOfItem(Long id, Pageable pageable) {
         Item item = Item.builder().id(id).build();
-        System.out.println(item);
-        List<Review> result = reviewRepository.findByItem(item);
-        System.out.println(result);
-        return result.stream().map(itemReview->entityToDto(itemReview)).collect(Collectors.toList());
+        log.info("Fetching reviews for item: {}", id);
+
+        // 페이징을 적용하여 리뷰 리스트를 반환
+        Page<Review> result = reviewRepository.findByItem(item, pageable);
+        // return result.stream().map(itemReview->entityToDto(itemReview)).collect(Collectors.toList());
+        return result.map(this::entityToDto);  // Stream 대신 Page의 map 메소드 사용
         
     }
 
