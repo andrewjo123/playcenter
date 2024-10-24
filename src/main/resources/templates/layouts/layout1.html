@@ -40,24 +40,22 @@
                 });
             }
         }
+
         $(document).ready(function(){
             cartCount();
-        });
+            const currentUrl = window.location.pathname;
+            const navLinks = document.querySelectorAll('.nav-link');
 
-    <!--    document.addEventListener("DOMContentLoaded", function() {-->
-    <!--        const currentUrl = window.location.pathname;-->
-    <!--        const navLinks = document.querySelectorAll('.nav-link');-->
-    <!--        -->
-    <!--        navLinks.forEach(link => {-->
-    <!--         const linkUrl = link.getAttribute('href');-->
-    <!--        -->
-    <!--         // 현재 URL이 링크 URL로 시작하는지 확인-->
-    <!--         if (currentUrl === linkUrl || currentUrl.startsWith(linkUrl)) {-->
-    <!--             link.classList.add('active');-->
-    <!--             console.log(`Active class added to: ${linkUrl}`);-->
-    <!--         }-->
-    <!--        });-->
-    <!--    });-->
+            navLinks.forEach(link => {
+                const linkUrl = link.getAttribute('href');
+
+                // 현재 URL이 링크 URL로 시작하는지 확인
+                if (currentUrl === linkUrl || currentUrl.startsWith(linkUrl)) {
+                 link.classList.add('active');
+                 console.log(`Active class added to: ${linkUrl}`);
+                }
+            });
+        });
     </script>
 
     <th:block layout:fragment="script"></th:block>
