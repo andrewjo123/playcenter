@@ -4,10 +4,7 @@ import com.playground.dto.OrderDto;
 import com.playground.dto.OrderHistDto;
 import com.playground.dto.OrderItemDto;
 import com.playground.entity.*;
-import com.playground.repository.ItemImgRepository;
-import com.playground.repository.ItemRepository;
-import com.playground.repository.MemberRepository;
-import com.playground.repository.OrderRepository;
+import com.playground.repository.*;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -19,6 +16,7 @@ import org.thymeleaf.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -29,6 +27,8 @@ public class OrderServiceImpl implements OrderService {
     private final MemberRepository memberRepository;
     private final OrderRepository orderRepository;
     private final ItemImgRepository itemImgRepository;
+    private final ItemCodeRepository codeRepository;
+    private final EmailService emailService;
 
     @Override
     public Long order(OrderDto orderDto, String email) {
@@ -162,5 +162,38 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void removeList(Long orderId) {
         orderRepository.deleteById(orderId);
+    }
+
+    //1023 1740추가
+    @Override
+    @Transactional
+    public String sendAllCodes(Long orderId, String email) {
+        String result = "";
+        StringBuilder mail_body=new StringBuilder();
+        Member member1=memberRepository.findByEmail(email);
+        Optional<Order> order = orderRepository.findById(orderId);
+        if (order.isPresent()){
+            List<OrderItem> orderItems = order.get().getOrderItems();
+            List<ItemCode> gatherCodes = new ArrayList<>();
+            orderItems.forEach(item ->{
+                int count=item.getCount();
+                List<ItemCode> codeList=codeRepository.getCode(count);
+                codeList.forEach(code1->{
+                    mail_body.append(item.getItem().getItemNm());
+                    mail_body.append(": ").append(code1.getCodNum()).append("\n");
+                    code1.setMember(member1);
+                    gatherCodes.add(code1);
+                });
+            });
+            //이메일 발송 로직구현
+            codeRepository.saveAll(gatherCodes);
+            order.get().setSendCode(true);
+            orderRepository.save(order.get());
+            emailService.sendEmail(email, "[놀이마당] 게임코드 발송", String.valueOf(mail_body));
+            result="success";
+        } else{
+            result="none";
+        }
+        return result;
     }
 }

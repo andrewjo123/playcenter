@@ -65,8 +65,11 @@ public class Order extends BaseEntity {
             orderItem.cancel();
         }
     }
-    //추가
     @ColumnDefault("false")
     private boolean isPayed;
+    
+    //추가
+    @ColumnDefault("false")
+    private boolean sendCode;
 
 }

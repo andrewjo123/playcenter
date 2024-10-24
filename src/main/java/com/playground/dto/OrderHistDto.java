@@ -16,6 +16,7 @@ public class OrderHistDto {
         this.orderId = order.getId();
         this.orderDate = order.getOrderDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
         this.orderStatus = order.getOrderStatus();
+        this.sendCode=order.isSendCode();
     }
 
     private Long orderId; //주문아이디
@@ -29,6 +30,9 @@ public class OrderHistDto {
         orderItemDtoList.add(orderItemDto);
     }
 
-    //추가
+
     private boolean isPayed;// 결제여부
+
+    //추가
+    private boolean sendCode;// 코드 발송 여부
 }

@@ -176,4 +176,17 @@ public class OrderController {
         refundService.refundWithToken(token,orderId);
         return new ResponseEntity<>("refund", HttpStatus.OK);
     }
+
+    // 1023 1730 추가
+    @PostMapping("/order/sendCode")
+    @ResponseBody
+    public ResponseEntity<String> sendCodes(@RequestParam("orderId") Long orderId , Principal principal) throws IOException {
+
+        if(!orderService.validateOrder(orderId, principal.getName())){
+            return new ResponseEntity<String>("코드발송권한이 없습니다.", HttpStatus.FORBIDDEN);
+        }
+        String email=principal.getName();
+        String result=orderService.sendAllCodes(orderId,email);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 }
