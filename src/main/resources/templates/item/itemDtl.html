@@ -68,7 +68,7 @@
             별점:
             <span th:if="${item.avg == 0}">평점 없음</span>
             <span th:if="${item.avg > 0}">
-                <span th:text="${item.avg}"></span>
+                <span th:text="${#numbers.formatDecimal(item.avg, 1, 1)}"></span>
                 <span th:each="i : ${#numbers.sequence(1, item.avg)}">
                     <i class="fas fa-star"></i>
                 </span>
@@ -104,6 +104,8 @@
 
      <!-- 로그인 여부에 따라 hidden 필드에 값 설정 -->
 <input type="hidden" id="isLoggedIn" th:value="${email != null ? 'true' : 'false'}">
+<input type="hidden" id="isLoginCheck" th:value="${email}">
+
 
 
     <div class="reviewModal modal" tabindex="-1" role="dialog">
@@ -407,37 +409,40 @@
 
             $(".reviewList").on("click", ".card-body", function () {
 
-                $(".reviewSaveBtn").hide();
-                $(".removeBtn , .modifyBtn").show();
+                var isLoginCheck = $("#isLoginCheck").val(); // 로그인된 사용자 이메일 값
+    var reviewEmail = $(this).data("mid"); // 리뷰 작성자의 이메일 값 (data-mid 속성에서 가져옴)
 
+    if (isLoginCheck === reviewEmail) {
+        // 로그인한 사용자와 리뷰 작성자가 같을 때 모달창 표시
+        $(".reviewSaveBtn").hide();
+        $(".removeBtn , .modifyBtn").show();
+        reviewModal.modal('show');
+    } else {
+        // 같지 않으면 팝업 메시지 표시
+        alert("본인의 리뷰만 수정할 수 있습니다.");
+    }
 
-                var targetReview = $(this);
+    // 리뷰 정보를 모달창에 표시
+    var targetReview = $(this);
+    reviewnum = targetReview.data("reviewnum");
+    inputMid.val(targetReview.data("mid"));
+    inputText.val(targetReview.find('.card-title').text().trim());
+    var grade2 = targetReview.find(".reviewgrade").data("grade2");
 
-                reviewnum = targetReview.data("reviewnum");
-                console.log(targetReview.data("mid"));
-                inputMid.val(targetReview.data("mid"));
-                inputText.val(targetReview.find('.card-title').text().trim());
-                grade2 = $(this).find(".reviewgrade").data("grade2"); // 리뷰 목록에서 사용
-                console.log(grade2);
+    // starrr 초기화
+    var star = $(".starrr").clone();
+    $(".starrr").remove();
+    $("#divGrade").append(star);
 
-                //.starrr초기화
-                var star=$(".starrr").clone();
-                $(".starrr").remove();
-                $("#divGrade").append(star);
-
-                $(".starrr").starrr({
-                rating:grade2,
-                    change: function(e, value){
-                        if (value) {
-                            console.log(value);
-                            grade2 = value;
-                        }
-                    }
-                });
-
-                $('.reviewModal').modal('show');
-            });
-
+    $(".starrr").starrr({
+        rating: grade2,
+        change: function (e, value) {
+            if (value) {
+                grade2 = value;
+            }
+        }
+    });
+});
 
             $(".modifyBtn").on("click", function () {
 
