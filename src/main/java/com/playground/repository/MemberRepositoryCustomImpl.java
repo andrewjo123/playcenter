@@ -1,6 +1,7 @@
 package com.playground.repository;
 
 
+import com.playground.constant.Role;
 import com.playground.dto.MemberSearchDto;
 import com.playground.entity.Member;
 import com.playground.entity.QMember;
@@ -58,7 +59,8 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
                     .selectFrom(QMember.member)
                     .where(
                             searchStatusEq(memberSearchDto.getSearchStatus()),  // 활성화/비활성화 상태 필터
-                            searchByLike(memberSearchDto.getSearchBy(), memberSearchDto.getSearchQuery()) // 통합 검색 필터
+                            searchByLike(memberSearchDto.getSearchBy(), memberSearchDto.getSearchQuery()), // 통합 검색 필터
+                            excludeAdminRole() // admin 역할 제외 필터
                     )
                     .orderBy(QMember.member.id.desc())  // 최신순으로 정렬
                     .offset(pageable.getOffset())  // 페이지네이션 오프셋 설정
@@ -71,7 +73,8 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
                     .from(QMember.member)
                     .where(
                             searchStatusEq(memberSearchDto.getSearchStatus()),
-                            searchByLike(memberSearchDto.getSearchBy(), memberSearchDto.getSearchQuery())
+                            searchByLike(memberSearchDto.getSearchBy(), memberSearchDto.getSearchQuery()),
+                            excludeAdminRole() // admin 역할 제외 필터
                     )
                     .fetchOne();
 
@@ -92,6 +95,11 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
     // 활성화/비활성화 상태 검색 조건
     private BooleanExpression resignStatusEq(Boolean resign) {
         return resign == null ? null : QMember.member.resign.eq(resign);
+    }
+
+    // admin 역할을 제외하는 조건
+    private BooleanExpression excludeAdminRole() {
+        return QMember.member.role.ne(Role.ADMIN);
     }
 
 
