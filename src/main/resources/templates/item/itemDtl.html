@@ -82,6 +82,13 @@
     <!-- 리뷰 등록 버튼 -->
     <button type="button" class="btn btn-info addReviewBtn">Review Register</button>
 
+    <!-- 리뷰 별점 높은순 버튼 -->
+    <button class="sortByRating">별점 높은 순</button>
+
+    <!-- 리뷰 별점 낮은순 버튼 -->
+<button class="sortByLowRating">별점 낮은 순</button>
+
+
     <!-- 리뷰 목록 -->
     <div class="list-group reviewList"></div>
 
@@ -253,29 +260,34 @@
     </th:block>
     <th:block layout:fragment="script">
         <script th:inline="javascript">
-            $(document).ready(function () {
+        $(document).ready(function () {
 
-var grade = 0;
-var grade2 = 0; // grade2 변수 초기화
-var id = [[${ item.id }]];
-var reviewnum;
+    var grade = 0;
+    var grade2 = 0; // grade2 변수 초기화
+    var id = [[${ item.id }]];
+    var reviewnum;
 
-// 리뷰 모달 관련 변수 정의
-var reviewModal = $(".reviewModal");
-var inputMid = $('input[name="email"]');
-var inputText = $('input[name="text"]');
+    // 리뷰 모달 관련 변수 정의
+    var reviewModal = $(".reviewModal");
+    var inputMid = $('input[name="email"]');
+    var inputText = $('input[name="text"]');
 
-$.ajaxSetup({
-    headers: {
-        'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content')
-    }
-});
+    //리뷰 정렬 변수 정의
+    let currentPage = 0;
+    let currentSort = "regTime";
+
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content')
+        }
+    });
 
 // 리뷰 목록 로드 함수
-function loadReviews(page) {
+function loadReviews(page, sort="regTime") {
+    currentSort = sort;
     const itemId = $("#itemId").val();
     $.ajax({
-        url: `/reviews/${itemId}/all?page=${page}`,
+        url: `/reviews/${itemId}/all?page=${page}&sort=${sort}`,
         type: "GET",
         dataType: "json",
         success: function (data) {
@@ -312,21 +324,32 @@ function renderStars() {
     });
 }
 
+//별점 높은 순 버튼 클릭 이벤트
+$(".sortByRating").click(function(){
+    loadReviews(0, "rating");
+});
+
+ // 별점 낮은 순 버튼 클릭 이벤트
+ $(".sortByLowRating").click(function() {
+        loadReviews(0, "asc"); // 첫 페이지부터 별점 낮은 순 정렬
+    });
+
 // 첫 번째 페이지 로드
 loadReviews(0);
 
 // 이전 페이지
 $(".prevPage").click(function () {
     if (currentPage > 0) {
-        loadReviews(currentPage - 1);
+        loadReviews(currentPage - 1, currentSort);
     }
 });
 
 // 다음 페이지
 $(".nextPage").click(function () {
     if (currentPage < totalPages - 1) {
-        loadReviews(currentPage + 1);
+        loadReviews(currentPage + 1, currentSort);
     }
+
 });
 
 
