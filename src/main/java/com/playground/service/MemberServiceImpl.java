@@ -1,12 +1,16 @@
 package com.playground.service;
 
 import com.playground.constant.Role;
+import com.playground.dto.MemberDetailDto;
 import com.playground.dto.MemberFormDto;
+import com.playground.dto.MemberSearchDto;
 import com.playground.entity.Email;
 import com.playground.entity.Member;
 import com.playground.repository.EmailRepository;
 import com.playground.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -202,4 +206,13 @@ public class MemberServiceImpl implements MemberService {
         member.setResign(!member.isResign());
         memberRepository.save(member);
     }
+
+    //조민추가
+    @Transactional(readOnly = true)
+    @Override
+    public Page<Member> getAdminMemberPage(MemberSearchDto memberSearchDto, Pageable pageable) {
+        return memberRepository.getAdminMemberPage(memberSearchDto, pageable);
+    }
+
+    //조민 끝
 }

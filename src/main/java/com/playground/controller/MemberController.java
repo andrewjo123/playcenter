@@ -1,12 +1,17 @@
 package com.playground.controller;
 
+import com.playground.dto.MemberDetailDto;
 import com.playground.dto.MemberFormDto;
+import com.playground.dto.MemberSearchDto;
 import com.playground.entity.Member;
 import com.playground.service.EmailService;
 import com.playground.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -23,6 +28,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 @RequestMapping("/members")
@@ -266,5 +272,20 @@ public class MemberController {
 
 
     // 정관수 끝
+    // 조민 추가
+
+    @GetMapping(value = {"/manageMember", "/manageMember/{page}"})
+    public String memberManage(MemberSearchDto memberSearchDto, @PathVariable("page") Optional<Integer> page, Model model){
+
+        Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 3);  // 페이지네이션 설정
+        Page<Member> members = memberService.getAdminMemberPage(memberSearchDto, pageable);
+
+        model.addAttribute("members", members);  // 회원 리스트 전달
+        model.addAttribute("memberSearchDto", memberSearchDto);  // 검색 필드 전달
+        model.addAttribute("maxPage", 5);  // 최대 페이지 수 설정
+
+        return "member/memberMng";
+    }
+    //조민끝
 }
 
