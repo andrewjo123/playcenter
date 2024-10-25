@@ -6,6 +6,8 @@
 
 <head>
     <link th:href="@{/css/shop.css}" rel="stylesheet">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 </head>
 
 
@@ -33,6 +35,13 @@
                 <td th:text="${member.resign ? '비활성화' : '활성화'}"></td>
                 <td th:text="${member.role}"></td>
                 <td th:text="${member.regTime}"></td>
+                <td>
+                    <button type="button"
+                            th:text="${member.resign ? '활성화' : '비활성화'}"
+                            th:onclick="|toggleStatus(${member.id}, ${!member.resign})|">
+                        활성화/비활성화
+                    </button>
+                </td>
             </tr>
             </tbody>
         </table>
@@ -78,7 +87,7 @@
 </div>
 
 <!-- 사용자 스크립트 추가 -->
-<<th:block layout:fragment="script">
+<th:block layout:fragment="script">
     <script th:inline="javascript">
         $(document).ready(function(){
             $("#searchBtn").on("click",function(e) {
@@ -97,6 +106,36 @@
             + "&searchQuery=" + searchQuery
             + "&searchStatus=" + searchStatus;
         }
+
+        window.toggleStatus = function(memberId, newStatus) {
+        const action = newStatus ? "활성화" : "비활성화";
+        if (!confirm(`정말로 ${action} 하시겠습니까?`)) {
+            return; // 사용자가 취소를 누르면 함수 종료
+        }
+
+        const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute("content");
+        const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");
+
+        fetch('/members/toggleStatus', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                [csrfHeader]: csrfToken // CSRF 헤더 추가
+            },
+            body: JSON.stringify({ memberId: memberId, resign: newStatus })
+        })
+        .then(response => {
+            if (response.ok) {
+                location.reload(); // 변경된 상태를 반영하기 위해 페이지 새로고침
+            } else {
+                alert('상태 변경에 실패했습니다.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('상태 변경 중 오류가 발생했습니다.');
+        });
+    };
     </script>
 </th:block>
 

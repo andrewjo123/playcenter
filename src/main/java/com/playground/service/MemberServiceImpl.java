@@ -1,7 +1,6 @@
 package com.playground.service;
 
 import com.playground.constant.Role;
-import com.playground.dto.MemberDetailDto;
 import com.playground.dto.MemberFormDto;
 import com.playground.dto.MemberSearchDto;
 import com.playground.entity.Email;
@@ -20,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -212,6 +210,14 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public Page<Member> getAdminMemberPage(MemberSearchDto memberSearchDto, Pageable pageable) {
         return memberRepository.getAdminMemberPage(memberSearchDto, pageable);
+    }
+
+    @Transactional
+    public void toggleStatus(Long memberId, boolean resign) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 멤버"));
+        member.setResign(resign);  // 상태 변경
+        memberRepository.save(member);
     }
 
     //조민 끝

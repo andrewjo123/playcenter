@@ -286,6 +286,14 @@ public class MemberController {
 
         return "member/memberMng";
     }
+
+    @PostMapping("/toggleStatus")
+    public ResponseEntity<Void> toggleStatus(@RequestBody MemberDetailDto memberDetailDto) {
+        System.out.println("Received Member ID: {}" + memberDetailDto.getMemberId());
+        System.out.println("Received Resign Status: {}" + memberDetailDto.isResign());
+        memberService.toggleStatus(memberDetailDto.getMemberId(), memberDetailDto.isResign());
+        return ResponseEntity.ok().build();
+    }
     //조민끝
 }
 

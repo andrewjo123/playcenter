@@ -37,4 +37,7 @@ public interface MemberService extends UserDetailsService {
 
     //조민 - 회원목록 불러오기
     Page<Member> getAdminMemberPage(MemberSearchDto memberSearchDto, Pageable pageable);
+
+    //조민 - 활성상태변경
+    void toggleStatus(Long memberId, boolean resign);
 }
