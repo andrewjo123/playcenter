@@ -96,6 +96,42 @@
             <p class="lead" th:text="${item.itemDetail}"></p>
         </div>
     </div>
+    <!--   이미지캐러셀  -->
+    <div id="carouselControls" class="carousel slide text-center" data-ride="carousel" >
+
+        <div class="carousel-inner" data-interval="2200">
+            <div class="carousel-item active item">
+                <img th:src="${item.itemImgDtoList[0].imgUrl}" th:alt="${item.itemNm}" alt="First slide" class="d-block rounded">
+            </div>
+            <div class="carousel-item item">
+                <img th:src="${item.itemImgDtoList[1].imgUrl}" th:alt="${item.itemNm}" alt="Second slide" class="d-block rounded">
+            </div>
+            <div class="carousel-item item">
+                <img th:src="${item.itemImgDtoList[2].imgUrl}" th:alt="${item.itemNm}" alt="Third slide" class="d-block rounded">
+            </div>
+            <div class="carousel-item item">
+                <img th:src="${item.itemImgDtoList[3].imgUrl}" th:alt="${item.itemNm}" alt="Fourth slide" class="d-block rounded">
+            </div>
+        </div>
+
+
+        <ul class="carousel-indicators">
+            <li data-target="#carouselControls" data-slide-to="0" class="active"></li>
+            <li data-target="#carouselControls" data-slide-to="1"></li>
+            <li data-target="#carouselControls" data-slide-to="2"></li>
+            <li data-target="#carouselControls" data-slide-to="3"></li>
+        </ul>
+
+            <a class="carousel-control-prev" href="#carouselControlso" data-slide="prev">
+                <i class="fa-solid fa-chevron-left"></i>
+            </a>
+            <a class="carousel-control-next" href="#carouselControls" data-slide="next">
+                <i class="fa-solid fa-chevron-right"></i>
+            </a>
+
+
+    </div>
+    <!--   이미지캐러셀 end-->
 
     <div th:each="itemImg : ${item.itemImgDtoList}" class="text-center">
         <img th:if="${not #strings.isEmpty(itemImg.imgUrl)}" th:src="${itemImg.imgUrl}" class="rounded mgb-15" width="800">
