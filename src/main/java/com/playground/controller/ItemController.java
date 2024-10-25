@@ -12,18 +12,18 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -128,5 +128,23 @@ public class ItemController {
 
         return "item/itemDtl";
     }
+
+    // 1024추가
+    @GetMapping(value="/admin/insert/{itemId}")
+    public String insertCodes (@PathVariable("itemId") Long itemId, Model model){
+        ItemFormDto itemFormDto = itemService.getItemDtl(itemId);
+        model.addAttribute("itemId", itemId);
+        model.addAttribute("itemNm",itemFormDto.getItemNm());
+        return "item/insertCode";
+    }
+
+    @RequestMapping(value="/admin/insert/{itemId}",method = {RequestMethod.POST})
+    @ResponseBody
+    public ResponseEntity<Integer> insertCodesToDB(@PathVariable("itemId") Long itemId, @RequestBody List<String> jsonData) throws IOException {
+        int result=0;
+        result=itemService.saveCodes(itemId, jsonData);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+    // 추가 끝
 
 }

@@ -6,6 +6,7 @@ import com.playground.dto.ItemSearchDto;
 import com.playground.dto.MainItemDto;
 import com.playground.entity.Item;
 import com.playground.entity.ItemCategory;
+import com.playground.entity.ItemCode;
 import com.playground.entity.ItemImg;
 import com.playground.repository.*;
 import com.playground.repository.ItemRepository;
@@ -36,7 +37,7 @@ public class ItemServiceImpl implements ItemService {
     private final ItemImgService itemImgService;
     private final ItemImgRepository itemImgRepository;
     private final ItemCategoryRepository categoryRepository;
-    private final ReviewRepository reviewRepository;
+    private final ItemCodeRepository itemCodeRepository;
 
 
 
@@ -146,5 +147,25 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public Page<MainItemDto> getMainItemPage2(String company, ItemSearchDto itemSearchDto, Pageable pageable) {
         return itemRepository.getMainItemPage2(company, itemSearchDto, pageable);
+    }
+
+    // 1024추가
+    @Transactional
+    @Override
+    public int saveCodes(Long itemId, List<String> codes) {
+        Item item = itemRepository.findById(itemId).get();
+        List<ItemCode> itemCodes = new ArrayList<>();
+
+        codes.forEach(code -> {
+            ItemCode itemCode = new ItemCode();
+            itemCode.setItem(item);
+            itemCode.setCodNum(code);
+            itemCodes.add(itemCode);
+        });
+
+        itemCodeRepository.saveAll(itemCodes);
+        item.setStockNumber(item.getStockNumber()+codes.size());
+        itemRepository.save(item);
+        return codes.size(); // 반복한 횟수 반환
     }
 }
