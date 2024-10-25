@@ -108,7 +108,7 @@
         }
 
         window.toggleStatus = function(memberId, newStatus) {
-        const action = newStatus ? "활성화" : "비활성화";
+        const action = newStatus ? "비활성화" : "활성화";
         if (!confirm(`정말로 ${action} 하시겠습니까?`)) {
             return; // 사용자가 취소를 누르면 함수 종료
         }
