@@ -41,25 +41,70 @@
         <p th:if="${#fields.hasErrors('company')}" th:errors="*{company}" class="fieldError">Incorrect data</p>
 
         <div class="input-group">
-            <div class="input-group-prepend">
-                <span class="input-group-text">장르</span>
-            </div>
+            <span class="input-group-text">장르</span>
             <div class="label">
                 <label>
-                    <input type="radio" th:field="*{tag}" th:value="RPG" th:checked="${category == 'RPG'}"> RPG
+                    <input type="checkbox" th:field="*{itemCategoryDto.action}"> 액션
                 </label>
                 <label>
-                    <input type="radio" th:field="*{tag}" th:value="action" th:checked="${category == 'action'}"> 액션
+                    <input type="checkbox" th:field="*{itemCategoryDto.adventure}"> 모험
                 </label>
                 <label>
-                    <input type="radio" th:field="*{tag}" th:value="sports" th:checked="${category == 'sports'}"> 스포츠
+                    <input type="checkbox" th:field="*{itemCategoryDto.rpg}"> RPG
                 </label>
                 <label>
-                    <input type="radio" th:field="*{tag}" th:value="puzzle" th:checked="${category == 'puzzle'}"> 퍼즐
+                    <input type="checkbox" th:field="*{itemCategoryDto.shooter}"> 슈팅
+                </label>
+                <label>
+                    <input type="checkbox" th:field="*{itemCategoryDto.strategy}"> 전략
+                </label>
+                <label>
+                    <input type="checkbox" th:field="*{itemCategoryDto.simulation}"> 시뮬레이션
+                </label>
+                <label>
+                    <input type="checkbox" th:field="*{itemCategoryDto.puzzle}"> 퍼즐
+                </label>
+                <label>
+                    <input type="checkbox" th:field="*{itemCategoryDto.sports}"> 스포츠
+                </label>
+                <label>
+                    <input type="checkbox" th:field="*{itemCategoryDto.racing}"> 레이싱
+                </label>
+                <label>
+                    <input type="checkbox" th:field="*{itemCategoryDto.fighting}"> 격투
+                </label>
+                <label>
+                    <input type="checkbox" th:field="*{itemCategoryDto.survival}"> 생존
+                </label>
+                <label>
+                    <input type="checkbox" th:field="*{itemCategoryDto.rhythm}"> 리듬게임
+                </label>
+                <label>
+                    <input type="checkbox" th:field="*{itemCategoryDto.sandbox}"> 샌드박스
+                </label>
+                <label>
+                    <input type="checkbox" th:field="*{itemCategoryDto.battleRoyale}"> 대전
+                </label>
+                <label>
+                    <input type="checkbox" th:field="*{itemCategoryDto.card}"> 카드
+                </label>
+                <label>
+                    <input type="checkbox" th:field="*{itemCategoryDto.boardGame}"> 보드게임
+                </label>
+                <label>
+                    <input type="checkbox" th:field="*{itemCategoryDto.horror}"> 공포
+                </label>
+                <label>
+                    <input type="checkbox" th:field="*{itemCategoryDto.platformer}"> 플랫포머
+                </label>
+                <label>
+                    <input type="checkbox" th:field="*{itemCategoryDto.moba}"> MOBA
+                </label>
+                <label>
+                    <input type="checkbox" th:field="*{itemCategoryDto.mmorpg}"> MMORPG
                 </label>
             </div>
         </div>
-        <p th:if="${#fields.hasErrors('tag')}" th:errors="*{tag}" class="fieldError">Incorrect data</p>
 
         <div class="input-group">
             <div class="input-group-prepend">
@@ -132,7 +177,17 @@
             if (errorMessage != null) {
                 alert(errorMessage);
             }
+            $("input[type='date']").click(function(){
+                this.showPicker();
+            });
 
+            $("input[type='checkbox']").change(function(){
+                const checkCount = $("input[type='checkbox']:checked").length;
+                if (checkCount > 4) {
+                  $(this).prop('checked', false);
+                  alert("장르는 4개까지 선택이 가능합니다");
+                }
+            });
             bindDomEvent();
 
         });

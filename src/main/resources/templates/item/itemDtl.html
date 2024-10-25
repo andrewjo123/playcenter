@@ -57,7 +57,29 @@
 
     <div class="jumbotron jumbotron-fluid mgt-30 itemdtl">
         <div><span class="dtlinfo">플랫폼:</span> <span th:text="${item.company}"></span></div>
-        <div><span class="dtlinfo">장르:</span> <span th:text="${item.tag}"></span></div>
+        <div>
+            <span class="dtlinfo">장르:</span>
+            <span th:if="${item.itemCategoryDto.action}">액션</span>
+            <span th:if="${item.itemCategoryDto.adventure}">모험</span>
+            <span th:if="${item.itemCategoryDto.rpg}">RPG</span>
+            <span th:if="${item.itemCategoryDto.shooter}">슈팅</span>
+            <span th:if="${item.itemCategoryDto.strategy}">전략</span>
+            <span th:if="${item.itemCategoryDto.simulation}">시뮬레이션</span>
+            <span th:if="${item.itemCategoryDto.puzzle}">퍼즐</span>
+            <span th:if="${item.itemCategoryDto.sports}">스포츠</span>
+            <span th:if="${item.itemCategoryDto.racing}">레이싱</span>
+            <span th:if="${item.itemCategoryDto.fighting}">격투</span>
+            <span th:if="${item.itemCategoryDto.survival}">생존</span>
+            <span th:if="${item.itemCategoryDto.rhythm}">리듬게임</span>
+            <span th:if="${item.itemCategoryDto.sandbox}">샌드박스</span>
+            <span th:if="${item.itemCategoryDto.battleRoyale}">대전</span>
+            <span th:if="${item.itemCategoryDto.card}">카드</span>
+            <span th:if="${item.itemCategoryDto.boardGame}">보드게임</span>
+            <span th:if="${item.itemCategoryDto.horror}">공포</span>
+            <span th:if="${item.itemCategoryDto.platformer}">플랫포머</span>
+            <span th:if="${item.itemCategoryDto.moba}">MOBA</span>
+            <span th:if="${item.itemCategoryDto.mmorpg}">MMORPG</span>
+        </div>
         <div>
             별점:
             <span th:if="${item.avg == 0}">평점 없음</span>

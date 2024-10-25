@@ -1,9 +1,6 @@
 package com.playground.service;
 
-import com.playground.dto.ItemFormDto;
-import com.playground.dto.ItemImgDto;
-import com.playground.dto.ItemSearchDto;
-import com.playground.dto.MainItemDto;
+import com.playground.dto.*;
 import com.playground.entity.Item;
 import com.playground.entity.ItemCategory;
 import com.playground.entity.ItemCode;
@@ -25,8 +22,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.print.DocPrintJob;
+
+import static com.playground.dto.ItemCategoryDto.modelMapper;
 
 @Service
 @Transactional
@@ -48,11 +48,7 @@ public class ItemServiceImpl implements ItemService {
         Item item = itemFormDto.createItem();
         itemRepository.save(item);
 
-        // 추가
-        ItemCategory category=new ItemCategory();
-        category.setCompany(itemFormDto.getCompany());
-        category.setTag(itemFormDto.getTag());
-        category.setItem(item);
+        ItemCategory category=itemFormDto.getItemCategoryDto().toEntity(item, itemFormDto.getCompany());
         categoryRepository.save(category);
 
         // Register images
@@ -84,7 +80,8 @@ public class ItemServiceImpl implements ItemService {
         //추가
         ItemCategory categories=categoryRepository.findByItemId(itemId);
         itemFormDto.setCompany(categories.getCompany());
-        itemFormDto.setTag(categories.getTag());
+        ItemCategoryDto itemCategoryDto=ItemCategoryDto.fromEntity(categories);
+        itemFormDto.setItemCategoryDto(itemCategoryDto);
         
         // 리뷰 추가
         List<Object[]>result=itemRepository.getAvgAndCount(itemId);
@@ -125,8 +122,8 @@ public class ItemServiceImpl implements ItemService {
 
         //추가
         ItemCategory category=categoryRepository.findByItemId(item.getId());
+        modelMapper.map(itemFormDto.getItemCategoryDto(),category);
         category.setCompany(itemFormDto.getCompany());
-        category.setTag(itemFormDto.getTag());
         categoryRepository.save(category);
 
         return item.getId();
