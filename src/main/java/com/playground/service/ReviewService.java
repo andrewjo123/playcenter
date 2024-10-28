@@ -24,6 +24,9 @@ public interface ReviewService {
     //영화 리뷰 삭제
     void remove(Long reviewnum);
 
+     //리뷰 추천
+     void reviewRecommend(Long reviewnum); // 추천 증가 메서드
+
     default Review dtoToEntity(ReviewDto itemReviewDto){
 
         Review itemReview = Review.builder()
@@ -40,15 +43,16 @@ public interface ReviewService {
     default ReviewDto entityToDto(Review itemReview){
 
         ReviewDto itemReviewDto = ReviewDto.builder()
-                .reviewnum(itemReview.getId())
-                .member_id(itemReview.getMember().getId())
-                .id(itemReview.getItem().getId())              
-                .email(itemReview.getMember().getEmail())
-                .grade(itemReview.getGrade())
-                .text(itemReview.getText())
-                .regTime(itemReview.getRegTime())
-                .updateTime(itemReview.getUpdateTime())
-                .build();
+    .reviewnum(itemReview.getId())
+    .member_id(itemReview.getMember().getId())
+    .id(itemReview.getItem().getId())              
+    .email(itemReview.getMember().getEmail())
+    .grade(itemReview.getGrade())
+    .text(itemReview.getText())
+    .regTime(itemReview.getRegTime())
+    .updateTime(itemReview.getUpdateTime())
+    .rCnt(itemReview.getRCnt())
+    .build();
 
         return itemReviewDto;
     }

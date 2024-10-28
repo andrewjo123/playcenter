@@ -150,6 +150,22 @@
     <!-- 리뷰 목록 -->
     <div class="list-group reviewList"></div>
 
+   
+     <!-- 리뷰 목록을 표시할 때 추천(따봉) 카운트와 버튼 추가 -->
+<div th:each="review : ${reviewList}" class="card-body" data-reviewnum="${review.reviewnum}" data-mid="${review.email}">
+    <h5 class="card-title" th:text="${review.text}"></h5>
+    <h6 class="card-subtitle mb-2 text-muted" th:text="${review.email}"></h6>
+    <p class="card-text" th:text="${#dates.format(review.regTime, 'yyyy-MM-dd HH:mm:ss')}"></p>
+    <div class="reviewgrade" data-grade="${review.grade}"></div>
+    <!-- 추천 수 표시 및 추천 버튼 -->
+    <div class="recommend-section">
+        <span class="rCnt" th:text="${review.rCnt != null ? review.rCnt : 0}">0</span> 
+        추천
+        <button class="btn btn-sm btn-outline-primary recommendBtn" th:attr="data-reviewnum=${review.reviewnum}">추천</button>
+    </div>
+</div>
+
+
       <!-- 페이지 네비게이션 -->
       <div class="pagination">
         <button class="prevPage">Previous</button>
@@ -194,6 +210,7 @@
             </div>
         </div>
     </div>
+
 
     <div class="imageModal modal " tabindex="-2" role="dialog">
         <div class="modal-dialog modal-lg" role="document">
@@ -345,13 +362,18 @@ function loadReviews(page, sort="regTime") {
         success: function (data) {
             let reviewHtml = "";
             data.content.forEach(function (review) {
-                reviewHtml += `
-                    <div class="card-body" data-reviewnum="${review.reviewnum}" data-mid="${review.email}">
-                        <h5 class="card-title">${review.text}</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">${review.email}</h6>
-                        <p class="card-text">${new Date(review.regTime).toLocaleString()}</p>
-                        <div class="reviewgrade" data-grade2="${review.grade}"></div>
-                    </div>
+            console.log(review);  // rCnt 값이 제대로 표시되는지 확인
+    reviewHtml += `
+        <div class="card-body" data-reviewnum="${review.reviewnum}" data-mid="${review.email}">
+            <h5 class="card-title">${review.text}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">${review.email}</h6>
+            <p class="card-text">${new Date(review.regTime).toLocaleString()}</p>
+            <div class="reviewgrade" data-grade2="${review.grade}"></div>
+            <div class="recommend-section">
+                <span class="rCnt">${review.rcnt != null ? review.rcnt : 0}</span> 추천
+                <button class="btn btn-sm btn-outline-primary recommendBtn" data-reviewnum="${review.reviewnum}">추천</button>
+            </div>
+        </div>
                 `;
             });
             $(".reviewList").html(reviewHtml);
@@ -375,6 +397,25 @@ function renderStars() {
         });
     });
 }
+
+ // 리뷰 추천 버튼 클릭 이벤트
+$(".reviewList").on("click", ".recommendBtn", function(e) {
+    e.stopPropagation(); // 클릭 이벤트가 상위 요소로 전파되지 않도록 함
+    const reviewnum = $(this).data("reviewnum");
+
+    $.ajax({
+        url: `/reviews/${reviewnum}/recommend`,
+        type: "POST",
+        success: function() {
+            loadReviews(currentPage, currentSort); // 추천 후 목록 다시 로드            
+        },
+        error: function(xhr) {
+            console.error("Error: " + xhr.responseText);
+        }
+    });
+});
+
+
 
 //별점 높은 순 버튼 클릭 이벤트
 $(".sortByRating").click(function(){
@@ -445,13 +486,19 @@ $('.reviewSaveBtn').click(function () {
         dataType: "text",
         success: function () {
             self.location.reload();
+        },
+        error: function (xhr, status, error) {
+            console.error("Error: " + xhr.responseText); // 오류 디버깅
         }
     });
     reviewModal.modal('hide');
 });
 
+
+
 // 리뷰 수정 및 삭제
 $(".reviewList").on("click", ".card-body", function () {
+
 
     var isLoginCheck = $("#isLoginCheck").val(); 
     var reviewEmail = $(this).data("mid");

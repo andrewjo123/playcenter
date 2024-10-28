@@ -24,15 +24,15 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     // 리뷰 리스트 가져오기 (페이징)
-  @GetMapping("/{id}/all")
-  public ResponseEntity<Page<ReviewDto>> getList(
+    @GetMapping("/{id}/all")
+    public ResponseEntity<Page<ReviewDto>> getList(
           @PathVariable("id") Long id,
           @RequestParam(defaultValue = "0") int page,
           @RequestParam(defaultValue = "5") int size,
           @RequestParam(defaultValue = "regTime") String sort) {
       
       log.info("리뷰 리스트 요청 - id: {}, page: {}, size: {}", id, page, size, sort);
-
+      
       // 페이지 요청 객체 생성
       Pageable pageable = PageRequest.of(page, size,
       sort.equals("rating") ? Sort.by(Sort.Direction.DESC, "grade") : 
@@ -41,9 +41,9 @@ public class ReviewController {
       
       // 리뷰 목록을 서비스에서 받아옴
       Page<ReviewDto> reviewDTOPage = reviewService.getListOfItem(id, pageable);
-
+      
       return new ResponseEntity<>(reviewDTOPage, HttpStatus.OK);
-  }
+    }
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/{id}")
@@ -53,10 +53,21 @@ public class ReviewController {
         System.out.println("###################################");
 
         Long reviewnum = reviewService.register(itemReviewDto);
-
+        
         return new ResponseEntity<>( reviewnum, HttpStatus.OK);
     }
-
+    
+    //리뷰추천
+    @PostMapping("/{reviewnum}/recommend")
+    public ResponseEntity<Void> recommendReview(@PathVariable Long reviewnum) {
+    log.info("---------------recommend Review--------------" + reviewnum);
+    
+    // 서비스에서 추천 수 증가 로직 처리
+    reviewService.reviewRecommend(reviewnum);
+    
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
+  
     @PreAuthorize("isAuthenticated()")
     @PutMapping("/{id}/{reviewnum}")
     public ResponseEntity<Long> modifyReview(@PathVariable Long reviewnum,
@@ -79,6 +90,7 @@ public class ReviewController {
 
         return new ResponseEntity<>( reviewnum, HttpStatus.OK);
     }
+
 
 }
 

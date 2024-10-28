@@ -66,6 +66,19 @@ public class ReviewServiceImpl implements ReviewService {
         reviewRepository.deleteById(reviewnum);
     }    
 
+    @Override
+    public void reviewRecommend(Long reviewnum) {
+        // 리뷰 조회
+        Review review = reviewRepository.findById(reviewnum)
+            .orElseThrow(() -> new IllegalArgumentException("Invalid review ID: " + reviewnum));
+
+        // 추천 수 증가
+        review.incrementRCnt();
+
+        // 변경 사항 저장
+        reviewRepository.save(review);
+    }
+
 
 }
 

@@ -31,7 +31,7 @@ public class Review extends BaseEntity{
     @Column(nullable = false)
     private String text; // 리뷰 내용
 
-    @Column(nullable = false)
+    @Column(nullable = false,  columnDefinition = "int default 0", name="r_cnt")
     private int rCnt; // 리뷰 추천수
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -49,6 +49,13 @@ public class Review extends BaseEntity{
    
     // @GeneratedValue(strategy = GenerationType.IDENTITY)
     // private Long reviewnum;
+    
+
+    // 추천 수 증가 메서드
+    public void incrementRCnt() {
+        this.rCnt += 1;
+    }
+
 
 
 
