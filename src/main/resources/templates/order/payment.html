@@ -222,6 +222,27 @@
               var buyer=$('#orderBuyer').text();
               var emailText = $('#orderEmail').text();
 
+              if(totalP==0){
+                var params=[[${cartId}]];
+                $.ajax({
+                    url: "/order/validDB",
+                    method: "post",
+                    data:{orderId:orderNumber, totalPrice:totalP, usePoint:$("#confirmPoint").val(),...params},
+                    dataType:"Text",
+                    beforeSend : function(xhr){
+                        xhr.setRequestHeader(header, token);
+                    }
+                }).done(function(res) {
+                    if(res=="ok"){
+                        alert('결제가 완료되었습니다.');
+                        location.href="/orders/0";
+                    } else {
+                        alert('결제가 실패했습니다');
+                    }
+                })
+                return;
+              }
+
               IMP.request_pay({ // 결제 요청
                   pg: pgName,   // PG사 설정
                   pay_method : "card", // 결제 방법
