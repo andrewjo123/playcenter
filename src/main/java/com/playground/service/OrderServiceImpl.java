@@ -1,5 +1,6 @@
 package com.playground.service;
 
+import com.playground.dto.MemberPointDto;
 import com.playground.dto.OrderDto;
 import com.playground.dto.OrderHistDto;
 import com.playground.dto.OrderItemDto;
@@ -17,6 +18,8 @@ import org.thymeleaf.util.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 @Transactional
@@ -29,6 +32,7 @@ public class OrderServiceImpl implements OrderService {
     private final ItemImgRepository itemImgRepository;
     private final ItemCodeRepository codeRepository;
     private final EmailService emailService;
+    private final MemberPointRepository pointRepository;
 
     @Override
     public Long order(OrderDto orderDto, String email) {
@@ -53,15 +57,25 @@ public class OrderServiceImpl implements OrderService {
         Long totalCount = orderRepository.countOrder(email);
 
         List<OrderHistDto> orderHistDtos = new ArrayList<>();
-
         for (Order order : orders) {
             OrderHistDto orderHistDto = new OrderHistDto(order);
             List<OrderItem> orderItems = order.getOrderItems();
+
             for (OrderItem orderItem : orderItems) {
                 ItemImg itemImg = itemImgRepository.findByItemIdAndRepimgYn(orderItem.getItem().getId(), "Y");
                 OrderItemDto orderItemDto = new OrderItemDto(orderItem, itemImg.getImgUrl());
                 orderHistDto.addOrderItemDto(orderItemDto);
             }
+            MemberPoint point=pointRepository.findOldestOne(order.getId());
+            MemberPointDto pointDto=new MemberPointDto();
+            if(point!=null){
+                pointDto.setUsedPoint(Math.abs(point.getPayPoint()));
+                pointDto.setStackPoint((int) ((order.getTotalPrice() - Math.abs(point.getPayPoint())) * 0.01));
+            } else{
+                pointDto.setUsedPoint(0);
+                pointDto.setStackPoint(0);
+            }
+            orderHistDto.setPointDto(pointDto);
 
             orderHistDtos.add(orderHistDto);
         }
@@ -81,10 +95,19 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public void cancelOrder(Long orderId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(EntityNotFoundException::new);
         order.cancelOrder();
+        Member member=order.getMember();
+        MemberPoint memberPoint=pointRepository.findByOrder_Id(order.getId()).orElseThrow(EntityNotFoundException::new);
+        member.setTotalPoint(member.getTotalPoint()-memberPoint.getPayPoint());
+        MemberPoint returnPoint=new MemberPoint();
+        returnPoint.setOrder(order);
+        returnPoint.setPayPoint(-memberPoint.getPayPoint());
+        pointRepository.save(returnPoint);
+        memberRepository.save(member);
     }
 
     @Override
@@ -126,21 +149,26 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public String findBuyer(Long orderId) {
-        return memberRepository.findBuyer(orderId).getName();
+    public String[] findBuyer(Long orderId) {
+        Member member=memberRepository.findBuyer(orderId);
+        return new String[]{member.getName(), String.valueOf(member.getTotalPoint())};
     }
 
     @Override
-    public String validpay(Long orderId, Long totalPrice) {
+    public String validpay(Long orderId, Long totalPrice, Long usePoint) {
         List<Order> orders = orderRepository.payOrder(orderId);
-        Long total=0L;
+        Member member=orders.get(0).getMember();
+        if(usePoint>member.getTotalPoint()){
+            return "not";
+        }
 
+        Long total=0L;
         for (Order order : orders) {
             total += order.getTotalPrice();
         }
-        String validation="";
 
-        if(total.equals(totalPrice)){
+        String validation="";
+        if(total.equals(totalPrice+usePoint)){
             validation="ok";
         } else{
             validation="not";
@@ -149,14 +177,21 @@ public class OrderServiceImpl implements OrderService {
         return validation;
     }
 
+    @Transactional
     @Override
-    public void payedOrder(Long orderId) {
+    public void payedOrder(Long orderId, Long usePoint) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new EntityNotFoundException("Order not found with id: " + orderId));
 
         order.setPayed(true);
+        Member member=order.getMember();
+        member.setTotalPoint((int) (member.getTotalPoint()-usePoint));
+        MemberPoint memberPoint=new MemberPoint();
+        memberPoint.setOrder(order);
+        memberPoint.setPayPoint((int)-usePoint);
         orderRepository.save(order);
-
+        memberRepository.save(member);
+        pointRepository.save(memberPoint);
     }
 
     @Override
@@ -164,11 +199,12 @@ public class OrderServiceImpl implements OrderService {
         orderRepository.deleteById(orderId);
     }
 
-    //1023 1740추가
+    //1025 1740수정
     @Override
     @Transactional
     public String sendAllCodes(Long orderId, String email) {
         String result = "";
+        AtomicInteger totalPrice=new AtomicInteger(0);
         StringBuilder mail_body=new StringBuilder();
         Member member1=memberRepository.findByEmail(email);
         Optional<Order> order = orderRepository.findById(orderId);
@@ -177,6 +213,7 @@ public class OrderServiceImpl implements OrderService {
             List<ItemCode> gatherCodes = new ArrayList<>();
             orderItems.forEach(item ->{
                 int count=item.getCount();
+                totalPrice.addAndGet(item.getTotalPrice());
                 List<ItemCode> codeList=codeRepository.getCode(count);
                 codeList.forEach(code1->{
                     mail_body.append(item.getItem().getItemNm());
@@ -189,6 +226,15 @@ public class OrderServiceImpl implements OrderService {
             codeRepository.saveAll(gatherCodes);
             order.get().setSendCode(true);
             orderRepository.save(order.get());
+            //포인트 적립
+            if((int)(totalPrice.get()*0.01)>0){
+                MemberPoint point= new MemberPoint();
+                point.setPayPoint((int)(totalPrice.get()*0.01));
+                point.setOrder(order.get());
+                pointRepository.save(point);
+                member1.setTotalPoint(member1.getTotalPoint()+(int)(totalPrice.get()*0.01));
+                memberRepository.save(member1);
+            }
             emailService.sendEmail(email, "[놀이마당] 게임코드 발송", String.valueOf(mail_body));
             result="success";
         } else{

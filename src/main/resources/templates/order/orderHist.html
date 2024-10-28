@@ -36,6 +36,20 @@
                 </th:block>
             </div>
         </div>
+        <div>
+            <th:block th:if="${order.orderStatus == T(com.playground.constant.OrderStatus).ORDER}">
+                <span>사용 포인트: [[${-order.pointDto.usedPoint}]]</span><br>
+                <th:block th:if="${order.sendCode==true}">
+                    <span style="color:blue;">적립 포인트: [[${order.pointDto.stackPoint}]]</span>
+                </th:block>
+                <th:block th:unless="${order.sendCode==true}">
+                    <span style="color:blue;">적립예정 포인트: [[${order.pointDto.stackPoint}]]</span>
+                </th:block>
+            </th:block>
+            <th:block th:unless="${order.orderStatus == T(com.playground.constant.OrderStatus).ORDER}">
+                <span style="color:red;">환불 포인트: [[${order.pointDto.usedPoint}]]</span>
+            </th:block>
+        </div>
         <div class="card d-flex">
             <div th:each="orderItem : ${order.orderItemDtoList}" class="d-flex mb-3">
                 <div class="repImgDiv">
@@ -45,7 +59,7 @@
                     <span th:text="${orderItem.itemNm}" class="fs24 font-weight-bold"></span>
                     <div class="fs18 font-weight-light">
                         <span th:text="${orderItem.orderPrice} +'원'"></span>
-                        <span th:text="${orderItem.count} +'개'"></span>
+                        <span th:text="${orderItem.count} +'개'"></span><br>
                     </div>
                 </div>
             </div>

@@ -99,9 +99,10 @@ public class OrderController {
             return "member/memberLoginForm";
         }
         List<OrderHistDto> orders = orderService.getPayList(orderId);
-        String buyer=orderService.findBuyer(orderId);
+        String[] members=orderService.findBuyer(orderId);
         model.addAttribute("orders", orders);
-        model.addAttribute("buyer",buyer);
+        model.addAttribute("buyer",members[0]);
+        model.addAttribute("point",members[1]);
         model.addAttribute("email",principal.getName());
         model.addAttribute("cartId",params);
         System.out.println(params);
@@ -138,14 +139,15 @@ public class OrderController {
     // DB에서 결제 2차검증
     @RequestMapping(value="/order/validDB",method = {RequestMethod.POST})
     @ResponseBody
-    public ResponseEntity<String> validateWithDB(@RequestParam("orderId")Long orderId, @RequestParam("totalPrice")Long totalPrice, @RequestParam Map<String, String> params,
+    public ResponseEntity<String> validateWithDB(@RequestParam("orderId")Long orderId, @RequestParam("totalPrice")Long totalPrice, @RequestParam("usePoint")Long usePoint ,@RequestParam Map<String, String> params,
                                                  Principal principal) throws IOException {
 
-        String result=orderService.validpay(orderId,totalPrice);
+        String result=orderService.validpay(orderId,totalPrice,usePoint);
         if(result.equals("ok")){
-            orderService.payedOrder(orderId);
+            orderService.payedOrder(orderId, usePoint);
             params.remove("orderId");
             params.remove("totalPrice");
+            params.remove("usePoint");
 
             if (!params.isEmpty()) {
                 params.forEach((key, value) -> {

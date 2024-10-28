@@ -9,6 +9,7 @@ import org.hibernate.annotations.ColumnDefault;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "orders")
@@ -67,9 +68,12 @@ public class Order extends BaseEntity {
     }
     @ColumnDefault("false")
     private boolean isPayed;
-    
-    //추가
+
     @ColumnDefault("false")
     private boolean sendCode;
+
+    //1025 1800추가
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<MemberPoint> memberPoints;
 
 }

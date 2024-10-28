@@ -19,9 +19,9 @@ public interface OrderService {
     Long orders(List<OrderDto> orderDtoList, String email);
 
     List<OrderHistDto> getPayList(Long orderId);
-    String findBuyer(Long orderId);
-    String validpay(Long orderId, Long totalPrice);
-    void payedOrder(Long orderId);
+    String[] findBuyer(Long orderId);
+    String validpay(Long orderId, Long totalPrice, Long usePoint);
+    void payedOrder(Long orderId, Long usePoint);
     void removeList(Long orderId);
 
     //1023 1740추가

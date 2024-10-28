@@ -35,4 +35,6 @@ public class OrderHistDto {
 
     //추가
     private boolean sendCode;// 코드 발송 여부
+
+    private MemberPointDto pointDto;
 }
