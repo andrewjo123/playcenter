@@ -33,12 +33,48 @@
 
 .hd1.dropdown-menu {
     position: absolute;
-    left: 0; /* 드롭다운 메뉴를 왼쪽으로 정렬 */
-    right: auto; /* 오른쪽 정렬 해제 */
-    min-width: 200px; /* 최소 너비 설정 */
-    max-width: calc(100vw - 20px); /* 뷰포트의 가로폭에 따라 조정 */
-    overflow: hidden; /* 내용이 넘치지 않도록 처리 */
+    left: 0; 
+    right: auto;
+    min-width: 200px; 
+    max-width: calc(100vw - 20px); 
+    overflow: hidden; 
 }
 .dropdown-toggle::after {
-    display: none; /* 화살표 숨기기 */
+    display: none; 
+}
+
+/*sidebar-------------*/
+#sb{
+    margin-top: 15%; position: fixed; height: 100%; width: 150px;  
+   } 
+   .sb_cart{
+   text-align: center; color: gray;position: relative;  display: inline-block;
+   }
+   #getCount  {
+    position: absolute; 
+    top: -15px; 
+    right: -15px; 
+    background-color: red; 
+    color: white; 
+    border-radius: 50%; 
+    padding: 2px; 
+    font-size: 12px; 
+    text-align: center; 
+    width: 20px; 
+    height: 20px;
+    line-height: 20px; 
+}
+#sidebarGetCount {
+    position: absolute; 
+    top: 35px;
+    right: -2px;
+    background-color: red; 
+    color: white; 
+    border-radius: 50%; 
+    padding: 2px; 
+    font-size: 12px; 
+    text-align: center; 
+    width: 20px; 
+    height: 20px;
+    line-height: 20px; 
 }
