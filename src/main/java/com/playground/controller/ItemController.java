@@ -14,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -34,12 +35,14 @@ public class ItemController {
 
     private final ItemService itemService;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(value = "/admin/item/new")
     public String itemForm(Model model){
         model.addAttribute("itemFormDto", new ItemFormDto());
         return "item/itemForm";
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(value = "/admin/item/new")
     public String itemNew(@Valid ItemFormDto itemFormDto, BindingResult bindingResult,
                           Model model, @RequestParam("itemImgFile") List<MultipartFile> itemImgFileList){
@@ -63,6 +66,7 @@ public class ItemController {
         return "redirect:/";
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(value = "/admin/item/{itemId}")
     public String itemDtl(@PathVariable("itemId") Long itemId, Model model){
 
@@ -79,6 +83,7 @@ public class ItemController {
         return "item/itemForm";
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(value = "/admin/item/{itemId}")
     public String itemUpdate(@Valid ItemFormDto itemFormDto, BindingResult bindingResult,
                              @RequestParam("itemImgFile") List<MultipartFile> itemImgFileList, Model model){
@@ -101,6 +106,7 @@ public class ItemController {
         return "redirect:/";
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(value = {"/admin/items", "/admin/items/{page}"})
     public String itemManage(ItemSearchDto itemSearchDto, @PathVariable("page") Optional<Integer> page, Model model){
 
@@ -130,6 +136,7 @@ public class ItemController {
     }
 
     // 1024추가
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(value="/admin/insert/{itemId}")
     public String insertCodes (@PathVariable("itemId") Long itemId, Model model){
         ItemFormDto itemFormDto = itemService.getItemDtl(itemId);
@@ -137,7 +144,7 @@ public class ItemController {
         model.addAttribute("itemNm",itemFormDto.getItemNm());
         return "item/insertCode";
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(value="/admin/insert/{itemId}",method = {RequestMethod.POST})
     @ResponseBody
     public ResponseEntity<Integer> insertCodesToDB(@PathVariable("itemId") Long itemId, @RequestBody List<String> jsonData) throws IOException {

@@ -18,6 +18,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -38,6 +39,7 @@ public class OrderController {
     private final CartService cartService;
     private final RefundService refundService;
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping(value = "/order")
     public @ResponseBody ResponseEntity order(@RequestBody @Valid OrderDto orderDto
             , BindingResult bindingResult, Principal principal){
@@ -65,6 +67,7 @@ public class OrderController {
         return new ResponseEntity<Long>(orderId, HttpStatus.OK);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping(value = {"/orders", "/orders/{page}"})
     public String orderHist(@PathVariable("page") Optional<Integer> page, Principal principal, Model model){
 
@@ -78,6 +81,7 @@ public class OrderController {
         return "order/orderHist";
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/order/{orderId}/cancel")
     public @ResponseBody ResponseEntity cancelOrder(@PathVariable("orderId") Long orderId , Principal principal) throws IOException {
 
@@ -93,6 +97,7 @@ public class OrderController {
 
     // 추가
     // 결제창
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/order/payment")
     public String goPayment(@RequestParam("orderId") Long orderId, @RequestParam Map<String, String> params, Principal principal, Model model){
         if(!orderService.validateOrder(orderId, principal.getName())){
@@ -164,6 +169,7 @@ public class OrderController {
     }
 
     //취소누르면 order삭제
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/order/removeOrder")
     public String removeOrderList(@RequestParam("orderId")Long orderId){
         orderService.removeList(orderId);
@@ -180,6 +186,7 @@ public class OrderController {
     }
 
     // 1023 1730 추가
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/order/sendCode")
     @ResponseBody
     public ResponseEntity<String> sendCodes(@RequestParam("orderId") Long orderId , Principal principal) throws IOException {

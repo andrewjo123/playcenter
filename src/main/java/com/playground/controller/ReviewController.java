@@ -9,6 +9,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.playground.dto.ReviewDto;
@@ -44,16 +45,7 @@ public class ReviewController {
       return new ResponseEntity<>(reviewDTOPage, HttpStatus.OK);
   }
 
-    // @GetMapping("/{id}/all")
-    // public ResponseEntity<List<ReviewDto>> getList(@PathVariable("id") Long id){
-    //     log.info("--------------list---------------");
-    //     log.info("id: " + id);
-
-    //     List<ReviewDto> reviewDTOList = reviewService.getListOfItem(id);
-
-    //     return new ResponseEntity<>(reviewDTOList, HttpStatus.OK);
-    // }
-
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/{id}")
     public ResponseEntity<Long> addReview(@RequestBody ReviewDto itemReviewDto){
         log.info("--------------add Review---------------");
@@ -65,6 +57,7 @@ public class ReviewController {
         return new ResponseEntity<>( reviewnum, HttpStatus.OK);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PutMapping("/{id}/{reviewnum}")
     public ResponseEntity<Long> modifyReview(@PathVariable Long reviewnum,
                                              @RequestBody ReviewDto itemReviewDto){
@@ -76,6 +69,7 @@ public class ReviewController {
         return new ResponseEntity<>( reviewnum, HttpStatus.OK);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/{id}/{reviewnum}")
     public ResponseEntity<Long> removeReview( @PathVariable Long reviewnum){
         log.info("---------------modify removeReview--------------");

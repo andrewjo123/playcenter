@@ -14,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -95,6 +96,7 @@ public class MemberController {
         return "member/memberLoginForm";
     }
     // 정관수 추가
+    @PreAuthorize("isAuthenticated()")
     @GetMapping(value="/modify")
     public String modUser(Model model, Principal principal){
         String userid = principal.getName();
@@ -103,6 +105,7 @@ public class MemberController {
         return "member/memberModify";
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping(value="/modify")
     public String modifyUser(@Valid MemberFormDto memberFormDto, BindingResult bindingResult, Principal principal, Model model){
         if(principal==null){
@@ -273,11 +276,11 @@ public class MemberController {
 
     // 정관수 끝
     // 조민 추가
-
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(value = {"/manageMember", "/manageMember/{page}"})
     public String memberManage(MemberSearchDto memberSearchDto, @PathVariable("page") Optional<Integer> page, Model model){
 
-        Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 3);  // 페이지네이션 설정
+        Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 10);  // 페이지네이션 설정
         Page<Member> members = memberService.getAdminMemberPage(memberSearchDto, pageable);
 
         model.addAttribute("members", members);  // 회원 리스트 전달
@@ -286,7 +289,7 @@ public class MemberController {
 
         return "member/memberMng";
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/toggleStatus")
     public ResponseEntity<Void> toggleStatus(@RequestBody MemberDetailDto memberDetailDto) {
         System.out.println("Received Member ID: {}" + memberDetailDto.getMemberId());
