@@ -41,7 +41,7 @@
    } 
    .sb_cart{
    text-align: center; color: gray;position: relative;  display: inline-block;
-   }
+   cursor: pointer; }
    #getCount  {
     position: absolute; 
     top: -15px; 
