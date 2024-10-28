@@ -1,5 +1,6 @@
 package com.playground.security.service;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -11,6 +12,8 @@ import org.springframework.stereotype.Service;
 import com.playground.entity.Member;
 import com.playground.repository.MemberRepository;
 import com.playground.security.dto.PlayAuthMemberDTO;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.Optional;
 import java.util.Set;
@@ -30,9 +33,17 @@ public class PlayUserDetailsService implements UserDetailsService {
         log.info("PlayUserDetailsService loadUserByUsername " + username);
         Member result = memberRepository.findByEmail(username);
 
+
         // result가 존재하는지 확인하는 로그 추가
         if (result==null) {
             log.warn("No member found with email: " + username + " and fromSocial: false");
+            throw new UsernameNotFoundException("Check User Email or from Social");
+        }
+
+        Optional<Member> isResign=memberRepository.findByEmailAndResign(username, true);
+        if(isResign.isPresent()){
+            HttpSession session = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest().getSession();
+            session.setAttribute("resign", "resign");
             throw new UsernameNotFoundException("Check User Email or from Social");
         }
 

@@ -82,4 +82,8 @@ public class Member extends BaseEntity {
         return member;
     }
 
+    // 1025 1700추가
+    @ColumnDefault("0")
+    int totalPoint; // 현재 보유 포인트
+
 }

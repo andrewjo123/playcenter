@@ -1,43 +1,31 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layouts/layout1}">
-
-<!-- 사용자 CSS 추가 -->
-<th:block layout:fragment="css">
-    <style>
-        .carousel-inner > .item {
-            height: 350px;
-        }
-        .margin{
-            margin-bottom:30px;
-        }
-        .banner{
-            height: 300px;
-            position: absolute; top:0; left: 0;
-            width: 100%;
-            height: 100%;
-        }
-        .card-text{
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            overflow: hidden;
-        }
-        a:hover{
-            text-decoration:none;
-        }
-        .center{
-            text-align:center;
-        }
-    </style>
-</th:block>
+      layout:decorate="~{layouts/layout1}" class="main">
+<head>
+    <link th:href="@{/css/layout1.css}" rel="stylesheet">
+</head>
 
 <div layout:fragment="content">
 
     <div id="carouselControls" class="carousel slide margin" data-ride="carousel">
+        <ul class="carousel-indicators">
+            <li data-target="#carouselControls" data-slide-to="0" class="active"></li>
+            <li data-target="#carouselControls" data-slide-to="1"></li>
+            <li data-target="#carouselControls" data-slide-to="2"></li>
+        </ul>
         <div class="carousel-inner">
             <div class="carousel-item active item">
-                <img class="d-block w-100 banner" src="https://user-images.githubusercontent.com/13268420/112147492-1ab76200-8c20-11eb-8649-3d2f282c3c02.png" alt="First slide">
+                <img class="d-block w-100 banner" src="/img/ad1.png"
+                     alt="First slide">
+            </div>
+            <div class="carousel-item item">
+                <img class="d-block w-100 banner" src="/img/ad3.png"
+                     alt="First slide">
+            </div>
+            <div class="carousel-item item">
+                <img class="d-block w-100 banner" src="/img/temp_ad3.png"
+                     alt="First slide">
             </div>
         </div>
     </div>

@@ -2,6 +2,9 @@ package com.playground.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import com.playground.dto.ReviewDto;
 import com.playground.entity.Item;
 import com.playground.entity.Member;
@@ -10,7 +13,7 @@ import com.playground.entity.Review;
 public interface ReviewService {
 
     //영화의 모든 영화리뷰를 가져온다.
-    List<ReviewDto> getListOfItem(Long id);
+    Page<ReviewDto> getListOfItem(Long id, Pageable pageable);  // 페이징 적용
 
     //영화 리뷰를 추가
     Long register(ReviewDto itemReviewDto);
@@ -20,6 +23,9 @@ public interface ReviewService {
 
     //영화 리뷰 삭제
     void remove(Long reviewnum);
+
+     //리뷰 추천
+     void reviewRecommend(Long reviewnum); // 추천 증가 메서드
 
     default Review dtoToEntity(ReviewDto itemReviewDto){
 
@@ -37,15 +43,16 @@ public interface ReviewService {
     default ReviewDto entityToDto(Review itemReview){
 
         ReviewDto itemReviewDto = ReviewDto.builder()
-                .reviewnum(itemReview.getId())
-                .member_id(itemReview.getMember().getId())
-                .id(itemReview.getItem().getId())              
-                .email(itemReview.getMember().getEmail())
-                .grade(itemReview.getGrade())
-                .text(itemReview.getText())
-                .regTime(itemReview.getRegTime())
-                .updateTime(itemReview.getUpdateTime())
-                .build();
+    .reviewnum(itemReview.getId())
+    .member_id(itemReview.getMember().getId())
+    .id(itemReview.getItem().getId())              
+    .email(itemReview.getMember().getEmail())
+    .grade(itemReview.getGrade())
+    .text(itemReview.getText())
+    .regTime(itemReview.getRegTime())
+    .updateTime(itemReview.getUpdateTime())
+    .rCnt(itemReview.getRCnt())
+    .build();
 
         return itemReviewDto;
     }

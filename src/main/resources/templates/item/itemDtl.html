@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 
-
 <div layout:fragment="content">
 
     <input type="hidden" id="itemId" th:value="${item.id}">
@@ -21,13 +20,9 @@
         </div>
         <div class="wd50">
             <span th:if="${item.itemSellStatus == T(com.playground.constant.ItemSellStatus).SELL}"
-                  class="badge badge-primary mgb-15">
-                판매중
-            </span>
+                  class="badge badge-primary mgb-15">판매중</span>
             <span th:unless="${item.itemSellStatus == T(com.playground.constant.ItemSellStatus).SELL}"
-                  class="badge btn-danger mgb-15">
-                품절
-            </span>
+                  class="badge btn-danger mgb-15">품절</span>
             <div class="h4" th:text="${item.itemNm}"></div>
             <hr class="my-4">
 
@@ -54,69 +49,152 @@
                     담기</button>
                 <button type="button" class="btn btn-primary btn-lg" onclick="order()">주문하기</button>
             </div>
-            <div th:unless="${item.itemSellStatus == T(com.playground.constant.ItemSellStatus).SELL}"
-                 class="text-right">
-                <button type="button" class="btn btn-danger btn-lg">품절</button>
+            <div th:unless="${item.itemSellStatus == T(com.playground.constant.ItemSellStatus).SELL}" class="text-right">
+                <button type="button" class="btn btn-danger btn-lg no-cursor">품절</button>
             </div>
         </div>
     </div>
 
     <div class="jumbotron jumbotron-fluid mgt-30 itemdtl">
         <div><span class="dtlinfo">플랫폼:</span> <span th:text="${item.company}"></span></div>
-        <div><span class="dtlinfo">장르:</span> <span th:text="${item.tag}"></span></div>
+        <div>
+            <span class="dtlinfo">장르:</span>
+            <span th:if="${item.itemCategoryDto.action}">액션</span>
+            <span th:if="${item.itemCategoryDto.adventure}">모험</span>
+            <span th:if="${item.itemCategoryDto.rpg}">RPG</span>
+            <span th:if="${item.itemCategoryDto.shooter}">슈팅</span>
+            <span th:if="${item.itemCategoryDto.strategy}">전략</span>
+            <span th:if="${item.itemCategoryDto.simulation}">시뮬레이션</span>
+            <span th:if="${item.itemCategoryDto.puzzle}">퍼즐</span>
+            <span th:if="${item.itemCategoryDto.sports}">스포츠</span>
+            <span th:if="${item.itemCategoryDto.racing}">레이싱</span>
+            <span th:if="${item.itemCategoryDto.fighting}">격투</span>
+            <span th:if="${item.itemCategoryDto.survival}">생존</span>
+            <span th:if="${item.itemCategoryDto.rhythm}">리듬게임</span>
+            <span th:if="${item.itemCategoryDto.sandbox}">샌드박스</span>
+            <span th:if="${item.itemCategoryDto.battleRoyale}">대전</span>
+            <span th:if="${item.itemCategoryDto.card}">카드</span>
+            <span th:if="${item.itemCategoryDto.boardGame}">보드게임</span>
+            <span th:if="${item.itemCategoryDto.horror}">공포</span>
+            <span th:if="${item.itemCategoryDto.platformer}">플랫포머</span>
+            <span th:if="${item.itemCategoryDto.moba}">MOBA</span>
+            <span th:if="${item.itemCategoryDto.mmorpg}">MMORPG</span>
+        </div>
         <div>
             별점:
             <span th:if="${item.avg == 0}">평점 없음</span>
             <span th:if="${item.avg > 0}">
-                <span th:text="${item.avg}"></span>
-                <span th:each="i : ${#numbers.sequence(1, item.avg)}">
-                    <i class="fas fa-star"></i>
-                </span>
-                <span th:each="i : ${#numbers.sequence(item.avg + 1, 5)}">
-                    <i class="far fa-star"></i>
-                </span>
+                <span th:text="${#numbers.formatDecimal(item.avg, 1, 1)}"></span>
+                <span th:each="i : ${#numbers.sequence(1, item.avg)}"><i class="fas fa-star"></i></span>
+                <span th:each="i : ${#numbers.sequence(item.avg + 1, 5)}"><i class="far fa-star"></i></span>
             </span>
         </div>
-        <div>
-            리뷰수: <span th:text="${item.allReview}"></span>
-        </div>
+        <div>리뷰수: <span th:text="${item.allReview}"></span></div>
         <div class="container">
             <h4 class="display-5">상품 상세 설명</h4>
             <hr class="my-4">
             <p class="lead" th:text="${item.itemDetail}"></p>
         </div>
     </div>
+    <!--   이미지캐러셀  -->
+    <div id="carouselControls" class="carousel slide text-center" data-ride="carousel" >
+
+        <div class="carousel-inner" data-interval="2200">
+            <div class="carousel-item active item">
+                <img th:src="${item.itemImgDtoList[0].imgUrl}" th:alt="${item.itemNm}" alt="First slide" class="d-block rounded">
+            </div>
+            <div class="carousel-item item">
+                <img th:src="${item.itemImgDtoList[1].imgUrl}" th:alt="${item.itemNm}" alt="Second slide" class="d-block rounded">
+            </div>
+            <div class="carousel-item item">
+                <img th:src="${item.itemImgDtoList[2].imgUrl}" th:alt="${item.itemNm}" alt="Third slide" class="d-block rounded">
+            </div>
+            <div class="carousel-item item">
+                <img th:src="${item.itemImgDtoList[3].imgUrl}" th:alt="${item.itemNm}" alt="Fourth slide" class="d-block rounded">
+            </div>
+        </div>
+
+
+        <ul class="carousel-indicators">
+            <li data-target="#carouselControls" data-slide-to="0" class="active"></li>
+            <li data-target="#carouselControls" data-slide-to="1"></li>
+            <li data-target="#carouselControls" data-slide-to="2"></li>
+            <li data-target="#carouselControls" data-slide-to="3"></li>
+        </ul>
+
+            <a class="carousel-control-prev" href="#carouselControlso" data-slide="prev">
+                <i class="fa-solid fa-chevron-left"></i>
+            </a>
+            <a class="carousel-control-next" href="#carouselControls" data-slide="next">
+                <i class="fa-solid fa-chevron-right"></i>
+            </a>
+
+
+    </div>
+    <!--   이미지캐러셀 end-->
 
     <div th:each="itemImg : ${item.itemImgDtoList}" class="text-center">
-        <img th:if="${not #strings.isEmpty(itemImg.imgUrl)}" th:src="${itemImg.imgUrl}" class="rounded mgb-15"
-             width="800">
+        <img th:if="${not #strings.isEmpty(itemImg.imgUrl)}" th:src="${itemImg.imgUrl}" class="rounded mgb-15" width="800">
     </div>
 
-    <!--리뷰카운트 빠짐-->
+    <!-- 리뷰 등록 버튼 -->
+    <button type="button" class="btn btn-info addReviewBtn">Review Register</button>
 
-    <button type="button" class="btn btn-info addReviewBtn">
-        Review Register
-    </button>
+    <!-- 리뷰 별점 높은순 버튼 -->
+    <button class="sortByRating">별점 높은 순</button>
 
-    <div class="list-group reviewList">
+    <!-- 리뷰 별점 낮은순 버튼 -->
+<button class="sortByLowRating">별점 낮은 순</button>
 
+
+    <!-- 리뷰 목록 -->
+    <div class="list-group reviewList"></div>
+
+   
+     <!-- 리뷰 목록을 표시할 때 추천(따봉) 카운트와 버튼 추가 -->
+<div th:each="review : ${reviewList}" class="card-body" data-reviewnum="${review.reviewnum}" data-mid="${review.email}">
+    <h5 class="card-title" th:text="${review.text}"></h5>
+    <h6 class="card-subtitle mb-2 text-muted" th:text="${review.email}"></h6>
+    <p class="card-text" th:text="${#dates.format(review.regTime, 'yyyy-MM-dd HH:mm:ss')}"></p>
+    <div class="reviewgrade" data-grade="${review.grade}"></div>
+
+    <!-- 수정모달창 버튼 -->
+    <button type="button" class="btn btn-warning modalBtn" data-reviewnum="${review.reviewnum}" data-mid="${review.email}">수정/삭제</button>
+
+    <!-- 추천 수 표시 및 추천 버튼 -->
+    <div class="recommend-section">
+        <span class="rCnt" th:text="${review.rCnt != null ? review.rCnt : 0}">0</span> 
+        추천
+        <button class="btn btn-sm btn-outline-primary recommendBtn" th:attr="data-reviewnum=${review.reviewnum}">추천</button>
+    </div>
+</div>
+
+
+      <!-- 페이지 네비게이션 -->
+      <div class="pagination">
+        <button class="prevPage">Previous</button>
+        <span class="pageIndicator"></span>
+        <button class="nextPage">Next</button>
     </div>
 
+     <!-- 로그인 여부에 따라 hidden 필드에 값 설정 -->
+    <input type="hidden" id="isLoggedIn" th:value="${email != null ? 'true' : 'false'}">
+    <input type="hidden" id="isLoginCheck" th:value="${email}">
 
+    <!-- 리뷰 모달 -->
     <div class="reviewModal modal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Movie Review</h5>
-
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close closeBtn" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
                         <label>Reviewer ID</label>
-                        <input type="text" class="form-control" name="email">
+                        <input type="text" class="form-control" name="email" th:value="${email}" readonly>
                     </div>
                     <div class="form-group" id="divGrade">
                         <label>Grade <span class="grade"></span></label>
@@ -128,28 +206,26 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary closeBtn" data-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-primary reviewSaveBtn">Save changes</button>
-                    <button type="button" class="btn btn-warning modifyBtn">Modify </button>
-                    <button type="button" class="btn btn-danger removeBtn">Remove </button>
+                    <button type="button" class="btn btn-warning modifyBtn">Modify</button>
+                    <button type="button" class="btn btn-danger removeBtn">Remove</button>
                 </div>
             </div>
         </div>
     </div>
+
 
     <div class="imageModal modal " tabindex="-2" role="dialog">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Picture</h5>
-
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
-
-                </div>
+                <div class="modal-body"></div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
@@ -157,11 +233,10 @@
         </div>
     </div>
 
-
+    <!-- 사용자 스크립트 추가 -->
     <script th:src="@{/starrr.js}"></script>
     <link th:href="@{/css/starrr.css}" rel="stylesheet">
     <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/css/font-awesome.min.css">
-
     <!-- 사용자 스크립트 추가 -->
     <th:block layout:fragment="script">
         <script th:inline="javascript">
@@ -205,17 +280,11 @@
                     dataType: "json",
                     cache: false,
                     success: function (result, status) {
-                        location.href='/order/payment?orderId='+result;
+                            location.href='/order/payment?orderId=' + result;
                     },
                     error: function (jqXHR, status, error) {
-
-                        if (jqXHR.status == '401' || jqXHR.status == '200') {
-                            alert('로그인 후 이용해주세요');
-                            location.href = '/members/login';
-                        } else {
-                            alert(jqXHR.responseText);
-                        }
-
+                        alert('로그인 후 이용해주세요');
+                        location.href = '/members/login';
                     }
                 });
             }
@@ -262,235 +331,282 @@
 
         </script>
     </th:block>
+    <th:block layout:fragment="script">
+        <script th:inline="javascript">
+        $(document).ready(function () {
 
-    <script>
-        $(document).ready(function (e) {
+    var grade = 0;
+    var grade2 = 0; // grade2 변수 초기화
+    var id = [[${ item.id }]];
+    var reviewnum;
 
-            var grade = 0;
-            var id = [[${ item.id }]];
+    // 리뷰 모달 관련 변수 정의
+    var reviewModal = $(".reviewModal");
+    var inputMid = $('input[name="email"]');
+    var inputText = $('input[name="text"]');
 
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content')
-                }
+    //리뷰 정렬 변수 정의
+    let currentPage = 0;
+    let currentSort = "regTime";
+
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content')
+        }
+    });
+
+// 리뷰 목록 로드 함수
+function loadReviews(page, sort="regTime") {
+    currentSort = sort;
+    const itemId = $("#itemId").val();
+    $.ajax({
+        url: `/reviews/${itemId}/all?page=${page}&sort=${sort}`,
+        type: "GET",
+        dataType: "json",
+        success: function (data) {
+            let reviewHtml = "";
+            data.content.forEach(function (review) {
+            console.log(review);  // rCnt 값이 제대로 표시되는지 확인
+    reviewHtml += `
+        <div class="card-body" data-reviewnum="${review.reviewnum}" data-mid="${review.email}">
+            <h5 class="card-title">${review.text}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">${review.email}</h6>
+            <p class="card-text">${new Date(review.regTime).toLocaleString()}</p>
+            <div class="reviewgrade" data-grade2="${review.grade}"></div>
+            <button type="button" class="btn btn-warning modalBtn"  data-reviewnum="${review.reviewnum}" data-mid="${review.email}">수정/삭제</button>
+            <div class="recommend-section">
+                <span class="rCnt">${review.rcnt != null ? review.rcnt : 0}</span> 추천
+                <button class="btn btn-sm btn-outline-primary recommendBtn" data-reviewnum="${review.reviewnum}">추천</button>
+            </div>
+        </div>
+                `;
             });
-            $('.starrr').starrr({
-                rating: grade,
-                change: function (e, value) {
-                    if (value) {
-                        console.log(value);
-                        grade = value;
-                    }
-                }
-            });
+            $(".reviewList").html(reviewHtml);
+            renderStars(); // 리뷰별점 표시
+            currentPage = data.number;
+            totalPages = data.totalPages;
+            $(".pageIndicator").text(`Page ${currentPage + 1} of ${totalPages}`);
+        },
+        error: function (xhr) {
+            console.error("Error: " + xhr.responseText);
+        }
+    });
+}
 
-            //$(".reviewModal").modal("show"); 미리 보기용
-
-            var reviewModal = $(".reviewModal");
-            var inputMid = $('input[name="email"]');
-            var inputText = $('input[name="text"]');
-
-
-            $(".addReviewBtn").click(function () {
-                grade=0;
-                inputMid.val("");
-                inputText.val("");
-
-                //.starrr초기화
-                var star=$(".starrr").clone();
-                $(".starrr").remove();
-                $("#divGrade").append(star);
-                $('.starrr').starrr({
-                    rating: grade,
-                    change: function(e, value){
-                        if (value) {
-                            console.log(value);
-                            grade = value;
-                        }
-                    }
-                });
-
-                $(".removeBtn ,  .modifyBtn").hide();
-                $(".reviewSaveBtn").show();
-
-                reviewModal.modal('show');
-            });
-
-
-            $('.reviewSaveBtn').click(function () {
-
-                var data = { id: id, grade: grade, text: inputText.val(), email: inputMid.val() };
-
-                console.log(data);
-
-                $.ajax({
-                    url: '/reviews/' + id,
-                    type: "POST",
-                    data: JSON.stringify(data),
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "text",
-                    success: function (result) {
-
-                        console.log("result: " + result);
-
-                        self.location.reload();
-
-                    }
-                })
-                reviewModal.modal('hide');
-
-            });
-
-
-            //페이지가 열리면 바로 리뷰 데이터들을 가져와서 사용한다.
-            function getMovieReviews() {
-                function formatTime(str) {
-                    var date = new Date(str);
-
-                    return date.getFullYear() + '/' +
-                        (date.getMonth() + 1) + '/' +
-                        date.getDate() + ' ' +
-                        date.getHours() + ':' +
-                        date.getMinutes();
-                }
-                console.log("id" + id);
-                $.ajax({
-                    url: "/reviews/" + id + "/all", // 요청할 URL
-                    method: "GET", // 요청 방식
-                    dataType: "json", // 응답 데이터 타입
-                    success: function (arr) {
-                        console.log("??????????????");
-                        var str = "";
-
-                        $.each(arr, function (idx, review) {
-                            console.log(review);
-
-                            str += '    <div class="card-body" data-reviewnum=' + review.reviewnum + ' data-mid=' + review.email + '>';
-                            str += '    <h5 class="card-title">' + review.text + ' <span class="reviewgrade" data-grade2=' + review.grade + '></span></h5>';
-                            str += '    <h6 class="card-subtitle mb-2 text-muted">' + review.email + '</h6>';
-                            str += '    <p class="card-text">' + formatTime(review.regTime) + '</p>';
-                            str += '    </div>';
-                        });
-
-                        $(".reviewList").html(str);
-                        // 리뷰 별모양으로 나오게하기
-                        $(".reviewgrade").each(function (idx, o) {
-                            console.log(o);
-                            $(this).starrr({ rating: $(this).data("grade2"), readOnly: true });
-                        });
-                    }, error: function (xhr, status, error) {
-                        console.error("Error: " + error);
-                        console.error("Response Text: " + xhr.responseText);
-                    }
-                });
-            }
-
-            //리뷰목록 바로 보이게 하기
-            getMovieReviews();
-
-
-            //modify reveiw
-
-            var reviewnum;
-
-            $(".reviewList").on("click", ".card-body", function () {
-
-                $(".reviewSaveBtn").hide();
-                $(".removeBtn , .modifyBtn").show();
-
-
-                var targetReview = $(this);
-
-                reviewnum = targetReview.data("reviewnum");
-                console.log(targetReview.data("mid"));
-                inputMid.val(targetReview.data("mid"));
-                inputText.val(targetReview.find('.card-title').text().trim());
-                var grade2 = $(this).find(".reviewgrade").data("grade2"); // 리뷰 목록에서 사용
-                console.log(grade2);
-
-                //.starrr초기화
-                var star=$(".starrr").clone();
-                $(".starrr").remove();
-                $("#divGrade").append(star);
-
-                $(".starrr").starrr({
-                rating:grade2,
-                    change: function(e, value){
-                        if (value) {
-                            console.log(value);
-                            grade2 = value;
-                        }
-                    }
-                });
-
-                $('.reviewModal').modal('show');
-            });
-
-
-            $(".modifyBtn").on("click", function () {
-
-                var data = { reviewnum: reviewnum, id: id, grade: grade, text: inputText.val(), email: inputMid.val() };
-
-                console.log(data);
-
-                $.ajax({
-                    url: '/reviews/' + id + "/" + reviewnum,
-                    type: "PUT",
-                    data: JSON.stringify(data),
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "text",
-                    success: function (result) {
-
-                        console.log("result: " + result);
-
-                        self.location.reload();
-
-                    }
-                })
-                reviewModal.modal('hide');
-            });
-
-            $(".removeBtn").on("click", function () {
-
-                var data = { reviewnum: reviewnum };
-
-                console.log(data);
-
-                $.ajax({
-                    url: '/reviews/' + id + "/" + reviewnum,
-                    type: "DELETE",
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "text",
-                    success: function (result) {
-
-                        console.log("result: " + result);
-
-                        self.location.reload();
-
-                    }
-                })
-                reviewModal.modal('hide');
-            });
-
-            $(".uploadResult li").click(function () {
-
-                var file = $(this).data('file');
-
-                console.log(file);
-
-                $('.imageModal .modal-body').html("<img style='width:100%' src='/display?fileName=" + file + "&size=1' >")
-
-                $(".imageModal").modal("show");
-
-            });
-
-
-
+// 별점 표시 함수
+function renderStars() {
+    $(".reviewgrade").each(function () {
+        $(this).starrr({
+            rating: $(this).data("grade2"),
+            readOnly: true
         });
-    </script>
+    });
+}
 
+ // 리뷰 추천 버튼 클릭 이벤트
+$(".reviewList").on("click", ".recommendBtn", function(e) {
+    e.stopPropagation(); // 클릭 이벤트가 상위 요소로 전파되지 않도록 함
+    const reviewnum = $(this).data("reviewnum");
+
+    $.ajax({
+        url: `/reviews/${reviewnum}/recommend`,
+        type: "POST",
+        success: function() {
+            loadReviews(currentPage, currentSort); // 추천 후 목록 다시 로드            
+        },
+        error: function(xhr) {
+            console.error("Error: " + xhr.responseText);
+        }
+    });
+});
+
+
+
+//별점 높은 순 버튼 클릭 이벤트
+$(".sortByRating").click(function(){
+    loadReviews(0, "rating");
+});
+
+ // 별점 낮은 순 버튼 클릭 이벤트
+ $(".sortByLowRating").click(function() {
+        loadReviews(0, "asc"); // 첫 페이지부터 별점 낮은 순 정렬
+    });
+
+// 첫 번째 페이지 로드
+loadReviews(0);
+
+// 이전 페이지
+$(".prevPage").click(function () {
+    if (currentPage > 0) {
+        loadReviews(currentPage - 1, currentSort);
+    }
+});
+
+// 다음 페이지
+$(".nextPage").click(function () {
+    if (currentPage < totalPages - 1) {
+        loadReviews(currentPage + 1, currentSort);
+    }
+
+});
+
+
+  //닫기버튼
+  $('.closeBtn').click(function () {
+                $(this).closest('.modal').modal('hide');
+            });
+
+// 리뷰 등록 버튼 클릭
+$(".addReviewBtn").click(function () {
+    var isLoggedIn = $("#isLoggedIn").val();
+    if (isLoggedIn === "false") {
+        alert("로그인이 필요합니다. 로그인 페이지로 이동합니다.");
+        window.location.href = "/members/login";
+    } else {
+        grade = 0;
+        inputText.val("");
+        var star = $(".starrr").clone();
+        $(".starrr").remove();
+        $("#divGrade").append(star);
+        $('.starrr').starrr({
+            rating: grade,
+            change: function (e, value) {
+                if (value) grade = value;
+            }
+        });
+        $(".removeBtn ,  .modifyBtn").hide();
+        $(".reviewSaveBtn").show();
+        reviewModal.modal('show');
+    }
+});
+
+// 리뷰 저장 버튼
+$('.reviewSaveBtn').click(function () {
+    var data = { id: id, grade: grade, text: inputText.val(), email: inputMid.val() };
+    $.ajax({
+        url: '/reviews/' + id,
+        type: "POST",
+        data: JSON.stringify(data),
+        contentType: "application/json; charset=utf-8",
+        dataType: "text",
+        success: function () {
+            self.location.reload();
+        },
+        error: function (xhr, status, error) {
+            console.error("Error: " + xhr.responseText); // 오류 디버깅
+        }
+    });
+    reviewModal.modal('hide');
+});
+
+
+
+// 리뷰 수정 및 삭제
+// $(".reviewList").on("click", "modalBtn", function () {
+
+
+//     var isLoginCheck = $("#isLoginCheck").val(); 
+//     // var reviewEmail = $(this).data("mid");
+//     var reviewEmail = $(this).data("mid")
+//     if (isLoginCheck === reviewEmail) {
+//         $(".reviewSaveBtn").hide();
+//         $(".removeBtn , .modifyBtn").show();
+//         reviewModal.modal('show');
+//     } else {
+//         alert("본인의 리뷰만 수정할 수 있습니다.");
+//     }
+
+//     var targetReview = $(this);
+//     reviewnum = targetReview.data("reviewnum");
+//     inputMid.val(targetReview.data("mid"));
+//     inputText.val(targetReview.find('.card-title').text().trim());
+//     grade2 = targetReview.find(".reviewgrade").data("grade2"); // grade2 초기화
+
+//     // starrr 초기화
+//     var star = $(".starrr").clone();
+//     $(".starrr").remove();
+//     $("#divGrade").append(star);
+
+//     $(".starrr").starrr({
+//         rating: grade2,
+//         change: function (e, value) {
+//             if (value) grade2 = value;
+//         }
+//     });
+// });
+
+$(".reviewList").on("click", ".modalBtn", function (e) {
+        e.stopPropagation(); // 이벤트 전파 방지
+
+        var isLoginCheck = $("#isLoginCheck").val();
+        var targetReview = $(this).closest(".card-body");
+        var reviewEmail = targetReview.data("mid");
+
+        // 로그인 사용자와 리뷰 작성자 일치 여부 확인
+        if (isLoginCheck === reviewEmail) {
+            $(".reviewSaveBtn").hide();
+            $(".removeBtn, .modifyBtn").show();
+            reviewModal.modal('show');
+        } else {
+            alert("본인의 리뷰만 수정할 수 있습니다.");
+            return;
+        }
+
+        // 선택한 리뷰의 데이터 불러오기
+        reviewnum = targetReview.data("reviewnum");
+        inputMid.val(targetReview.data("mid"));
+        inputText.val(targetReview.find('.card-title').text().trim());
+        grade2 = targetReview.find(".reviewgrade").data("grade2");
+
+        // 별점 초기화
+        var star = $(".starrr").clone();
+        $(".starrr").remove();
+        $("#divGrade").append(star);
+
+        $(".starrr").starrr({
+            rating: grade2,
+            change: function (e, value) {
+                if (value) grade2 = value;
+            }
+        });
+    });
+
+
+
+// 리뷰 수정 버튼
+$(".modifyBtn").on("click", function () {
+    var data = { reviewnum: reviewnum, id: id, grade: grade2, text: inputText.val(), email: inputMid.val() };
+    $.ajax({
+        url: '/reviews/' + id + "/" + reviewnum,
+        type: "PUT",
+        data: JSON.stringify(data),
+        contentType: "application/json; charset=utf-8",
+        dataType: "text",
+        success: function () {
+            self.location.reload();
+        }
+    });
+    reviewModal.modal('hide');
+});
+
+// 리뷰 삭제 버튼
+$(".removeBtn").on("click", function () {
+    var data = { reviewnum: reviewnum };
+    $.ajax({
+        url: '/reviews/' + id + "/" + reviewnum,
+        type: "DELETE",
+        contentType: "application/json; charset=utf-8",
+        dataType: "text",
+        success: function () {
+            self.location.reload();
+        }
+    });
+    reviewModal.modal('hide');
+});
+});
+
+        </script>
+    </th:block>
 </div>
-
-
 
 </html>

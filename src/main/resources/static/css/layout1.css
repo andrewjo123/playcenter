@@ -18,6 +18,39 @@ body {
 .content{
     margin-bottom:100px;
     margin-top: 50px;
-    margin-left: 200px;
-    margin-right: 200px;
+    margin-left: 175px;
+    margin-right: 175px;
 }
+
+li,ul{
+    text-decoration:none ;
+}
+
+/* main */
+.main .carousel-inner > .item {
+    height: 350px;
+}
+.main .margin{
+    margin-bottom:30px;
+}
+.main .banner{
+    height: 300px;
+    position: absolute; top:0; left: 0;
+    width: 100%;
+    height: 100%;
+}
+.main .card-text{
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.main a{
+    text-decoration: none;
+}
+.main a:hover{
+    text-decoration:gray;
+}
+.main .center{
+    text-align:center;
+}
+

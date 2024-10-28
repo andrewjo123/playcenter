@@ -20,14 +20,35 @@
         <div class="d-flex mb-3 align-self-center">
             <h4 th:text="${order.orderDate} + ' 주문'"></h4>
             <div class="ml-3">
-                <th:block th:if="${order.orderStatus == T(com.playground.constant.OrderStatus).ORDER}">
-                    <button type="button" class="btn btn-outline-secondary" th:value="${order.orderId}"
-                        onclick="cancelOrder(this.value)">주문취소</button>
+                <th:block th:if="${order.sendCode==true}">
+                    <h4>(코드 발송 완료)</h4>
                 </th:block>
-                <th:block th:unless="${order.orderStatus == T(com.playground.constant.OrderStatus).ORDER}">
-                    <h4>(취소 완료)</h4>
+                <th:block th:unless="${order.sendCode==true}">
+                    <th:block th:if="${order.orderStatus == T(com.playground.constant.OrderStatus).ORDER}">
+                        <button type="button" class="btn btn-outline-info" th:value="${order.orderId}"
+                                onclick="sendCode(this.value)">코드발송</button>
+                        <button type="button" class="btn btn-outline-secondary" th:value="${order.orderId}"
+                                onclick="cancelOrder(this.value)">주문취소</button>
+                    </th:block>
+                    <th:block th:unless="${order.orderStatus == T(com.playground.constant.OrderStatus).ORDER}">
+                        <h4>(취소 완료)</h4>
+                    </th:block>
                 </th:block>
             </div>
+        </div>
+        <div>
+            <th:block th:if="${order.orderStatus == T(com.playground.constant.OrderStatus).ORDER}">
+                <span>사용 포인트: [[${-order.pointDto.usedPoint}]]</span><br>
+                <th:block th:if="${order.sendCode==true}">
+                    <span style="color:blue;">적립 포인트: [[${order.pointDto.stackPoint}]]</span>
+                </th:block>
+                <th:block th:unless="${order.sendCode==true}">
+                    <span style="color:blue;">적립예정 포인트: [[${order.pointDto.stackPoint}]]</span>
+                </th:block>
+            </th:block>
+            <th:block th:unless="${order.orderStatus == T(com.playground.constant.OrderStatus).ORDER}">
+                <span style="color:red;">환불 포인트: [[${order.pointDto.usedPoint}]]</span>
+            </th:block>
         </div>
         <div class="card d-flex">
             <div th:each="orderItem : ${order.orderItemDtoList}" class="d-flex mb-3">
@@ -38,7 +59,7 @@
                     <span th:text="${orderItem.itemNm}" class="fs24 font-weight-bold"></span>
                     <div class="fs18 font-weight-light">
                         <span th:text="${orderItem.orderPrice} +'원'"></span>
-                        <span th:text="${orderItem.count} +'개'"></span>
+                        <span th:text="${orderItem.count} +'개'"></span><br>
                     </div>
                 </div>
             </div>
@@ -68,6 +89,20 @@
             </li>
 
         </ul>
+    </div>
+
+    <!-- 모달 -->
+    <div class="modal fade" id="loadingIndicator" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmModalLabel">⏳ 메일 발송 중..</h5>
+                </div>
+                <div class="modal-body">
+                    처리중 입니다. 잠시만 기다려 주세요. 🙏
+                </div>
+            </div>
+        </div>
     </div>
 
 </div>
@@ -106,7 +141,43 @@
                         alert('로그인 후 이용해주세요');
                         location.href = '/members/login';
                     } else {
-                        alert(jqXHR.responseText);
+                        alert('통신오류가 발생했습니다. 잠시 후 다시시도해주세요');
+                    }
+                }
+            });
+        }
+
+        function sendCode(orderId) {
+            var token = $("meta[name='_csrf']").attr("content");
+            var header = $("meta[name='_csrf_header']").attr("content");
+
+            $.ajax({
+                url: "/order/sendCode",
+                type: "POST",
+                data: {orderId: orderId},
+                beforeSend: function (xhr) {
+                    /* 데이터를 전송하기 전에 헤더에 csrf값을 설정 */
+                    xhr.setRequestHeader(header, token);
+                    $("#loadingIndicator").modal('show');
+                },
+                dataType: "text",
+                cache: false,
+                success: function (result, status) {
+                    $("#loadingIndicator").modal('hide');
+                    if(result=="success"){
+                        alert("이메일로 코드가 발송되었습니다.");
+                        location.href = '/orders/' + [[${ page }]];
+                    } else {
+                        alert("코드 발송중 오류가 발생했습니다. 다시 시도해주세요.");
+                    }
+                },
+                error: function (jqXHR, status, error) {
+                    $("#loadingIndicator").modal('hide');
+                    if (jqXHR.status == '401') {
+                        alert('로그인 후 이용해주세요');
+                        location.href = '/members/login';
+                    } else {
+                        alert('통신오류가 발생했습니다. 잠시 후 다시시도해주세요');
                     }
                 }
             });

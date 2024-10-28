@@ -61,9 +61,14 @@
     <div>
         <h2>주문정보</h2>
         이름: <span th:text="${buyer}" id="orderBuyer"></span><br/>
-        이메일: <span th:text="${email}" id="orderEmail"></span>
+        이메일: <span th:text="${email}" id="orderEmail"></span><br/>
+        보유포인트: <span id="totalPoint">[[${point}]]</span><br>
+        사용할 포인트: <input type="number" id="usePoint" value="0" min="0">
+        <button class="btn" id="use">사용</button><button class="btn" id="useAll">전부사용</button><button class="btn" id="useNot">취소</button>
         <h4 class="text-center">
-            총 주문 금액 : <span id="orderTotalPrice" class="text-danger"></span>
+            <input type="hidden" id="confirmPoint">
+            총 주문 금액 : <span id="orderTotalPrice" class="text-danger"></span><br>
+            적립 예정 포인트: <span id="stackPoint"></span>
         </h4>
     </div>
 
@@ -119,22 +124,33 @@
     <script th:inline="javascript">
         var pg="";//kakaopay, html5_inicis
         var totalP=0;
+        var orderTotalPrice = 0;
+        var finalUsingPoint=0;
 
         function getOrderTotalPrice(){
-            var orderTotalPrice = 0;
+            var usingPoint=$("#confirmPoint").val();
+            totalP=0;
+            orderTotalPrice = 0;
             $("span[name='totalPrice']").each(function() {
                 var priceEach=$(this).text();
                 console.log(priceEach);
                 var price = parseInt(priceEach.replace('원', '').replace(',', '').trim());
                 orderTotalPrice += price;
             });
-            totalP=orderTotalPrice;
-            $("#orderTotalPrice").html(orderTotalPrice.toLocaleString()+'원');
+            totalP=orderTotalPrice-usingPoint;
+            if(usingPoint>=100){
+                $("#orderTotalPrice").html(orderTotalPrice+'-'+usingPoint+'='+totalP.toLocaleString()+'원');
+            } else{
+                $("#orderTotalPrice").html(totalP.toLocaleString()+'원');
+            }
+            $("#stackPoint").html(Math.floor(totalP* 0.01)+' Point');
         }
 
         $(document).ready(function(){
             //총 결제금액 계산
             getOrderTotalPrice();
+
+            IMP.init('imp56101224'); // 가맹점 식별코드로 Iamport 초기화
 
             // 결제동의 모달
             $("#agreeDetail").on('click',function(){
@@ -143,6 +159,48 @@
             $(".agreeBtn").on('click',function(){
                 $('#agreeCheck').prop('checked', true);
                 $(".agreeModal").modal('hide');
+            });
+
+            //포인트 버튼
+            $("#use").on("click",function(){
+                if(parseInt($("#usePoint").val())!=0&&parseInt($("#usePoint").val())<100){
+                    alert("포인트는 100원이상 사용 가능합니다");
+                    return;
+                }
+                if(parseInt($("#usePoint").val())>parseInt($("#totalPoint").text())){
+                    console.log($("#usePoint").val());
+                    console.log($("#totalPoint").text());
+                    alert("포인트가 부족합니다");
+                    $("#usePoint").val($("#totalPoint").text());
+                    $("#usePoint").focus();
+                    return;
+                }
+                if(parseInt($("#usePoint").val())>parseInt(orderTotalPrice)){
+                    alert("포인트값이 결제금액을 초과했습니다");
+                    $("#usePoint").val(orderTotalPrice);
+                    $("#usePoint").focus();
+                }
+                $("#confirmPoint").val($("#usePoint").val());
+                getOrderTotalPrice();
+            });
+            $("#useAll").on("click",function(){
+                if(parseInt($("#totalPoint").text())<100){
+                    alert("포인트는 100원이상 사용 가능합니다");
+                    return;
+                }
+                if(parseInt($("#totalPoint").text())>parseInt(orderTotalPrice)){
+                    $("#usePoint").val(orderTotalPrice);
+                } else {
+                    $("#usePoint").val($("#totalPoint").text());
+                }
+                $("#confirmPoint").val($("#usePoint").val());
+                getOrderTotalPrice();
+            });
+            $("#useNot").on("click",function(){
+                $("#usePoint").val(0);
+                $("#confirmPoint").val(0);
+                getOrderTotalPrice();
+
             });
 
             //결제
@@ -164,7 +222,26 @@
               var buyer=$('#orderBuyer').text();
               var emailText = $('#orderEmail').text();
 
-              IMP.init('imp56101224'); // 가맹점 식별코드로 Iamport 초기화
+              if(totalP==0){
+                var params=[[${cartId}]];
+                $.ajax({
+                    url: "/order/validDB",
+                    method: "post",
+                    data:{orderId:orderNumber, totalPrice:totalP, usePoint:$("#confirmPoint").val(),...params},
+                    dataType:"Text",
+                    beforeSend : function(xhr){
+                        xhr.setRequestHeader(header, token);
+                    }
+                }).done(function(res) {
+                    if(res=="ok"){
+                        alert('결제가 완료되었습니다.');
+                        location.href="/orders/0";
+                    } else {
+                        alert('결제가 실패했습니다');
+                    }
+                })
+                return;
+              }
 
               IMP.request_pay({ // 결제 요청
                   pg: pgName,   // PG사 설정
@@ -192,7 +269,7 @@
                             $.ajax({
                                 url: "/order/validDB",
                                 method: "post",
-                                data:{orderId:orderNumber, totalPrice:totalP, ...params},
+                                data:{orderId:orderNumber, totalPrice:totalP, usePoint:$("#confirmPoint").val(),...params},
                                 dataType:"Text",
                                 beforeSend : function(xhr){
                                     xhr.setRequestHeader(header, token);

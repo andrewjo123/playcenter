@@ -1,11 +1,9 @@
 package com.playground.service;
 
-import com.playground.dto.ItemFormDto;
-import com.playground.dto.ItemImgDto;
-import com.playground.dto.ItemSearchDto;
-import com.playground.dto.MainItemDto;
+import com.playground.dto.*;
 import com.playground.entity.Item;
 import com.playground.entity.ItemCategory;
+import com.playground.entity.ItemCode;
 import com.playground.entity.ItemImg;
 import com.playground.repository.*;
 import com.playground.repository.ItemRepository;
@@ -24,8 +22,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.print.DocPrintJob;
+
+import static com.playground.dto.ItemCategoryDto.modelMapper;
 
 @Service
 @Transactional
@@ -36,7 +37,7 @@ public class ItemServiceImpl implements ItemService {
     private final ItemImgService itemImgService;
     private final ItemImgRepository itemImgRepository;
     private final ItemCategoryRepository categoryRepository;
-    private final ReviewRepository reviewRepository;
+    private final ItemCodeRepository itemCodeRepository;
 
 
 
@@ -47,11 +48,7 @@ public class ItemServiceImpl implements ItemService {
         Item item = itemFormDto.createItem();
         itemRepository.save(item);
 
-        // 추가
-        ItemCategory category=new ItemCategory();
-        category.setCompany(itemFormDto.getCompany());
-        category.setTag(itemFormDto.getTag());
-        category.setItem(item);
+        ItemCategory category=itemFormDto.getItemCategoryDto().toEntity(item, itemFormDto.getCompany());
         categoryRepository.save(category);
 
         // Register images
@@ -83,7 +80,8 @@ public class ItemServiceImpl implements ItemService {
         //추가
         ItemCategory categories=categoryRepository.findByItemId(itemId);
         itemFormDto.setCompany(categories.getCompany());
-        itemFormDto.setTag(categories.getTag());
+        ItemCategoryDto itemCategoryDto=ItemCategoryDto.fromEntity(categories);
+        itemFormDto.setItemCategoryDto(itemCategoryDto);
         
         // 리뷰 추가
         List<Object[]>result=itemRepository.getAvgAndCount(itemId);
@@ -124,8 +122,8 @@ public class ItemServiceImpl implements ItemService {
 
         //추가
         ItemCategory category=categoryRepository.findByItemId(item.getId());
+        modelMapper.map(itemFormDto.getItemCategoryDto(),category);
         category.setCompany(itemFormDto.getCompany());
-        category.setTag(itemFormDto.getTag());
         categoryRepository.save(category);
 
         return item.getId();
@@ -146,5 +144,25 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public Page<MainItemDto> getMainItemPage2(String company, ItemSearchDto itemSearchDto, Pageable pageable) {
         return itemRepository.getMainItemPage2(company, itemSearchDto, pageable);
+    }
+
+    // 1024추가
+    @Transactional
+    @Override
+    public int saveCodes(Long itemId, List<String> codes) {
+        Item item = itemRepository.findById(itemId).get();
+        List<ItemCode> itemCodes = new ArrayList<>();
+
+        codes.forEach(code -> {
+            ItemCode itemCode = new ItemCode();
+            itemCode.setItem(item);
+            itemCode.setCodNum(code);
+            itemCodes.add(itemCode);
+        });
+
+        itemCodeRepository.saveAll(itemCodes);
+        item.setStockNumber(item.getStockNumber()+codes.size());
+        itemRepository.save(item);
+        return codes.size(); // 반복한 횟수 반환
     }
 }

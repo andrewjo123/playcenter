@@ -1,10 +1,72 @@
-/*header-------------*/
-.imgcontent {
-    text-align: center;
+/*header1-------------*/
+
+.hd1 .nav-link {
+    border-bottom: 2px solid transparent; 
+    color: #6c757d; 
+    transition: color 0.3s, font-weight 0.3s;
 }
-.imgcontent img {
-    max-width: 100%;
-    height: auto;
-    display: block; 
-    margin: 0 auto;
+
+.hd1 .nav-link:hover {
+    color: #343a40;
+    font-weight: bold;
+}
+
+
+.hd1 .nav-link.active {
+    border-bottom: 3px solid #5cbf4e !important; 
+    color: #5cbf4e !important;
+    background-color: white  !important; /* active 상태에서의 텍스트 색상 (원하는 경우) */
+}
+
+
+.hd1 .nav-item {
+    position: relative;
+}
+
+.hd1.dropdown-menu {
+    position: absolute;
+    left: 0; /* 드롭다운 메뉴를 왼쪽으로 정렬 */
+    right: auto; /* 오른쪽 정렬 해제 */
+    min-width: 200px; /* 최소 너비 설정 */
+    max-width: calc(100vw - 20px); /* 뷰포트의 가로폭에 따라 조정 */
+    overflow: hidden; /* 내용이 넘치지 않도록 처리 */
+}
+.dropdown-toggle::after {
+    display: none; /* 화살표 숨기기 */
+}
+
+/*sidebar-------------*/
+#sb{
+    margin-top: 15%; position: fixed; height: 100%; width: 150px;  
+   } 
+   .sb_cart{
+   text-align: center; color: gray;position: relative;  display: inline-block;
+   cursor: pointer; }
+   #getCount  {
+    position: absolute; 
+    top: -15px; 
+    right: -15px; 
+    background-color: red; 
+    color: white; 
+    border-radius: 50%; 
+    padding: 2px; 
+    font-size: 12px; 
+    text-align: center; 
+    width: 20px; 
+    height: 20px;
+    line-height: 20px; 
+}
+#sidebarGetCount {
+    position: absolute; 
+    top: 35px;
+    right: -2px;
+    background-color: red; 
+    color: white; 
+    border-radius: 50%; 
+    padding: 2px; 
+    font-size: 12px; 
+    text-align: center; 
+    width: 20px; 
+    height: 20px;
+    line-height: 20px; 
 }

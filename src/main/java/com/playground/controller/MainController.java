@@ -88,5 +88,9 @@ public class MainController {
         // ResponseEntity로 반환
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+    @RequestMapping(value="/support", method = RequestMethod.GET)
+    public String support() {
+        return "support/supportmain";
+    }
 
 }

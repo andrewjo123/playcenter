@@ -1,14 +1,20 @@
 package com.playground.controller;
 
+import com.playground.dto.MemberDetailDto;
 import com.playground.dto.MemberFormDto;
+import com.playground.dto.MemberSearchDto;
 import com.playground.entity.Member;
 import com.playground.service.EmailService;
 import com.playground.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,6 +29,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 @RequestMapping("/members")
@@ -78,12 +85,18 @@ public class MemberController {
     }
 
     @GetMapping(value = "/login/error")
-    public String loginError(Model model){
-        System.out.println("controlerrrrrrrrrrrrrrrrr");
-        model.addAttribute("loginErrorMsg", "아이디 또는 비밀번호를 확인해주세요");
+    public String loginError(Model model,HttpServletRequest request){
+        String site=(String) request.getSession().getAttribute("resign");
+        if(site==null|| site.isEmpty()){
+            model.addAttribute("loginErrorMsg", "아이디 또는 비밀번호를 확인해주세요");
+        } else {
+            request.getSession().removeAttribute("resign");
+            model.addAttribute("loginErrorMsg", "회원 탈퇴 신청된 계정입니다. 복구를 원하시면 관리자에게 문의하세요.");
+        }
         return "member/memberLoginForm";
     }
     // 정관수 추가
+    @PreAuthorize("isAuthenticated()")
     @GetMapping(value="/modify")
     public String modUser(Model model, Principal principal){
         String userid = principal.getName();
@@ -92,6 +105,7 @@ public class MemberController {
         return "member/memberModify";
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping(value="/modify")
     public String modifyUser(@Valid MemberFormDto memberFormDto, BindingResult bindingResult, Principal principal, Model model){
         if(principal==null){
@@ -248,7 +262,41 @@ public class MemberController {
         }
     }
 
+    // 회원탈퇴
+    @RequestMapping(value="/resign",method = {RequestMethod.POST})
+    @ResponseBody
+    public ResponseEntity<String> goResign(MemberFormDto dto){
+
+        String result=memberService.valideResign(dto);
+        memberService.changeResign(dto.getEmail());
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
 
     // 정관수 끝
+    // 조민 추가
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping(value = {"/manageMember", "/manageMember/{page}"})
+    public String memberManage(MemberSearchDto memberSearchDto, @PathVariable("page") Optional<Integer> page, Model model){
+
+        Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 10);  // 페이지네이션 설정
+        Page<Member> members = memberService.getAdminMemberPage(memberSearchDto, pageable);
+
+        model.addAttribute("members", members);  // 회원 리스트 전달
+        model.addAttribute("memberSearchDto", memberSearchDto);  // 검색 필드 전달
+        model.addAttribute("maxPage", 5);  // 최대 페이지 수 설정
+
+        return "member/memberMng";
+    }
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/toggleStatus")
+    public ResponseEntity<Void> toggleStatus(@RequestBody MemberDetailDto memberDetailDto) {
+        System.out.println("Received Member ID: {}" + memberDetailDto.getMemberId());
+        System.out.println("Received Resign Status: {}" + memberDetailDto.isResign());
+        memberService.toggleStatus(memberDetailDto.getMemberId(), memberDetailDto.isResign());
+        return ResponseEntity.ok().build();
+    }
+    //조민끝
 }
 
