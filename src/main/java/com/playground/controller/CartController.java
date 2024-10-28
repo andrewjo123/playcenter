@@ -54,6 +54,11 @@ public class CartController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping(value = "/cart")
     public String orderHist(Principal principal, Model model){
+
+        if (principal == null) {
+            return "redirect:/members/login";
+        }
+
         List<CartDetailDto> cartDetailList = cartService.getCartList(principal.getName());
         model.addAttribute("cartItems", cartDetailList);
         return "cart/cartList";
@@ -62,6 +67,10 @@ public class CartController {
     @PreAuthorize("isAuthenticated()")
     @PatchMapping(value = "/cartItem/{cartItemId}")
     public @ResponseBody ResponseEntity updateCartItem(@PathVariable("cartItemId") Long cartItemId, int count, Principal principal){
+
+        if (principal == null) {
+            return new ResponseEntity<>("로그인이 필요합니다.", HttpStatus.UNAUTHORIZED);
+        }
 
         if(count <= 0){
             return new ResponseEntity<String>("최소 1개 이상 담아주세요", HttpStatus.BAD_REQUEST);
@@ -76,6 +85,10 @@ public class CartController {
     @PreAuthorize("isAuthenticated()")
     @DeleteMapping(value = "/cartItem/{cartItemId}")
     public @ResponseBody ResponseEntity deleteCartItem(@PathVariable("cartItemId") Long cartItemId, Principal principal){
+
+        if (principal == null) {
+            return new ResponseEntity<>("로그인이 필요합니다.", HttpStatus.UNAUTHORIZED);
+        }
 
         if(!cartService.validateCartItem(cartItemId, principal.getName())){
             return new ResponseEntity<String>("수정 권한이 없습니다.", HttpStatus.FORBIDDEN);
