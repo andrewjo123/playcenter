@@ -34,3 +34,39 @@
 .dropdown-toggle::after {
     display: none; /* 화살표 숨기기 */
 }
+
+/*sidebar-------------*/
+#sb{
+    margin-top: 15%; position: fixed; height: 100%; width: 150px;  
+   } 
+   .sb_cart{
+   text-align: center; color: gray;position: relative;  display: inline-block;
+   }
+   #getCount  {
+    position: absolute; 
+    top: -15px; 
+    right: -15px; 
+    background-color: red; 
+    color: white; 
+    border-radius: 50%; 
+    padding: 2px; 
+    font-size: 12px; 
+    text-align: center; 
+    width: 20px; 
+    height: 20px;
+    line-height: 20px; 
+}
+#sidebarGetCount {
+    position: absolute; 
+    top: 35px;
+    right: -2px;
+    background-color: red; 
+    color: white; 
+    border-radius: 50%; 
+    padding: 2px; 
+    font-size: 12px; 
+    text-align: center; 
+    width: 20px; 
+    height: 20px;
+    line-height: 20px; 
+}
