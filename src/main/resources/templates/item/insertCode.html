@@ -35,6 +35,8 @@
       </div>
       <button class="btn btn-info addInput">입력칸 추가</button>
       <button class="btn btn-success regCodes">코드 등록</button>
+      <!-- 새 버튼 추가 -->
+      <button class="btn btn-warning fillCodes">코드 자동 채우기</button>
     </div>
 
   </div>
@@ -48,6 +50,31 @@
       var inputNum=6;
       var token = $("meta[name='_csrf']").attr("content");
       var header = $("meta[name='_csrf_header']").attr("content");
+
+      // 16자리 랜덤 코드 생성 함수
+      function generateRandomCode() {
+        const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        let code = "";
+        while (code.length < 16) {
+          code += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        return code.match(/.{4}/g).join("-"); // 4자리마다 '-' 삽입
+      }
+
+      // 코드 자동 채우기 기능
+      $(".fillCodes").on('click', function() {
+        const codes = new Set();
+        $(".insert").each(function() {
+          let randomCode;
+          do {
+            randomCode = generateRandomCode();
+          } while (codes.has(randomCode)); // 중복 방지
+          codes.add(randomCode);
+          $(this).val(randomCode);
+          $(this).siblings('.error').hide();
+        });
+      });
+
 
       //입력칸 추가
       $(".addInput").on('click',function(){
