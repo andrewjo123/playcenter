@@ -1,6 +1,8 @@
 package com.playground.repository;
 
+import com.playground.dto.ItemCategoryDto;
 import com.playground.entity.QItemCategory;
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Wildcard;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -91,10 +93,43 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
     }
 
     @Override
-    public Page<MainItemDto> getMainItemPage(ItemSearchDto itemSearchDto, Pageable pageable) {
+    public Page<MainItemDto> getMainItemPage(ItemSearchDto itemSearchDto, ItemCategoryDto itemCategoryDto,Pageable pageable) {
         QItem item = QItem.item;
         QItemImg itemImg = QItemImg.itemImg;
+        QItemCategory itemCategory= QItemCategory.itemCategory;
 
+        BooleanBuilder whereClause = new BooleanBuilder();
+
+        // 기본 조건 추가
+        whereClause.and(itemImg.repimgYn.eq("Y"));
+        whereClause.and(itemNmLike(itemSearchDto.getSearchQuery()));
+
+        // ItemCategoryDto의 필드 추가
+        if (itemCategoryDto != null) {
+            if (itemCategoryDto.isAction()) whereClause.and(itemCategory.action.eq(true));
+            if (itemCategoryDto.isAdventure()) whereClause.and(itemCategory.adventure.eq(true));
+            if (itemCategoryDto.isRpg()) whereClause.and(itemCategory.rpg.eq(true));
+            if (itemCategoryDto.isShooter()) whereClause.and(itemCategory.shooter.eq(true));
+            if (itemCategoryDto.isStrategy()) whereClause.and(itemCategory.strategy.eq(true));
+            if (itemCategoryDto.isSimulation()) whereClause.and(itemCategory.simulation.eq(true));
+            if (itemCategoryDto.isPuzzle()) whereClause.and(itemCategory.puzzle.eq(true));
+            if (itemCategoryDto.isSports()) whereClause.and(itemCategory.sports.eq(true));
+            if (itemCategoryDto.isRacing()) whereClause.and(itemCategory.racing.eq(true));
+            if (itemCategoryDto.isFighting()) whereClause.and(itemCategory.fighting.eq(true));
+            if (itemCategoryDto.isSurvival()) whereClause.and(itemCategory.survival.eq(true));
+            if (itemCategoryDto.isRhythm()) whereClause.and(itemCategory.rhythm.eq(true));
+            if (itemCategoryDto.isSandbox()) whereClause.and(itemCategory.sandbox.eq(true));
+            if (itemCategoryDto.isBattleRoyale()) whereClause.and(itemCategory.battleRoyale.eq(true));
+            if (itemCategoryDto.isCard()) whereClause.and(itemCategory.card.eq(true));
+            if (itemCategoryDto.isBoardGame()) whereClause.and(itemCategory.boardGame.eq(true));
+            if (itemCategoryDto.isHorror()) whereClause.and(itemCategory.horror.eq(true));
+            if (itemCategoryDto.isPlatformer()) whereClause.and(itemCategory.platformer.eq(true));
+            if (itemCategoryDto.isMoba()) whereClause.and(itemCategory.moba.eq(true));
+            if (itemCategoryDto.isMmorpg()) whereClause.and(itemCategory.mmorpg.eq(true));
+        }
+        System.out.println(itemCategoryDto.isAction());
+        System.out.println("::::::::::::::::::::::::::::::::::::::");
+        System.out.println(whereClause);
         List<MainItemDto> content = queryFactory
                 .select(
                         new QMainItemDto(
@@ -106,8 +141,8 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
                 )
                 .from(itemImg)
                 .join(itemImg.item, item)
-                .where(itemImg.repimgYn.eq("Y"))
-                .where(itemNmLike(itemSearchDto.getSearchQuery()))
+                .join(itemCategory).on(itemCategory.item.eq(item))
+                .where(whereClause)
                 .orderBy(item.id.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -117,8 +152,8 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
                 .select(Wildcard.count)
                 .from(itemImg)
                 .join(itemImg.item, item)
-                .where(itemImg.repimgYn.eq("Y"))
-                .where(itemNmLike(itemSearchDto.getSearchQuery()))
+                .join(itemCategory).on(itemCategory.item.eq(item))
+                .where(whereClause)
                 .fetchOne()
                 ;
 
@@ -126,11 +161,44 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
     }
 
     @Override
-    public Page<MainItemDto> getMainItemPage2(String company, ItemSearchDto itemSearchDto, Pageable pageable) {
+    public Page<MainItemDto> getMainItemPage2(String company, ItemSearchDto itemSearchDto, ItemCategoryDto itemCategoryDto,Pageable pageable) {
         QItem item = QItem.item;
         QItemImg itemImg = QItemImg.itemImg;
-        QItemCategory itemCategory = QItemCategory.itemCategory;
+        QItemCategory itemCategory= QItemCategory.itemCategory;
 
+        BooleanBuilder whereClause = new BooleanBuilder();
+
+        // 기본 조건 추가
+        whereClause.and(itemImg.repimgYn.eq("Y"));
+        whereClause.and(itemCategory.company.eq(company));
+        whereClause.and(itemNmLike(itemSearchDto.getSearchQuery()));
+
+        // ItemCategoryDto의 필드 추가
+        if (itemCategoryDto != null) {
+            if (itemCategoryDto.isAction()) whereClause.and(itemCategory.action.eq(true));
+            if (itemCategoryDto.isAdventure()) whereClause.and(itemCategory.adventure.eq(true));
+            if (itemCategoryDto.isRpg()) whereClause.and(itemCategory.rpg.eq(true));
+            if (itemCategoryDto.isShooter()) whereClause.and(itemCategory.shooter.eq(true));
+            if (itemCategoryDto.isStrategy()) whereClause.and(itemCategory.strategy.eq(true));
+            if (itemCategoryDto.isSimulation()) whereClause.and(itemCategory.simulation.eq(true));
+            if (itemCategoryDto.isPuzzle()) whereClause.and(itemCategory.puzzle.eq(true));
+            if (itemCategoryDto.isSports()) whereClause.and(itemCategory.sports.eq(true));
+            if (itemCategoryDto.isRacing()) whereClause.and(itemCategory.racing.eq(true));
+            if (itemCategoryDto.isFighting()) whereClause.and(itemCategory.fighting.eq(true));
+            if (itemCategoryDto.isSurvival()) whereClause.and(itemCategory.survival.eq(true));
+            if (itemCategoryDto.isRhythm()) whereClause.and(itemCategory.rhythm.eq(true));
+            if (itemCategoryDto.isSandbox()) whereClause.and(itemCategory.sandbox.eq(true));
+            if (itemCategoryDto.isBattleRoyale()) whereClause.and(itemCategory.battleRoyale.eq(true));
+            if (itemCategoryDto.isCard()) whereClause.and(itemCategory.card.eq(true));
+            if (itemCategoryDto.isBoardGame()) whereClause.and(itemCategory.boardGame.eq(true));
+            if (itemCategoryDto.isHorror()) whereClause.and(itemCategory.horror.eq(true));
+            if (itemCategoryDto.isPlatformer()) whereClause.and(itemCategory.platformer.eq(true));
+            if (itemCategoryDto.isMoba()) whereClause.and(itemCategory.moba.eq(true));
+            if (itemCategoryDto.isMmorpg()) whereClause.and(itemCategory.mmorpg.eq(true));
+        }
+
+        System.out.println("::::::::::::::::::::::::::::::::::::::");
+        System.out.println(whereClause);
         List<MainItemDto> content = queryFactory
                 .select(
                         new QMainItemDto(
@@ -143,9 +211,7 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
                 .from(itemImg)
                 .join(itemImg.item, item)
                 .join(itemCategory).on(itemCategory.item.eq(item))
-                .where(itemImg.repimgYn.eq("Y"))
-                .where(itemCategory.company.eq(company))
-                .where(itemNmLike(itemSearchDto.getSearchQuery()))
+                .where(whereClause)
                 .orderBy(item.id.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -156,11 +222,8 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
                 .from(itemImg)
                 .join(itemImg.item, item)
                 .join(itemCategory).on(itemCategory.item.eq(item))
-                .where(itemImg.repimgYn.eq("Y"))
-                .where(itemCategory.company.eq(company))
-                .where(itemNmLike(itemSearchDto.getSearchQuery()))
-                .fetchOne()
-                ;
+                .where(whereClause)
+                .fetchOne();
 
         return new PageImpl<>(content, pageable, total);
     }

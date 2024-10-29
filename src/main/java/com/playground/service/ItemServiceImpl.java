@@ -137,13 +137,13 @@ public class ItemServiceImpl implements ItemService {
 
     @Transactional(readOnly = true)
     @Override
-    public Page<MainItemDto> getMainItemPage(ItemSearchDto itemSearchDto, Pageable pageable) {
-        return itemRepository.getMainItemPage(itemSearchDto, pageable);
+    public Page<MainItemDto> getMainItemPage(ItemSearchDto itemSearchDto, ItemCategoryDto itemCategoryDto, Pageable pageable) {
+        return itemRepository.getMainItemPage(itemSearchDto, itemCategoryDto, pageable);
     }
 
     @Override
-    public Page<MainItemDto> getMainItemPage2(String company, ItemSearchDto itemSearchDto, Pageable pageable) {
-        return itemRepository.getMainItemPage2(company, itemSearchDto, pageable);
+    public Page<MainItemDto> getMainItemPage2(String company, ItemSearchDto itemSearchDto, ItemCategoryDto itemCategoryDto,Pageable pageable) {
+        return itemRepository.getMainItemPage2(company, itemSearchDto, itemCategoryDto, pageable);
     }
 
     // 1024추가
