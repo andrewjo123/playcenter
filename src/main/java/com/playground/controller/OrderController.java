@@ -27,7 +27,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -167,15 +166,6 @@ public class OrderController {
             refundService.refundWithToken(token,orderId);
             return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
         }
-    }
-
-    // 결제 전 수량체크
-    @RequestMapping(value="/order/checkStack",method = {RequestMethod.POST})
-    @ResponseBody
-    public ResponseEntity<List<String>> stack(@RequestParam Map<String, String> params){
-        params.remove("orderId");
-        List<String> result=orderService.checkStack(params);
-        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     //취소누르면 order삭제

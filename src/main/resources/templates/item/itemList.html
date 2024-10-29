@@ -69,12 +69,7 @@
                             <div class="card-body">
                                 <h4 class="card-title">[[${item.itemNm}]]</h4>
                                 <p class="card-text">[[${item.itemDetail}]]</p>
-                                <th:block th:if="${item.stockNumber<=0}">
-                                    <h3 class="card-title text-danger">품절</h3>
-                                </th:block>
-                                <th:block th:unless="${item.stockNumber<=0}">
-                                    <h3 class="card-title text-danger">[[${item.price}]]원</h3>
-                                </th:block>
+                                <h3 class="card-title text-danger">[[${item.price}]]원</h3>
                             </div>
                         </a>
                     </div>
@@ -171,11 +166,7 @@
                     str += '            <div class="card-body">';
                     str += '                <h4 class="card-title">' + item.itemNm + '</h4>'; // 수정된 부분
                     str += '                <p class="card-text">' + item.itemDetail + '</p>'; // 수정된 부분
-                    if (item.stockNumber <= 0) {
-                        str += '                <h3 class="card-title text-danger">품절</h3>';
-                    } else {
-                        str += '                <h3 class="card-title text-danger">' + item.price + '원</h3>';
-                    }
+                    str += '                <h3 class="card-title text-danger">' + item.price + '원</h3>'; // 수정된 부분
                     str += '            </div></a></div></div>';
                 });
 
@@ -267,18 +258,11 @@
                 var cate=$("#getCompany").text();
                 const newUrl = "/"+cate+"More";
                 currentPage++;
-                var itemCategoryDto = {};
-
-                $("input[type='checkbox']:checked").each(function() {
-                    var checkboxName = $(this).attr('name');
-                    var checked = $(this).is(':checked');
-                    itemCategoryDto[checkboxName]=checked;
-                });
 
                 $.ajax({
                     url: newUrl,
                     type: 'GET',
-                    data:{searchQuery:searchQuery, nthPage:currentPage, ...itemCategoryDto},
+                    data:{searchQuery:searchQuery, nthPage:currentPage},
                     success: function(response) {
                         appendPage(response);
                         var maxPage = parseInt(response.maxPage);

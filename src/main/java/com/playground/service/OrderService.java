@@ -6,7 +6,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
-import java.util.Map;
 
 public interface OrderService {
     Long order(OrderDto orderDto, String email);
@@ -25,7 +24,6 @@ public interface OrderService {
     void payedOrder(Long orderId, Long usePoint);
     void removeList(Long orderId);
 
+    //1023 1740추가
     String sendAllCodes(Long orderId, String email);
-
-    List<String> checkStack(Map<String, String> cartIds);
 }

@@ -137,8 +137,7 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
                                 item.itemNm,
                                 item.itemDetail,
                                 itemImg.imgUrl,
-                                item.price,
-                                item.stockNumber)
+                                item.price)
                 )
                 .from(itemImg)
                 .join(itemImg.item, item)
@@ -207,8 +206,7 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
                                 item.itemNm,
                                 item.itemDetail,
                                 itemImg.imgUrl,
-                                item.price,
-                                item.stockNumber)
+                                item.price)
                 )
                 .from(itemImg)
                 .join(itemImg.item, item)
