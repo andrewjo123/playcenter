@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}"
+      class="itemMng">
+
+<head>
+  <link th:href="@{/css/shop.css}" rel="stylesheet">
+  <meta name="_csrf" th:content="${_csrf.token}"/>
+  <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+</head>
+
+
+<div layout:fragment="content">
+  <style>
+    .code{display:block; margin-bottom:2px;}
+    .error{color: red; display: none;}
+  </style>
+
+  <div>
+    <p>코드등록</p>
+    <p>게임 id: <span id="itemId" th:text="${itemId}"></span></p>
+    <p>게임 이름: <span th:text="${itemNm}"></span></p>
+
+    <div>
+      코드 입력
+      <label><input type="radio" name="option" value="exist" checked>- 있음</label>
+      <label><input type="radio" name="option" value="none">- 없음</label><br/>
+      <div id="inputDiv">
+        <label class="code">1: <span class="error"></span><input class="form-control insert"></label>
+        <label class="code">2: <span class="error"></span><input class="form-control insert"></label>
+        <label class="code">3: <span class="error"></span><input class="form-control insert"></label>
+        <label class="code">4: <span class="error"></span><input class="form-control insert"></label>
+        <label class="code">5: <span class="error"></span><input class="form-control insert"></label>
+      </div>
+      <button class="btn btn-info addInput">입력칸 추가</button>
+      <button class="btn btn-success regCodes">코드 등록</button>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- 사용자 스크립트 추가 -->
+<th:block layout:fragment="script">
+  <script th:inline="javascript">
+    $(document).ready(function(){
+      var inputNum=6;
+      var token = $("meta[name='_csrf']").attr("content");
+      var header = $("meta[name='_csrf_header']").attr("content");
+
+      //입력칸 추가
+      $(".addInput").on('click',function(){
+        for(var i=inputNum; i<inputNum+5; i++){
+          var input1='<label class="code">'+i+': <span class="error"></span><input class="form-control insert"></label>';
+          $("#inputDiv").append(input1);
+        }
+        inputNum+=5;
+      });
+
+      //코드 등록
+      $(".regCodes").on('click', function() {
+        var codes = [];
+        const dashRegex = /^[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/;
+        const regex = /^[A-Z0-9]{16}$/;
+        var valid=true;
+
+        $(".insert").each(function(idx) {
+          var value = $(this).val();
+          var errorMessage = $(this).siblings('.error');
+          if (value) {
+            if($('input[name="option"]:checked').val()=="exist"){
+              if(dashRegex.test(value)){
+                codes.push(value);
+                errorMessage.hide();
+              } else {
+                errorMessage.text("코드 형식 불일치").show();
+                valid=false;
+              }
+            } else {
+              if(regex.test(value)){
+                codes.push(value.replace(/(.{4})/g, '$1-').slice(0, -1));
+                errorMessage.hide();
+              } else {
+                errorMessage.text("코드 형식 불일치").show();
+                valid=false;
+              }
+            }
+          }
+        });
+        if(!valid){
+          alert("코드 번호를 확인해주세요.");
+          return;
+        }
+        if (codes.length === 0) {
+          alert("입력값이 없습니다.");
+          return;
+        }
+        // JSON 형태로 변환
+        var jsonData = JSON.stringify(codes);
+
+        $.ajax({
+          url: '/admin/insert/'+$("#itemId").text(),
+          type: 'POST',
+          contentType: 'application/json',
+          data: jsonData,
+          dataType:"text",
+          beforeSend : function(xhr){
+            xhr.setRequestHeader(header, token);
+          },
+          success: function(result) {
+            $(".insert").val("");
+            alert(result+"개의 코드를 등록하였습니다");
+          },
+          error: function(xhr, status, error) {
+            console.error("에러:", error);
+          }
+        });
+      });
+
+      //입력칸 제한
+      $("#inputDiv").on("input", ".insert",function() {
+        var num = 19;
+        if ($('input[name="option"]:checked').val() == "none") {
+          num = 16;
+        }
+        var errorMessage = $(this).siblings('.error');
+
+        if ($(this).val().length > num) {
+          $(this).val($(this).val().substring(0, num));
+          errorMessage.text("입력값 초과").show();
+        } else {
+          errorMessage.hide();
+        }
+      });
+
+      // 옵션 변경 시 각 요소 체크
+      $('input[name="option"]').on('change', function() {
+        var checked=false;
+        $('.insert').each(function() {
+          var inputValue = $(this).val();
+          var errorMessage = $(this).siblings('.error');
+
+          if (inputValue.length > 16) {
+            $(this).val(inputValue.substring(0, 16));
+            errorMessage.text("입력값 초과").show();
+            checked=true;
+          } else {
+            errorMessage.hide();
+          }
+        });
+        if(checked){
+          alert("입력값이 초과된 항목이 있습니다.");
+        }
+      });
+
+    })
+  </script>
+</th:block>
+
+</html>

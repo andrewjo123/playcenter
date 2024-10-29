@@ -122,4 +122,11 @@ public class CartServiceImpl implements CartService {
 
         return orderId;
     }
+
+    // 1024추가
+    @Override
+    public int getCartCount(String email) {
+        Long cartId=cartRepository.findByEmail(email).getId();
+        return (int)cartItemRepository.countByCartId(cartId);
+    }
 }

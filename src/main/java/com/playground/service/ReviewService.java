@@ -2,6 +2,9 @@ package com.playground.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import com.playground.dto.ReviewDto;
 import com.playground.entity.Item;
 import com.playground.entity.Member;
@@ -10,7 +13,7 @@ import com.playground.entity.Review;
 public interface ReviewService {
 
     //영화의 모든 영화리뷰를 가져온다.
-    List<ReviewDto> getListOfItem(Long id);
+    Page<ReviewDto> getListOfItem(Long id, Pageable pageable);  // 페이징 적용
 
     //영화 리뷰를 추가
     Long register(ReviewDto itemReviewDto);

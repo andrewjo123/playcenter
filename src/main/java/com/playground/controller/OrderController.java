@@ -99,9 +99,10 @@ public class OrderController {
             return "member/memberLoginForm";
         }
         List<OrderHistDto> orders = orderService.getPayList(orderId);
-        String buyer=orderService.findBuyer(orderId);
+        String[] members=orderService.findBuyer(orderId);
         model.addAttribute("orders", orders);
-        model.addAttribute("buyer",buyer);
+        model.addAttribute("buyer",members[0]);
+        model.addAttribute("point",members[1]);
         model.addAttribute("email",principal.getName());
         model.addAttribute("cartId",params);
         System.out.println(params);
@@ -138,14 +139,15 @@ public class OrderController {
     // DB에서 결제 2차검증
     @RequestMapping(value="/order/validDB",method = {RequestMethod.POST})
     @ResponseBody
-    public ResponseEntity<String> validateWithDB(@RequestParam("orderId")Long orderId, @RequestParam("totalPrice")Long totalPrice, @RequestParam Map<String, String> params,
+    public ResponseEntity<String> validateWithDB(@RequestParam("orderId")Long orderId, @RequestParam("totalPrice")Long totalPrice, @RequestParam("usePoint")Long usePoint ,@RequestParam Map<String, String> params,
                                                  Principal principal) throws IOException {
 
-        String result=orderService.validpay(orderId,totalPrice);
+        String result=orderService.validpay(orderId,totalPrice,usePoint);
         if(result.equals("ok")){
-            orderService.payedOrder(orderId);
+            orderService.payedOrder(orderId, usePoint);
             params.remove("orderId");
             params.remove("totalPrice");
+            params.remove("usePoint");
 
             if (!params.isEmpty()) {
                 params.forEach((key, value) -> {
@@ -175,5 +177,18 @@ public class OrderController {
         String token=refundService.getToken(restApiKey,restApiSecret);
         refundService.refundWithToken(token,orderId);
         return new ResponseEntity<>("refund", HttpStatus.OK);
+    }
+
+    // 1023 1730 추가
+    @PostMapping("/order/sendCode")
+    @ResponseBody
+    public ResponseEntity<String> sendCodes(@RequestParam("orderId") Long orderId , Principal principal) throws IOException {
+
+        if(!orderService.validateOrder(orderId, principal.getName())){
+            return new ResponseEntity<String>("코드발송권한이 없습니다.", HttpStatus.FORBIDDEN);
+        }
+        String email=principal.getName();
+        String result=orderService.sendAllCodes(orderId,email);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

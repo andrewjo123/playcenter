@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}"
+      class="itemMng">
+
+<head>
+    <link th:href="@{/css/shop.css}" rel="stylesheet">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+</head>
+
+
+<div layout:fragment="content">
+
+    <form th:action="@{'/members/manageMember' + ${members.number}}" role="form" method="get" th:object="${members}">
+        <table class="table">
+            <thead>
+            <tr>
+                <td>회원 ID</td>
+                <td>이름</td>
+                <td>이메일</td>
+                <td>전화번호</td>
+                <td>상태</td>
+                <td>역할</td>
+                <td>등록일</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="member, status: ${members.getContent()}">
+                <td th:text="${member.id}"></td>
+                <td th:text="${member.name}"></td>
+                <td th:text="${member.email}"></td>
+                <td th:text="${member.phone}"></td>
+                <td th:text="${member.resign ? '비활성화' : '활성화'}"></td>
+                <td th:text="${member.role}"></td>
+                <td th:text="${member.regTime}"></td>
+                <td>
+                    <button type="button"
+                            th:text="${member.resign ? '활성화' : '비활성화'}"
+                            th:onclick="|toggleStatus(${member.id}, ${!member.resign})|">
+                        활성화/비활성화
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="form-inline justify-content-center" th:object="${memberSearchDto}">
+            <select th:field="*{searchBy}" class="form-control" style="width:auto;">
+                <option value="name">이름</option>
+                <option value="email">이메일</option>
+                <option value="phone">전화번호</option>
+            </select>
+            <input th:field="*{searchQuery}" type="text" class="form-control" placeholder="검색어를 입력해주세요">
+            <select th:field="*{searchStatus}" class="form-control" style="width:auto;">
+                <option value="">상태(전체)</option>
+                <option value="true">활성화</option>
+                <option value="false">비활성화</option>
+            </select>
+            <button id="searchBtn" type="submit" class="btn btn-primary">검색</button>
+        </div>
+
+        <div th:with="start=${(members.number/maxPage)*maxPage + 1}, end=(${(members.totalPages == 0) ? 1 : (start + (maxPage - 1) < members.totalPages ? start + (maxPage - 1) : members.totalPages)})" >
+            <ul class="pagination justify-content-center">
+
+                <li class="page-item" th:classappend="${members.first}?'disabled'">
+                    <a th:onclick="'javascript:page(' + ${members.number - 1} + ')'" aria-label='Previous' class="page-link">
+                        <span aria-hidden='true'>Previous</span>
+                    </a>
+                </li>
+
+                <li class="page-item" th:each="page: ${#numbers.sequence(start, end)}" th:classappend="${members.number eq page-1}?'active':''">
+                    <a th:onclick="'javascript:page(' + ${page - 1} + ')'" th:inline="text" class="page-link">[[${page}]]</a>
+                </li>
+
+                <li class="page-item" th:classappend="${members.last}?'disabled'">
+                    <a th:onclick="'javascript:page(' + ${members.number + 1} + ')'" aria-label='Next' class="page-link">
+                        <span aria-hidden='true'>Next</span>
+                    </a>
+                </li>
+
+            </ul>
+        </div>
+    </form>
+
+</div>
+
+<!-- 사용자 스크립트 추가 -->
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+        $(document).ready(function(){
+            $("#searchBtn").on("click",function(e) {
+                e.preventDefault();
+                page(0); // 검색 시 첫 번째 페이지로 이동
+            });
+        });
+
+        function page(page){
+            var searchBy = $("#searchBy").val(); // 검색 기준
+            var searchQuery = $("#searchQuery").val(); // 검색어
+            var searchStatus = $("#searchStatus").val(); // 회원 상태
+
+            // 페이지 이동 시 검색 조건들을 유지
+            location.href="/members/manageMember/" + page + "?searchBy=" + searchBy
+            + "&searchQuery=" + searchQuery
+            + "&searchStatus=" + searchStatus;
+        }
+
+        window.toggleStatus = function(memberId, newStatus) {
+        const action = newStatus ? "비활성화" : "활성화";
+        if (!confirm(`정말로 ${action} 하시겠습니까?`)) {
+            return; // 사용자가 취소를 누르면 함수 종료
+        }
+
+        const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute("content");
+        const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");
+
+        fetch('/members/toggleStatus', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                [csrfHeader]: csrfToken // CSRF 헤더 추가
+            },
+            body: JSON.stringify({ memberId: memberId, resign: newStatus })
+        })
+        .then(response => {
+            if (response.ok) {
+                location.reload(); // 변경된 상태를 반영하기 위해 페이지 새로고침
+            } else {
+                alert('상태 변경에 실패했습니다.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('상태 변경 중 오류가 발생했습니다.');
+        });
+    };
+    </script>
+</th:block>
+
+</html>

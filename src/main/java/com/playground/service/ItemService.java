@@ -1,5 +1,6 @@
 package com.playground.service;
 
+import com.playground.dto.ItemCategoryDto;
 import com.playground.dto.ItemFormDto;
 import com.playground.dto.ItemSearchDto;
 import com.playground.dto.MainItemDto;
@@ -19,7 +20,9 @@ public interface ItemService {
 
     Page<Item> getAdminItemPage(ItemSearchDto itemSearchDto, Pageable pageable);
 
-    Page<MainItemDto> getMainItemPage(ItemSearchDto itemSearchDto, Pageable pageable);
-    //물품삭제
-    void deleteItem(Long itemId);
+    Page<MainItemDto> getMainItemPage(ItemSearchDto itemSearchDto, ItemCategoryDto itemCategoryDto, Pageable pageable);
+
+    Page<MainItemDto> getMainItemPage2(String company, ItemSearchDto itemSearchDto, ItemCategoryDto itemCategoryDto,Pageable pageable);
+
+    int saveCodes(Long itemId,List<String> codes);
 }

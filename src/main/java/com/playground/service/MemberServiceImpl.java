@@ -1,14 +1,19 @@
 package com.playground.service;
 
+import com.playground.constant.Role;
 import com.playground.dto.MemberFormDto;
+import com.playground.dto.MemberSearchDto;
 import com.playground.entity.Email;
 import com.playground.entity.Member;
 import com.playground.repository.EmailRepository;
 import com.playground.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +28,7 @@ public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
     private final EmailRepository emailRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public Member saveMember(Member member) {
@@ -73,9 +79,9 @@ public class MemberServiceImpl implements MemberService {
 
     //추가
     @Override
-    public MemberFormDto getUser(String email){
-        Member member=memberRepository.findByEmail(email);
-        MemberFormDto dto=new MemberFormDto();
+    public MemberFormDto getUser(String email) {
+        Member member = memberRepository.findByEmail(email);
+        MemberFormDto dto = new MemberFormDto();
         dto.setEmail(member.getEmail());
         dto.setAddress(member.getAddress());
         dto.setAddressCode(member.getAddressCode());
@@ -87,12 +93,12 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public String validateEmail(String email) {
-        String result="";
+        String result = "";
         Member findMember = memberRepository.findByEmail(email);
         if (findMember != null) {
-            result="exist";
-        } else{
-            result="none";
+            result = "exist";
+        } else {
+            result = "none";
         }
         return result;
     }
@@ -112,17 +118,17 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public String compareCode(String email,String code) {
-        String result="";
-        Email getInfo=emailRepository.findByEmail(email);
+    public String compareCode(String email, String code) {
+        String result = "";
+        Email getInfo = emailRepository.findByEmail(email);
         System.out.println(getInfo.getAuthCode());
         System.out.println(email);
         System.out.println(code);
         System.out.println("---------------------------");
-        if(getInfo.getAuthCode().equals(code)){
-            result="ok";
-        } else{
-            result="not";
+        if (getInfo.getAuthCode().equals(code)) {
+            result = "ok";
+        } else {
+            result = "not";
         }
         return result;
     }
@@ -134,7 +140,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public List<String> findEmail(String name, String phone) {
-        Object[] emails=memberRepository.findEmail(name,phone);
+        Object[] emails = memberRepository.findEmail(name, phone);
         List<String> emailList = Arrays.stream(emails)
                 .map(Object::toString) // Convert each Object to String
                 .collect(Collectors.toList());
@@ -144,16 +150,75 @@ public class MemberServiceImpl implements MemberService {
     // 비밀번호 변경 이메일 보내기 전 검증
     @Override
     public String validBeforeSendPwd(String email, String name, String phone) {
-        String result="";
+        String result = "";
 
-        Member member=memberRepository.findByEmail(email);
+        Member member = memberRepository.findByEmail(email);
         if (member == null) {
-            return result="noEmail";
+            return result = "noEmail";
         }
-        if(member.getName().equals(name)&&member.getPhone().equals(phone)){
-            return result="valid";
+        if (member.getName().equals(name) && member.getPhone().equals(phone)) {
+            return result = "valid";
         }
-        return result="notValid";
+        return result = "notValid";
     }
-    // 추가 끝
+
+    @Override
+    public void registSocialMember(MemberFormDto dto) {
+        Member sMember = new Member();
+        sMember.setName(dto.getName());
+        sMember.setEmail(dto.getEmail());
+        sMember.setPassword(dto.getPassword());
+        sMember.setPhone(dto.getPhone());
+        sMember.setAddress(dto.getAddress());
+        sMember.setAddressCode(dto.getAddressCode());
+        sMember.setAddressDetail(dto.getAddressDetail());
+        sMember.setFromSocial(true);
+        sMember.setRole(Role.USER);
+        memberRepository.save(sMember);
+    }
+
+    // 1022 1600 추가
+    @Override
+    public void changeSocial(String email) {
+        Member nonSocial = memberRepository.findByEmail(email);
+        nonSocial.setFromSocial(true);
+        memberRepository.save(nonSocial);
+    }
+
+    // 1023 1500 추가
+    @Override
+    public String valideResign(MemberFormDto dto) {
+        Member member = memberRepository.findByEmail(dto.getEmail());
+        String result = "";
+        if (member != null && passwordEncoder.matches(dto.getPassword(), member.getPassword())) {
+            result = "success";
+        } else {
+            result = "notFound";
+        }
+        return result;
+    }
+
+    @Override
+    public void changeResign(String email) {
+        Member member = memberRepository.findByEmail(email);
+        member.setResign(!member.isResign());
+        memberRepository.save(member);
+    }
+
+    //조민추가
+    @Transactional(readOnly = true)
+    @Override
+    public Page<Member> getAdminMemberPage(MemberSearchDto memberSearchDto, Pageable pageable) {
+        return memberRepository.getAdminMemberPage(memberSearchDto, pageable);
+    }
+
+    @Transactional
+    public void toggleStatus(Long memberId, boolean resign) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 멤버"));
+        member.setResign(resign);  // 상태 변경
+        memberRepository.save(member);
+    }
+
+    //조민 끝
 }

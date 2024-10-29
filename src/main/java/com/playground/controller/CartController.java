@@ -100,4 +100,13 @@ public class CartController {
         return new ResponseEntity<Long>(orderId, HttpStatus.OK);
     }
 
+    //추가
+    @RequestMapping(value="/cartCount",method = {RequestMethod.GET})
+    @ResponseBody
+    public ResponseEntity<Integer> cartCount(@RequestParam("email") String email){
+        int result=cartService.getCartCount(email);
+        // ResponseEntity로 반환
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
 }

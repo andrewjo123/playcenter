@@ -1,11 +1,9 @@
 package com.playground.service;
 
-import com.playground.dto.ItemFormDto;
-import com.playground.dto.ItemImgDto;
-import com.playground.dto.ItemSearchDto;
-import com.playground.dto.MainItemDto;
+import com.playground.dto.*;
 import com.playground.entity.Item;
 import com.playground.entity.ItemCategory;
+import com.playground.entity.ItemCode;
 import com.playground.entity.ItemImg;
 import com.playground.repository.*;
 import com.playground.repository.ItemRepository;
@@ -24,8 +22,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.print.DocPrintJob;
+
+import static com.playground.dto.ItemCategoryDto.modelMapper;
 
 @Service
 @Transactional
@@ -36,7 +37,7 @@ public class ItemServiceImpl implements ItemService {
     private final ItemImgService itemImgService;
     private final ItemImgRepository itemImgRepository;
     private final ItemCategoryRepository categoryRepository;
-    private final ReviewRepository reviewRepository;
+    private final ItemCodeRepository itemCodeRepository;
 
 
 
@@ -47,11 +48,7 @@ public class ItemServiceImpl implements ItemService {
         Item item = itemFormDto.createItem();
         itemRepository.save(item);
 
-        // 추가
-        ItemCategory category=new ItemCategory();
-        category.setCompany(itemFormDto.getCompany());
-        category.setTag(itemFormDto.getTag());
-        category.setItem(item);
+        ItemCategory category=itemFormDto.getItemCategoryDto().toEntity(item, itemFormDto.getCompany());
         categoryRepository.save(category);
 
         // Register images
@@ -66,41 +63,6 @@ public class ItemServiceImpl implements ItemService {
 
         return item.getId();
     }
-    //아이템 삭제
-    @Override
-    public void deleteItem(Long itemId) {
-        // 1. 아이템을 찾기.
-        Item item = itemRepository.findById(itemId)
-                .orElseThrow(() -> new EntityNotFoundException("해당 상품을 찾을 수 없습니다."));
-        // 2. 리뷰 삭제
-        reviewRepository.deleteByItemId(itemId);
-        // 3. 아이템 삭제
-        itemRepository.delete(item);
-        // 4. 아이템 카테고리 삭제
-        categoryRepository.deleteByItemId(itemId);
-        // 5. 이미지 삭제
-        itemImgRepository.deleteByItemId(itemId);
-        List<ItemImg> itemImgList = itemImgRepository.findByItemId(itemId);  // itemId와 관련된 모든 이미지를 조회
-        for (ItemImg itemImg : itemImgList) {
-            // 이미지 파일명을 가져옴
-            String imgName = itemImg.getImgName();
-            // 파일명이 null이거나 빈 문자열이 아닌지 확인
-            if (imgName != null && !imgName.trim().isEmpty()) {
-                Path imagePath = Paths.get("C:\\shop\\item\\" + imgName);  // 전체 파일 경로 생성
-                try {
-                    // 파일이 존재하면 삭제
-                    Files.deleteIfExists(imagePath);
-                } catch (IOException e) {
-                    // 파일 삭제 실패 시 예외 처리
-                    e.printStackTrace();
-                }
-            } else {
-                // 파일명이 null이거나 빈 문자열인 경우 로깅
-                System.out.println("유효하지 않은 파일명: " + imgName);
-            }
-        }
-    }
-
   
     @Override
     public ItemFormDto getItemDtl(Long itemId) {
@@ -118,7 +80,8 @@ public class ItemServiceImpl implements ItemService {
         //추가
         ItemCategory categories=categoryRepository.findByItemId(itemId);
         itemFormDto.setCompany(categories.getCompany());
-        itemFormDto.setTag(categories.getTag());
+        ItemCategoryDto itemCategoryDto=ItemCategoryDto.fromEntity(categories);
+        itemFormDto.setItemCategoryDto(itemCategoryDto);
         
         // 리뷰 추가
         List<Object[]>result=itemRepository.getAvgAndCount(itemId);
@@ -159,8 +122,8 @@ public class ItemServiceImpl implements ItemService {
 
         //추가
         ItemCategory category=categoryRepository.findByItemId(item.getId());
+        modelMapper.map(itemFormDto.getItemCategoryDto(),category);
         category.setCompany(itemFormDto.getCompany());
-        category.setTag(itemFormDto.getTag());
         categoryRepository.save(category);
 
         return item.getId();
@@ -174,7 +137,32 @@ public class ItemServiceImpl implements ItemService {
 
     @Transactional(readOnly = true)
     @Override
-    public Page<MainItemDto> getMainItemPage(ItemSearchDto itemSearchDto, Pageable pageable) {
-        return itemRepository.getMainItemPage(itemSearchDto, pageable);
+    public Page<MainItemDto> getMainItemPage(ItemSearchDto itemSearchDto, ItemCategoryDto itemCategoryDto, Pageable pageable) {
+        return itemRepository.getMainItemPage(itemSearchDto, itemCategoryDto, pageable);
+    }
+
+    @Override
+    public Page<MainItemDto> getMainItemPage2(String company, ItemSearchDto itemSearchDto, ItemCategoryDto itemCategoryDto,Pageable pageable) {
+        return itemRepository.getMainItemPage2(company, itemSearchDto, itemCategoryDto, pageable);
+    }
+
+    // 1024추가
+    @Transactional
+    @Override
+    public int saveCodes(Long itemId, List<String> codes) {
+        Item item = itemRepository.findById(itemId).get();
+        List<ItemCode> itemCodes = new ArrayList<>();
+
+        codes.forEach(code -> {
+            ItemCode itemCode = new ItemCode();
+            itemCode.setItem(item);
+            itemCode.setCodNum(code);
+            itemCodes.add(itemCode);
+        });
+
+        itemCodeRepository.saveAll(itemCodes);
+        item.setStockNumber(item.getStockNumber()+codes.size());
+        itemRepository.save(item);
+        return codes.size(); // 반복한 횟수 반환
     }
 }
