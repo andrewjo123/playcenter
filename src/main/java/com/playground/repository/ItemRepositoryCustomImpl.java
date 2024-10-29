@@ -31,7 +31,7 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
     }
 
     private BooleanExpression searchSellStatusEq(ItemSellStatus searchSellStatus){
-        return searchSellStatus == null ? null : QItem.item.itemSellStatus.eq(searchSellStatus);
+        return searchSellStatus == null ? null : QItem.item.stockNumber.eq(0);
     }
 
     private BooleanExpression regDtsAfter(String searchDateType){
