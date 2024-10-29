@@ -15,10 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
@@ -33,6 +30,7 @@ public class OrderServiceImpl implements OrderService {
     private final ItemCodeRepository codeRepository;
     private final EmailService emailService;
     private final MemberPointRepository pointRepository;
+    private final CartItemRepository cartItemRepository;
 
     @Override
     public Long order(OrderDto orderDto, String email) {
@@ -106,6 +104,16 @@ public class OrderServiceImpl implements OrderService {
         MemberPoint returnPoint=new MemberPoint();
         returnPoint.setOrder(order);
         returnPoint.setPayPoint(-memberPoint.getPayPoint());
+
+        //1029추가
+        List<Item> items = new ArrayList<>();
+        order.getOrderItems().forEach(oItem -> {
+            Item item = oItem.getItem();
+            item.setStockNumber(item.getStockNumber() + oItem.getCount());
+            items.add(item);
+        });
+
+        itemRepository.saveAll(items);
         pointRepository.save(returnPoint);
         memberRepository.save(member);
     }
@@ -189,6 +197,16 @@ public class OrderServiceImpl implements OrderService {
         MemberPoint memberPoint=new MemberPoint();
         memberPoint.setOrder(order);
         memberPoint.setPayPoint((int)-usePoint);
+
+        //1029추가
+        List<Item> items = new ArrayList<>();
+        order.getOrderItems().forEach(oItem -> {
+            Item item = oItem.getItem();
+            item.setStockNumber(item.getStockNumber() - oItem.getCount());
+            items.add(item);
+        });
+
+        itemRepository.saveAll(items);
         orderRepository.save(order);
         memberRepository.save(member);
         pointRepository.save(memberPoint);
@@ -242,4 +260,20 @@ public class OrderServiceImpl implements OrderService {
         }
         return result;
     }
+
+    @Override
+    public List<String> checkStack(Map<String, String> cartIds) {
+        List<String> result=new ArrayList<>();
+        cartIds.forEach((key, value) -> {
+            Optional<CartItem> cartItem=cartItemRepository.findById(Long.valueOf(value));
+            if(cartItem.get().getCount()>cartItem.get().getItem().getStockNumber()){
+                result.add(cartItem.get().getItem().getItemNm());
+            }
+        });
+        if (result.isEmpty()) {
+            result.add("getOk");
+        }
+        return result;
+    }
+
 }

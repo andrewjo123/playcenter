@@ -43,6 +43,9 @@ public class CartServiceImpl implements CartService {
             cart = Cart.createCart(member);
             cartRepository.save(cart);
         }
+        if(cartItemDto.getCount()>item.getStockNumber()){
+            return 0L;
+        }
 
         CartItem savedCartItem = cartItemRepository.findByCartIdAndItemId(cart.getId(), item.getId());
 
