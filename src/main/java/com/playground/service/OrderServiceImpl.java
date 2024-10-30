@@ -271,7 +271,7 @@ public class OrderServiceImpl implements OrderService {
             }
         });
         if (result.isEmpty()) {
-            result.add("getOk");
+            result.add("conTinueForPay");
         }
         return result;
     }
