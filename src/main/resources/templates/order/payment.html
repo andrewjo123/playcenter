@@ -126,6 +126,13 @@
         var totalP=0;
         var orderTotalPrice = 0;
         var finalUsingPoint=0;
+        var orderNumber=$("#orderId").val();
+        var firstItem=$('span.itemNm').first().text();
+        var counting=$('span.itemNm').length-1;
+        var setName = counting > 0 ? firstItem + " 외 " + counting : firstItem;
+        var buyer=$('#orderBuyer').text();
+        var emailText = $('#orderEmail').text();
+        var params=[[${cartId}]];
         let token = $("meta[name='_csrf']").attr("content");
         let header = $("meta[name='_csrf_header']").attr("content");
 
@@ -148,7 +155,86 @@
             $("#stackPoint").html(Math.floor(totalP* 0.01)+' Point');
         }
 
+        function impPay(){
+            if(totalP==0){
+                $.ajax({
+                    url: "/order/validDB",
+                    method: "post",
+                    data:{orderId:orderNumber, totalPrice:totalP, usePoint:$("#confirmPoint").val(),...params},
+                    dataType:"Text",
+                    beforeSend : function(xhr){
+                        xhr.setRequestHeader(header, token);
+                    }
+                }).done(function(res) {
+                    if(res=="ok"){
+                        alert('결제가 완료되었습니다.');
+                        location.href="/orders/0";
+                    } else {
+                        alert('결제가 실패했습니다');
+                    }
+                })
+                return;
+            }
 
+            IMP.request_pay({ // 결제 요청
+                pg: pgName,   // PG사 설정
+                pay_method : "card", // 결제 방법
+                merchant_uid : orderNumber, // 주문 번호
+                name : setName, // 상품 이름
+                amount: totalP, // 결제 가격
+                buyer_name : buyer, // 구매자 이름 (buyer_ 부분은 꼭 작성하지 않아도된다. (선택사항))
+                buyer_email : emailText
+            }, function(res) {
+                // 결제 후
+                if (res.success) {
+                    // 결제 재검증
+                    $.ajax({
+                        url:'/order/validPay/'+res.imp_uid,
+                        type:"POST",
+                        beforeSend : function(xhr){
+                            xhr.setRequestHeader(header, token);
+                        }
+                    }).done(function(data){
+                        if(res.paid_amount==data.response.amount){
+                            $.ajax({
+                                url: "/order/validDB",
+                                method: "post",
+                                data:{orderId:orderNumber, totalPrice:totalP, usePoint:$("#confirmPoint").val(),...params},
+                                dataType:"Text",
+                                beforeSend : function(xhr){
+                                    xhr.setRequestHeader(header, token);
+                                }
+                            }).done(function(res) {
+                                if(res=="ok"){
+                                    alert('결제가 완료되었습니다.');
+                                    location.href="/orders/0";
+                                } else {
+                                    alert('결제가 실패했습니다');
+                                }
+                            }).fail(function(error) {
+                                $.ajax({
+                                    url: "/order/autoCancel",
+                                    method: "post",
+                                    data:{orderId:orderNumber},
+                                    dataType:"Text",
+                                    beforeSend : function(xhr){
+                                        xhr.setRequestHeader(header, token);
+                                    },success(result){
+                                        alert("주문정보 저장을 실패 했습니다.");
+                                    },error(){
+                                        alert("관리자에게 문의해보세요.");
+                                    }
+                                })
+                            });
+                        }
+                    }).fail(function(error) {
+                        alert('결제가 실패하였습니다.');
+                    });
+                } else {
+                alert("결제가 취소되었습니다.");
+                }
+            });
+        }
 
         $(document).ready(function(){
             //총 결제금액 계산
@@ -187,6 +273,7 @@
                 $("#confirmPoint").val($("#usePoint").val());
                 getOrderTotalPrice();
             });
+
             $("#useAll").on("click",function(){
                 if(parseInt($("#totalPoint").text())<100){
                     alert("포인트는 100원이상 사용 가능합니다");
@@ -200,6 +287,7 @@
                 $("#confirmPoint").val($("#usePoint").val());
                 getOrderTotalPrice();
             });
+
             $("#useNot").on("click",function(){
                 $("#usePoint").val(0);
                 $("#confirmPoint").val(0);
@@ -214,14 +302,8 @@
                     alert("결제동의를 하셔야 결제가 가능합니다");
                     return;
                 }
+
                 pgName=this.id;
-                var orderNumber=$("#orderId").val();
-                var firstItem=$('span.itemNm').first().text();
-                var counting=$('span.itemNm').length-1;
-                var setName = counting > 0 ? firstItem + " 외 " + counting : firstItem;
-                var buyer=$('#orderBuyer').text();
-                var emailText = $('#orderEmail').text();
-                var params=[[${cartId}]];
 
                 $.ajax({
                     url: "/order/checkStack",
@@ -232,95 +314,18 @@
                         xhr.setRequestHeader(header, token);
                     }
                 }).done(function(res) {
-                    if(res.length == 1 && res[0] == "getOk"){
-                        alert("주문하신 제품: "+res.join(', ')+"의 수량이 없습니다");
-                        return;
+                    console.log("---------------");
+                    console.log(res);
+                    if(res == '["conTinueForPay"]'){
+                        impPay();
+                    } else{
+                        console.log("결제안됨");
+                        alert("주문하신 제품: "+res+"의 수량이 없습니다");
                     }
                 }).fail(function(error){
                     alert("서버와의 통신에 실패했습니다. 잠시 후 다시 시도해주세요");
-                    return;
                 });
 
-
-              if(totalP==0){
-                $.ajax({
-                    url: "/order/validDB",
-                    method: "post",
-                    data:{orderId:orderNumber, totalPrice:totalP, usePoint:$("#confirmPoint").val(),...params},
-                    dataType:"Text",
-                    beforeSend : function(xhr){
-                        xhr.setRequestHeader(header, token);
-                    }
-                }).done(function(res) {
-                    if(res=="ok"){
-                        alert('결제가 완료되었습니다.');
-                        location.href="/orders/0";
-                    } else {
-                        alert('결제가 실패했습니다');
-                    }
-                })
-                    return;
-                }
-
-              IMP.request_pay({ // 결제 요청
-                  pg: pgName,   // PG사 설정
-                  pay_method : "card", // 결제 방법
-                  merchant_uid : orderNumber, // 주문 번호
-                  name : setName, // 상품 이름
-                  amount: totalP, // 결제 가격
-                  buyer_name : buyer, // 구매자 이름 (buyer_ 부분은 꼭 작성하지 않아도된다. (선택사항))
-                  buyer_email : emailText
-              }, function(res) {
-                  // 결제 후
-                  if (res.success) {
-                      // 결제 재검증
-                     $.ajax({
-                        url:'/order/validPay/'+res.imp_uid,
-                        type:"POST",
-                        beforeSend : function(xhr){
-                            xhr.setRequestHeader(header, token);
-                        }
-                     }).done(function(data){
-                        if(res.paid_amount==data.response.amount){
-                            $.ajax({
-                                url: "/order/validDB",
-                                method: "post",
-                                data:{orderId:orderNumber, totalPrice:totalP, usePoint:$("#confirmPoint").val(),...params},
-                                dataType:"Text",
-                                beforeSend : function(xhr){
-                                    xhr.setRequestHeader(header, token);
-                                }
-                            }).done(function(res) {
-                                if(res=="ok"){
-                                    alert('결제가 완료되었습니다.');
-                                    location.href="/orders/0";
-                                } else {
-                                    alert('결제가 실패했습니다');
-                                }
-                            }).fail(function(error) {
-                                $.ajax({
-                                    url: "/order/autoCancel",
-                                    method: "post",
-                                    data:{orderId:orderNumber},
-                                    dataType:"Text",
-                                    beforeSend : function(xhr){
-                                        xhr.setRequestHeader(header, token);
-                                    },success(result){
-                                        alert("주문정보 저장을 실패 했습니다.");
-                                    },error(){
-                                        alert("관리자에게 문의해보세요.");
-                                    }
-                                })
-                            });
-                        }
-                    }).fail(function(error) {
-                        alert('결제가 실패하였습니다.');
-                    });
-
-                  } else {
-                    alert("결제가 취소되었습니다.");
-                  }
-              });
             });
         });
 
