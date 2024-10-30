@@ -231,6 +231,7 @@
                         alert('결제가 실패하였습니다.');
                     });
                 } else {
+                console.log("Payment failed with error:", res.error_msg);
                 alert("결제가 취소되었습니다.");
                 }
             });
