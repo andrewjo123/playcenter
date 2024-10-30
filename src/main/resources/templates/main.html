@@ -7,207 +7,115 @@
 </head>
 
 <div layout:fragment="content">
-
     <div id="carouselControls" class="carousel slide margin" data-ride="carousel">
+        <ul class="carousel-indicators">
+            <li data-target="#carouselControls" data-slide-to="0" class="active"></li>
+            <li data-target="#carouselControls" data-slide-to="1"></li>
+            <li data-target="#carouselControls" data-slide-to="2"></li>
+        </ul>
         <div class="carousel-inner">
             <div class="carousel-item active item">
-                <img class="d-block w-100 banner" src="https://user-images.githubusercontent.com/13268420/112147492-1ab76200-8c20-11eb-8649-3d2f282c3c02.png" alt="First slide">
+                <img class="d-block w-100 banner" src="/img/ad1.png"
+                     alt="First slide">
             </div>
             <div class="carousel-item item">
-                <img class="d-block w-100 banner" src="https://user-images.githubusercontent.com/13268420/112147492-1ab76200-8c20-11eb-8649-3d2f282c3c02.png" alt="First slide">
+                <img class="d-block w-100 banner" src="/img/ad3.png"
+                     alt="First slide">
+            </div>
+            <div class="carousel-item item">
+                <img class="d-block w-100 banner" src="/img/temp_ad3.png"
+                     alt="First slide">
             </div>
         </div>
     </div>
 
-    <input type="hidden" name="searchQuery" th:value="${itemSearchDto.searchQuery}">
-    <div th:if="${not #strings.isEmpty(itemSearchDto.searchQuery)}" class="center">
-        <p class="h3 font-weight-bold" th:text="${itemSearchDto.searchQuery} + '검색 결과'"></p>
-    </div>
 
-    <nav class="navbar navbar-expand-sm navbar-dark" style="background:black">
-        <div class="collapse navbar-collapse" id="navbarToggleDemo03">
-            <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link" href="/">Total</a>
-                </li>
-                <li class="nav-item">
-                    <button class="btn btn-primary company" data-company="steam">Steam</button>
-                </li>
-                <li class="nav-item">
-                    <button class="btn btn-success company" data-company="ps">PS</button>
-                </li>
-                <li class="nav-item">
-                    <button class="btn btn-warning company" data-company="nintendo">Nintendo</button>
-                </li>
-            </ul>
-        </div>
-        <form class="form-inline my-2 my-lg-0" action="/" method="get" id="cateSearch">
-            <input name="searchQuery" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" id="search2">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form>
-    </nav>
-
-    <div id="lists">
-    <div class="row">
-        <th:block th:each="item, status: ${items.getContent()}">
-            <div class="col-md-4 margin">
-                <div class="card">
-                    <a th:href="'/item/' +${item.id}" class="text-dark">
-                        <img th:src="${item.imgUrl}" class="card-img-top" th:alt="${item.itemNm}" height="400">
-                        <div class="card-body">
-                            <h4 class="card-title">[[${item.itemNm}]]</h4>
-                            <p class="card-text">[[${item.itemDetail}]]</p>
-                            <h3 class="card-title text-danger">[[${item.price}]]원</h3>
+    <div id="all-items" >
+        <h2>모든 아이템</h2>
+        <!-- 모든 아이템을 표시할 영역 -->
+        <div  class="row">
+            <th:block th:if="${allItems.getContent().size() > 0}">
+                <th:block th:each="item, status: ${allItems.getContent()}">
+                    <div class="col-md-4">
+                        <div class="card">
+                            <a th:href="'/item/' +${item.id}" class="text-dark">
+                                <img th:src="${item.imgUrl}" class="card-img-top" th:alt="${item.itemNm}" height="400">
+                                <div class="card-body">
+                                    <h4 class="card-title">[[${item.itemNm}]]</h4>
+                                    <p class="card-text">[[${item.itemDetail}]]</p>
+                                    <h3 class="card-title text-danger">[[${item.price}]]원</h3>
+                                </div>
+                            </a>
                         </div>
-                    </a>
+                    </div>
+                </th:block>
+            </th:block>  
+        </div>  
+    </div>
+
+    <div class="company-items">
+        <h2>스팀</h2>
+        <div  class="row">
+        <th:block th:if="${steamItems.getContent().size() > 0}">
+            <th:block th:each="item, status: ${steamItems.getContent()}">
+                <div class="col-md-4 margin">
+                    <div class="card">
+                        <a th:href="'/item/' +${item.id}" class="text-dark">
+                            <img th:src="${item.imgUrl}" class="card-img-top" th:alt="${item.itemNm}" height="400">
+                            <div class="card-body">
+                                <h4 class="card-title">[[${item.itemNm}]]</h4>
+                                <p class="card-text">[[${item.itemDetail}]]</p>
+                                <h3 class="card-title text-danger">[[${item.price}]]원</h3>
+                            </div>
+                        </a>
+                    </div>
                 </div>
-            </div>
-        </th:block>
+            </th:block>
+        </th:block>  
+        </div>
     </div>
-
-    <div th:with="start=${(items.number/maxPage)*maxPage + 1}, end=(${(items.totalPages == 0) ? 1 : (start + (maxPage - 1) < items.totalPages ? start + (maxPage - 1) : items.totalPages)})" >
-        <ul class="pagination justify-content-center">
-            <li class="page-item" th:classappend="${items.number eq 0}?'disabled':''">
-                <a th:href="@{'/' + '?searchQuery=' + ${itemSearchDto.searchQuery} + '&page=' + ${items.number-1}}" aria-label='Previous' class="page-link">
-                    <span aria-hidden='true'>Previous</span>
-                </a>
-            </li>
-            <li class="page-item" th:each="page: ${#numbers.sequence(start, end)}" th:classappend="${items.number eq page-1}?'active':''">
-                <a th:href="@{'/' +'?searchQuery=' + ${itemSearchDto.searchQuery} + '&page=' + ${page-1}}" th:inline="text" class="page-link">[[${page}]]</a>
-            </li>
-            <li class="page-item" th:classappend="${items.number+1 ge items.totalPages}?'disabled':''">
-                <a th:href="@{'/' +'?searchQuery=' + ${itemSearchDto.searchQuery} + '&page=' + ${items.number+1}}" aria-label='Next' class="page-link">
-                    <span aria-hidden='true'>Next</span>
-                </a>
-            </li>
-        </ul>
+    <div class="company-items">
+        <h2>닌텐도</h2>
+        <div  class="row">
+        <th:block th:if="${nintendoItems.getContent().size() > 0}">
+            <th:block th:each="item, status: ${nintendoItems.getContent()}">
+                <div class="col-md-4 margin">
+                    <div class="card">
+                        <a th:href="'/item/' +${item.id}" class="text-dark">
+                            <img th:src="${item.imgUrl}" class="card-img-top" th:alt="${item.itemNm}" height="400">
+                            <div class="card-body">
+                                <h4 class="card-title">[[${item.itemNm}]]</h4>
+                                <p class="card-text">[[${item.itemDetail}]]</p>
+                                <h3 class="card-title text-danger">[[${item.price}]]원</h3>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </th:block>
+        </th:block>  
+        </div>
     </div>
+    <div class="company-items">
+        <h2>플레이스테이션</h2>
+        <div  class="row">
+        <th:block th:if="${psItems.getContent().size() > 0}">
+            <th:block th:each="item, status: ${psItems.getContent()}">
+                <div class="col-md-4 margin">
+                    <div class="card">
+                        <a th:href="'/item/' +${item.id}" class="text-dark">
+                            <img th:src="${item.imgUrl}" class="card-img-top" th:alt="${item.itemNm}" height="400">
+                            <div class="card-body">
+                                <h4 class="card-title">[[${item.itemNm}]]</h4>
+                                <p class="card-text">[[${item.itemDetail}]]</p>
+                                <h3 class="card-title text-danger">[[${item.price}]]원</h3>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </th:block>
+        </th:block>  
+        </div>
     </div>
-
-    <script inline="javascript">
-        function makePage(response){
-            const items = response.items.content; // items 목록
-            const maxPage = response.maxPage; // 페이지 수
-            var str="";
-
-            if (Array.isArray(items) && items.length > 0) {
-                items.forEach(function(item) {
-                    console.log(item);
-                    str += '<div class="col-md-4 margin">';
-                    str += '  <div class="card">';
-                    str += '        <a href="/item/' + item.id + '" class="text-dark">'; // 수정된 부분
-                    str += '            <img src="' + item.imgUrl + '" class="card-img-top" alt="' + item.itemNm + '" height="400">'; // 수정된 부분
-                    str += '            <div class="card-body">';
-                    str += '                <h4 class="card-title">' + item.itemNm + '</h4>'; // 수정된 부분
-                    str += '                <p class="card-text">' + item.itemDetail + '</p>'; // 수정된 부분
-                    str += '                <h3 class="card-title text-danger">' + item.price + '원</h3>'; // 수정된 부분
-                    str += '            </div></a></div></div>';
-                });
-
-                $("#lists").html(str);
-
-                const totalItems = response.items.totalElements; // 전체 아이템 수
-                const totalPages = Math.ceil(totalItems / maxPage); // 전체 페이지 수
-                const currentPage = response.items.number + 1; // 현재 페이지 (0부터 시작하므로 +1)
-
-                var paginationStr = '<div class="pagination justify-content-center">';
-                paginationStr += '<ul class="pagination">';
-
-                // 이전 페이지 링크
-                if (currentPage > 1) {
-                    paginationStr += '<li class="page-item"><a href="?searchQuery=' + encodeURIComponent(itemSearchDto.searchQuery) + '&page=' + (currentPage - 2) + '" class="page-link">Previous</a></li>';
-                } else {
-                    paginationStr += '<li class="page-item disabled"><span class="page-link">Previous</span></li>';
-                }
-
-                // 페이지 번호 링크
-                for (let i = 1; i <= totalPages; i++) {
-                    if (i === currentPage) {
-                        paginationStr += '<li class="page-item active"><span class="page-link">' + i + '</span></li>';
-                    } else {
-                        paginationStr += '<li class="page-item"><a href="?searchQuery=' + encodeURIComponent(itemSearchDto.searchQuery) + '&page=' + (i - 1) + '" class="page-link">' + i + '</a></li>';
-                    }
-                }
-
-                // 다음 페이지 링크
-                if (currentPage < totalPages) {
-                    paginationStr += '<li class="page-item"><a href="?searchQuery=' + encodeURIComponent(itemSearchDto.searchQuery) + '&page=' + currentPage + '" class="page-link">Next</a></li>';
-                } else {
-                    paginationStr += '<li class="page-item disabled"><span class="page-link">Next</span></li>';
-                }
-
-                paginationStr += '</ul>';
-                paginationStr += '</div>';
-
-                $("#lists").append(paginationStr); // 페이지 네비게이션 추가
-            }else {
-                $("#lists").html('<p>상품이 없습니다.</p>'); // 데이터가 없을 경우 메시지 표시
-            }
-        }
-
-        $(document).ready(function(){
-            var cate="";
-
-             $("#cateSearch").on('submit', function(event) {
-                // 기본 폼 제출을 막음
-                event.preventDefault();
-
-                // 입력된 검색 쿼리 값을 가져옴
-                const searchQuery = $("#search2").val();
-                console.log(searchQuery);
-
-                // 주소를 변경 (예: "/search"로 변경)
-                const newUrl = "/"+cate;
-
-                if(newUrl=="/"){
-                    const form = $('<form>', {
-                        method: 'GET', // Ensure it matches the form's method
-                        action: newUrl // Set the action to the new URL
-                    });
-
-                    // Add the search query as a hidden input
-                    form.append($('<input>', {
-                        type: 'hidden',
-                        name: 'searchQuery',
-                        value: searchQuery
-                    }));
-
-                    // Append the form to the body and submit it
-                    $('body').append(form);
-                    form.submit();
-                    return;
-                }
-
-                // AJAX 요청 보내기
-                $.ajax({
-                    url: newUrl,
-                    type: 'GET',
-                    data:{searchQuery,searchQuery},
-                    success: function(response) {
-                        makePage(response);
-                    },
-                    error: function(xhr, status, error) {
-                        console.error("AJAX Error:", error);
-                    }
-                });
-            });
-
-            $(".company").on('click',function(){
-                const company = $(this).data('company');
-                cate=company;
-                 $("#lists").empty();
-                 $.ajax({
-                     url:'/'+company,
-                     type:"GET",
-                     dataType: "json",
-                     success: function(response) {
-                        makePage(response);
-                    }
-                });
-            });
-        })
-
-    </script>
 
 
 </div>
