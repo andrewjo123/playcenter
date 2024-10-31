@@ -15,4 +15,5 @@ public interface ItemRepositoryCustom {
 
     Page<MainItemDto> getMainItemPage2(String company, ItemSearchDto itemSearchDto, ItemCategoryDto itemCategoryDto,Pageable pageable);
 
+    Page<MainItemDto> getMainItem(String company, ItemSearchDto itemSearchDto, ItemCategoryDto itemCategoryDto, Pageable pageable);
 }

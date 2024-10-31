@@ -7,7 +7,6 @@
 </head>
 
 <div layout:fragment="content">
-
     <div id="carouselControls" class="carousel slide margin" data-ride="carousel">
         <ul class="carousel-indicators">
             <li data-target="#carouselControls" data-slide-to="0" class="active"></li>
@@ -31,6 +30,92 @@
     </div>
 
 
+    <div id="all-items" >
+        <h2>모든 아이템</h2>
+        <!-- 모든 아이템을 표시할 영역 -->
+        <div  class="row">
+            <th:block th:if="${allItems.getContent().size() > 0}">
+                <th:block th:each="item, status: ${allItems.getContent()}">
+                    <div class="col-md-4">
+                        <div class="card">
+                            <a th:href="'/item/' +${item.id}" class="text-dark">
+                                <img th:src="${item.imgUrl}" class="card-img-top" th:alt="${item.itemNm}" height="400">
+                                <div class="card-body">
+                                    <h4 class="card-title">[[${item.itemNm}]]</h4>
+                                    <p class="card-text">[[${item.itemDetail}]]</p>
+                                    <h3 class="card-title text-danger">[[${item.price}]]원</h3>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </th:block>
+            </th:block>  
+        </div>  
+    </div>
+
+    <div class="company-items">
+        <h2>스팀</h2>
+        <div  class="row">
+        <th:block th:if="${steamItems.getContent().size() > 0}">
+            <th:block th:each="item, status: ${steamItems.getContent()}">
+                <div class="col-md-4 margin">
+                    <div class="card">
+                        <a th:href="'/item/' +${item.id}" class="text-dark">
+                            <img th:src="${item.imgUrl}" class="card-img-top" th:alt="${item.itemNm}" height="400">
+                            <div class="card-body">
+                                <h4 class="card-title">[[${item.itemNm}]]</h4>
+                                <p class="card-text">[[${item.itemDetail}]]</p>
+                                <h3 class="card-title text-danger">[[${item.price}]]원</h3>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </th:block>
+        </th:block>  
+        </div>
+    </div>
+    <div class="company-items">
+        <h2>닌텐도</h2>
+        <div  class="row">
+        <th:block th:if="${nintendoItems.getContent().size() > 0}">
+            <th:block th:each="item, status: ${nintendoItems.getContent()}">
+                <div class="col-md-4 margin">
+                    <div class="card">
+                        <a th:href="'/item/' +${item.id}" class="text-dark">
+                            <img th:src="${item.imgUrl}" class="card-img-top" th:alt="${item.itemNm}" height="400">
+                            <div class="card-body">
+                                <h4 class="card-title">[[${item.itemNm}]]</h4>
+                                <p class="card-text">[[${item.itemDetail}]]</p>
+                                <h3 class="card-title text-danger">[[${item.price}]]원</h3>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </th:block>
+        </th:block>  
+        </div>
+    </div>
+    <div class="company-items">
+        <h2>플레이스테이션</h2>
+        <div  class="row">
+        <th:block th:if="${psItems.getContent().size() > 0}">
+            <th:block th:each="item, status: ${psItems.getContent()}">
+                <div class="col-md-4 margin">
+                    <div class="card">
+                        <a th:href="'/item/' +${item.id}" class="text-dark">
+                            <img th:src="${item.imgUrl}" class="card-img-top" th:alt="${item.itemNm}" height="400">
+                            <div class="card-body">
+                                <h4 class="card-title">[[${item.itemNm}]]</h4>
+                                <p class="card-text">[[${item.itemDetail}]]</p>
+                                <h3 class="card-title text-danger">[[${item.price}]]원</h3>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </th:block>
+        </th:block>  
+        </div>
+    </div>
 
 
 </div>

@@ -28,9 +28,22 @@ import java.util.Optional;
 public class MainController {
 
     private final ItemService itemService;
-
     @GetMapping(value={"/","/main"})
-    public String mains(Model model){
+    public String getItems(Model model) {
+        Pageable pageable = PageRequest.of(0, 3);
+        
+        // 모든 아이템 가져오기
+        Page<MainItemDto> allItems = itemService.getMainItem(null, null, null, pageable);
+        
+        // 회사별 아이템 가져오기
+        Page<MainItemDto> steamItems = itemService.getMainItem("steam", null, null, pageable);
+        Page<MainItemDto> nintendoItems = itemService.getMainItem("nintendo", null, null, pageable);
+        Page<MainItemDto> psItems = itemService.getMainItem("ps", null, null, pageable);
+
+        model.addAttribute("allItems", allItems);
+        model.addAttribute("steamItems", steamItems);
+        model.addAttribute("nintendoItems", nintendoItems);
+        model.addAttribute("psItems", psItems);
 
         return "main";
     }

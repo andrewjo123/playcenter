@@ -7,6 +7,7 @@ import com.playground.entity.ItemCode;
 import com.playground.entity.ItemImg;
 import com.playground.repository.*;
 import com.playground.repository.ItemRepository;
+
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -164,5 +165,11 @@ public class ItemServiceImpl implements ItemService {
         item.setStockNumber(item.getStockNumber()+codes.size());
         itemRepository.save(item);
         return codes.size(); // 반복한 횟수 반환
+    }
+
+
+    @Override
+    public Page<MainItemDto> getMainItem(String company, ItemSearchDto itemSearchDto, ItemCategoryDto itemCategoryDto, Pageable pageable) {
+        return itemRepository.getMainItem(company, itemSearchDto, itemCategoryDto, pageable); // Repository 메서드 호출
     }
 }

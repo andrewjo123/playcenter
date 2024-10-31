@@ -25,4 +25,5 @@ public interface ItemService {
     Page<MainItemDto> getMainItemPage2(String company, ItemSearchDto itemSearchDto, ItemCategoryDto itemCategoryDto,Pageable pageable);
 
     int saveCodes(Long itemId,List<String> codes);
+    Page<MainItemDto> getMainItem(String company, ItemSearchDto itemSearchDto, ItemCategoryDto itemCategoryDto, Pageable pageable);
 }
