@@ -110,6 +110,31 @@ margin: auto;
     object-fit: cover;
 }
 
+.itemDtl .instructions {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+}
+
+.itemDtl .instructions h2 {
+    color: #333;
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+.itemDtl .instructions ol {
+    list-style-type: decimal;
+    padding-left: 20px;
+}
+
+.itemDtl .instructions li {
+    margin-bottom: 10px;
+}
+
+.itemDtl .instructions strong {
+    color: #0073e6; /* 강조할 부분에 색상 추가 */
+}
+
+
 
 /* itemForm--------------------------------------------------------*/
 

@@ -47,6 +47,12 @@ public class SecurityConfig {
                         .userService(playOAuth2UserDetailsService))
                 .successHandler(playLoginSuccessHandler())
                 .failureHandler(new CustomOAuth2AuthenticationFailureHandler())
+        ).exceptionHandling(exceptionHandlingCustomizer -> exceptionHandlingCustomizer
+                .accessDeniedPage("/error") // 접근 권한이 없을 때 에러 페이지 설정
+                .defaultAuthenticationEntryPointFor(
+                        (request, response, authException) -> response.sendRedirect("/error"),
+                        new AntPathRequestMatcher("/**") // 모든 URL에 대해 예외 발생 시 리디렉션
+                )
         );
 
         return http.build();

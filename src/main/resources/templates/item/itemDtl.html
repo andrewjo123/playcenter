@@ -19,9 +19,9 @@
             <img th:src="${item.itemImgDtoList[0].imgUrl}" class="rounded repImg" th:alt="${item.itemNm}">
         </div>
         <div class="wd50">
-            <span th:if="${item.itemSellStatus == T(com.playground.constant.ItemSellStatus).SELL}"
+            <span th:if="${item.stockNumber!=0}"
                   class="badge badge-primary mgb-15">판매중</span>
-            <span th:unless="${item.itemSellStatus == T(com.playground.constant.ItemSellStatus).SELL}"
+            <span th:if="${item.stockNumber==0}"
                   class="badge btn-danger mgb-15">품절</span>
             <div class="h4" th:text="${item.itemNm}"></div>
             <hr class="my-4">
@@ -91,8 +91,59 @@
         </div>
         <div>리뷰수: <span th:text="${item.allReview}"></span></div>
         <div class="container">
-            <h4 class="display-5">상품 상세 설명</h4>
+            <h2 class="display-5">상품 상세 안내</h2>
             <hr class="my-4">
+            <div class="product-details">
+                <h3>구매 절차</h3>
+                <p>본 상품은 구매 완료 후, 고유 코드가 발급되며, <strong>"코드 전송"</strong> 버튼을 클릭하시면 회원님의 이메일로 발송됩니다.<br>
+                    코드 전송 후에는 교환 및 환불이 불가하므로, 결제 및 코드 수령 과정에서 유의해주시기 바랍니다.</p>
+
+                <h3>교환 및 환불 정책</h3>
+                <p>결제 완료 후에는 발급된 코드가 회원님의 이메일로 발송되므로, <strong>교환 및 환불이 불가</strong>합니다.<br>
+                    코드를 발송하기 전에는 결제 취소가 가능하지만, 발송 이후에는 불가능합니다.</p>
+
+                <h3>고객 주의 사항</h3>
+                <p>코드 전송 버튼을 클릭하기 전, 이메일 주소를 정확히 확인해주시기 바랍니다.<br>
+                    오기입으로 인한 코드 미수령은 고객님 책임이므로 주의 바랍니다.<br>
+                    상품 사용을 위한 고유 코드의 유효 기간은 <strong>[유효 기간 예시: 발급일로부터 30일]</strong>입니다.</p>
+
+                <h3>사용법 및 유의사항</h3>
+                <p>본 상품의 코드는 1회 사용만 가능하며, 타인에게 양도가 불가능합니다.<br>
+                    코드 사용 시, 지정된 플랫폼 또는 애플리케이션에서만 유효합니다.</p>
+
+                <h3>고객 지원</h3>
+                <p>코드 발송 후 문의사항이나 도움이 필요하시면 <a href="[고객 지원 링크]">고객 지원</a>으로 문의해 주시기 바랍니다.</p>
+            </div>
+            <!-- 닌텐도 안내문 -->
+            <div class="instructions" th:if="${item.company == 'nintendo'}">
+                <h2>닌텐도 스위치에서 코드 입력 방법</h2>
+                <ol>
+                    <li><strong>홈 메뉴</strong>에서 <strong>"닌텐도 e샵"</strong>을 실행하세요.</li>
+                    <li>사용하실 <strong>계정을 선택</strong>해 주세요.</li>
+                    <li>화면 왼쪽에서 <strong>"Enter Code (코드 입력)"</strong>를 선택하세요.</li>
+                    <li>총 16자의 다운로드 코드를 입력해 주세요.</li>
+                    <li><strong>"확인"</strong>을 선택합니다.</li>
+                </ol>
+            </div>
+            <!-- 스팀 안내문 -->
+            <div class="instructions" th:if="${item.company == 'steam'}">
+                <h2>스팀에서 코드 입력 방법</h2>
+                <ol>
+                    <li><strong>스팀 클라이언트</strong>에 접속하여 <strong>스팀에 로그인</strong>합니다.</li>
+                    <li>스팀 클라이언트 <strong>왼쪽 하단</strong>에 있는 <strong>'게임 추가 - STEAM에 제품 등록'</strong>을 클릭합니다.</li>
+                    <li>제품 등록 약관에 동의한 후 메일에 적혀있는 <strong>게임 코드를 입력</strong>합니다.</li>
+                </ol>
+            </div>
+            <!-- PS 안내문 -->
+            <div class="instructions" th:if="${item.company == 'ps'}">
+                <h2>PlayStation Store에서 코드 입력 방법</h2>
+                <ol>
+                    <li><strong>PlayStation Store</strong>로 이동하여 화면 상단의 <strong>프로필</strong>을 선택하세요.</li>
+                    <li>드롭다운 메뉴에서 <strong>코드 번호 입력</strong>을 선택하세요.</li>
+                    <li>16자리 코드를 정확하게 입력한 후 <strong>계속</strong>을 선택하세요.</li>
+                    <li>그러면 크레딧 또는 콘텐츠가 계정에 적용됩니다.</li>
+                </ol>
+            </div>
             <p class="lead" th:text="${item.itemDetail}"></p>
         </div>
     </div>

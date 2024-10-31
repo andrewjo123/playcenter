@@ -32,7 +32,17 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
     }
 
     private BooleanExpression searchSellStatusEq(ItemSellStatus searchSellStatus){
-        return searchSellStatus == null ? null : QItem.item.stockNumber.eq(0);
+        if (searchSellStatus == null) {
+            return null;
+        }
+        // searchSellStatus 값에 따라 조건을 설정
+        if (searchSellStatus == ItemSellStatus.SOLD_OUT) {
+            return QItem.item.stockNumber.eq(0); // 품절 상태 + stockNumber가 0
+        } else if (searchSellStatus == ItemSellStatus.SELL) {
+            return QItem.item.stockNumber.gt(0); // 재고 있음 + stockNumber가 0보다 큼
+        } else {
+            return null; //기본 값
+        }
     }
 
     private BooleanExpression regDtsAfter(String searchDateType){
