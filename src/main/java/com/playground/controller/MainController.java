@@ -3,6 +3,7 @@ package com.playground.controller;
 import com.playground.dto.ItemCategoryDto;
 import com.playground.dto.ItemSearchDto;
 import com.playground.dto.MainItemDto;
+import com.playground.service.DibsService;
 import com.playground.service.ItemService;
 import com.siot.IamportRestClient.exception.IamportResponseException;
 import com.siot.IamportRestClient.response.IamportResponse;
@@ -19,15 +20,16 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.security.Principal;
+import java.util.*;
 
 @Controller
 @RequiredArgsConstructor
 public class MainController {
 
     private final ItemService itemService;
+    private final DibsService dibsService;
+
     @GetMapping(value={"/","/main"})
     public String getItems(Model model) {
         Pageable pageable = PageRequest.of(0, 3);
@@ -49,11 +51,18 @@ public class MainController {
     }
 
     @GetMapping(value ={"/list","/steam","/ps","/nintendo"})
-    public String defaultList(ItemSearchDto itemSearchDto, ItemCategoryDto itemCategoryDto,Optional<Integer> page, Model model, HttpServletRequest request){
+    public String defaultList(ItemSearchDto itemSearchDto, ItemCategoryDto itemCategoryDto, Optional<Integer> page, Model model, HttpServletRequest request, Principal principal){
         System.out.println(itemCategoryDto.isAction());
         System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
         String company = request.getRequestURI().substring(1);
         Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 6);
+        List<Long> dibsList=new ArrayList<>();
+        if(principal!=null){
+            dibsList=dibsService.dibsListforItemId(principal.getName());
+        }else{
+            dibsList.add(0L);
+        }
+        model.addAttribute("dibsList",dibsList);
         if(company.equals("list")){
             Page<MainItemDto> items = itemService.getMainItemPage(itemSearchDto, itemCategoryDto,pageable);
             model.addAttribute("items", items);
@@ -75,12 +84,18 @@ public class MainController {
 
     @RequestMapping(value= {"/steamMore", "/psMore", "/nintendoMore", "/allMore"},method = {RequestMethod.GET})
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> addList(ItemSearchDto itemSearchDto, ItemCategoryDto itemCategoryDto, Optional<Integer> page, HttpServletRequest request){
+    public ResponseEntity<Map<String, Object>> addList(ItemSearchDto itemSearchDto, ItemCategoryDto itemCategoryDto, Optional<Integer> page, HttpServletRequest request, Principal principal){
 
         String company = request.getRequestURI().substring(1);
         Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : itemSearchDto.getNthPage(), 6);
-
+        List<Long> dibsList=new ArrayList<>();
+        if(principal!=null){
+            dibsList=dibsService.dibsListforItemId(principal.getName());
+        }else{
+            dibsList.add(0L);
+        }
         Map<String, Object> response = new HashMap<>();
+        response.put("dibsList",dibsList);
         if(company.equals("allMore")){
             Page<MainItemDto> items = itemService.getMainItemPage(itemSearchDto, itemCategoryDto,pageable);
             response.put("items", items);

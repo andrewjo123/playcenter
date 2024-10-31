@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}"
+      class="cartList">
+
+<head>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <link th:href="@{/css/shop.css}" rel="stylesheet">
+</head>
+
+<div layout:fragment="content" class="content-mg">
+
+    <h2 class="mb-4">
+        찜 목록
+    </h2>
+    <table class="table">
+        <thead>
+        <tr class="text-center">
+            <td>상품정보</td>
+        </tr>
+        </thead>
+        <tbody>
+        <th:block th:unless="${dibsItems.size() == 0}">
+            <tr th:each="dibsItem : ${dibsItems}">
+                <td class="d-flex">
+                    <div class="repImgDiv align-self-center">
+                        <img th:src="${dibsItem.imgUrl}" class = "rounded repImg" th:alt="${dibsItem.itemNm}">
+                    </div>
+                    <div class="align-self-center">
+                        <a th:href="'/item/' +${dibsItem.itemId}"><span th:text="${dibsItem.itemNm}" class="fs24 font-weight-bold"></span></a>
+                        <div class="fs18 font-weight-light">
+                            <span class="input-group mt-2">
+                                <span th:id="'price_' + ${dibsItem.dibsItemId}"
+                                      th:data-price="${dibsItem.price}"
+                                      th:text="${dibsItem.price} + '원'" class="align-self-center mr-2">
+                                </span>
+                                <button type="button" class="close" aria-label="Close">
+                                    <span aria-hidden="true" th:data-id="${dibsItem.dibsItemId}" onclick="deleteDibsItem(this)">&times;</span>
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </th:block>
+        <th:block th:if="${dibsItems.size() == 0}">
+            <tr><td class="d-flex"><h4>결과 없음</h4></td></tr>
+        </th:block>
+        </tbody>
+    </table>
+</div>
+
+<!-- 사용자 스크립트 추가 -->
+<th:block layout:fragment="script">
+
+    <script th:inline="javascript">
+
+        function deleteDibsItem(obj){
+            var token = $("meta[name='_csrf']").attr("content");
+            var header = $("meta[name='_csrf_header']").attr("content");
+
+            var paramData = {
+                dibsItemId: $(obj).data('id')
+            };
+
+            var param = JSON.stringify(paramData);
+
+            $.ajax({
+                url      : "/dibsDelete",
+                type     : "DELETE",
+                contentType: "application/json",
+                data: param,
+                beforeSend : function(xhr){
+                    /* 데이터를 전송하기 전에 헤더에 csrf값을 설정 */
+                    xhr.setRequestHeader(header, token);
+                },
+                dataType : "json",
+                cache   : false,
+                success  : function(result, status){
+                    location.href='/dibs';
+                },
+                error : function(jqXHR, status, error){
+
+                    if(jqXHR.status == '401'){
+                        alert('로그인 후 이용해주세요');
+                        location.href='/members/login';
+                    } else{
+                        alert(jqXHR.responseJSON.message);
+                    }
+
+                }
+            });
+        }
+    </script>
+
+</th:block>
+
+</html>

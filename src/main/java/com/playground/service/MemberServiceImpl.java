@@ -4,9 +4,11 @@ import com.playground.constant.Role;
 import com.playground.dto.MemberFormDto;
 import com.playground.dto.MemberSearchDto;
 import com.playground.entity.Cart;
+import com.playground.entity.Dibs;
 import com.playground.entity.Email;
 import com.playground.entity.Member;
 import com.playground.repository.CartRepository;
+import com.playground.repository.DibsRepository;
 import com.playground.repository.EmailRepository;
 import com.playground.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +34,7 @@ public class MemberServiceImpl implements MemberService {
     private final EmailRepository emailRepository;
     private final PasswordEncoder passwordEncoder;
     private final CartRepository cartRepository;
+    private final DibsRepository dibsRepository;
 
     @Override
     public Member saveMember(Member member) {
@@ -40,6 +43,8 @@ public class MemberServiceImpl implements MemberService {
         Member member1=memberRepository.save(member);
         Cart cart = Cart.createCart(member1);
         cartRepository.save(cart);
+        Dibs dibs= Dibs.createDibs(member1);
+        dibsRepository.save(dibs);
         return member1;
     }
 
@@ -185,6 +190,8 @@ public class MemberServiceImpl implements MemberService {
 
         Cart cart = Cart.createCart(sMember);
         cartRepository.save(cart);
+        Dibs dibs=Dibs.createDibs(sMember);
+        dibsRepository.save(dibs);
     }
 
     // 1022 1600 추가

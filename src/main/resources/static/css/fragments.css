@@ -39,10 +39,10 @@
 #sb{
     margin-top: 15%; position: fixed; height: 100%; width: 150px;  
    } 
-   .sb_cart{
-   text-align: center; color: gray;position: relative;  display: inline-block;
-   cursor: pointer; }
-   #getCount  {
+.sb_cart{
+text-align: center; color: gray;position: relative;  display: inline-block;
+cursor: pointer; }
+#getCount, #getCountDibs{
     position: absolute; 
     top: -15px; 
     right: -15px; 
@@ -56,6 +56,7 @@
     height: 20px;
     line-height: 20px; 
 }
+#getCountDibs{background-color: blue;}
 #sidebarGetCount {
     position: absolute; 
     top: 35px;

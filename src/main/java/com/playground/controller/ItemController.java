@@ -4,6 +4,7 @@ import com.playground.dto.ItemFormDto;
 import com.playground.dto.ItemSearchDto;
 import com.playground.entity.Item;
 import com.playground.security.service.PlayUserDetailsService;
+import com.playground.service.DibsService;
 import com.playground.service.ItemService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
@@ -34,6 +35,7 @@ import java.util.Optional;
 public class ItemController {
 
     private final ItemService itemService;
+    private final DibsService dibsService;
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(value = "/admin/item/new")
@@ -128,8 +130,8 @@ public class ItemController {
         // 로그인한 사용자 이메일 추가
         if (userDetails != null) {
             String email = userDetails.getUsername();// 이메일 정보 가져오기
-            log.info("로그인한 사람 %%%%% : "+email);
             model.addAttribute("email", email);
+            model.addAttribute("callDibs", dibsService.checkDibs(email, itemId));
         }
 
         return "item/itemDtl";

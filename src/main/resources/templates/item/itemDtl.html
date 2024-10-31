@@ -52,8 +52,48 @@
             <div th:if="${item.stockNumber==0}" class="text-right">
                 <button type="button" class="btn btn-danger btn-lg no-cursor">품절</button>
             </div>
+            <div id="wish-button" class="wish-button" aria-label="찜하기" onclick="addDibs()"></div>
         </div>
     </div>
+    <style>
+        .wish-button {
+            width: 40px;
+            height: 40px;
+            background-color: #bbb;
+            cursor: pointer;
+            position: relative;
+            outline:none;
+            border-radius: 5px;
+            transform: rotate(45deg);
+        }
+
+        .wish-button::before,
+        .wish-button::after {
+            content: '';
+            width: 40px;
+            height: 40px;
+            background-color: #bbb;
+            border-radius: 50%;
+            position: absolute;
+        }
+
+        .wish-button::before {
+            left: -20px;
+            top:0;
+        }
+
+        .wish-button::after {
+            top: -20px;
+            left:0;
+        }
+
+        .wish-button.active::before,
+        .wish-button.active::after,
+        .wish-button.active{
+            background-color: #ff1744;
+        }
+
+    </style>
 
     <div class="jumbotron jumbotron-fluid mgt-30 itemdtl">
         <div><span class="dtlinfo">플랫폼:</span> <span th:text="${item.company}"></span></div>
@@ -298,6 +338,19 @@
                 $("#count").change(function () {
                     calculateToalPrice();
                 });
+
+                //찜하기 버튼 로직
+                const dibs = [[${callDibs}]]; // 또는 false로 변경 가능
+                const wishBtn = $("#wish-button");
+                if (dibs) {
+                    wishBtn.addClass("active");
+                } else {
+                    wishBtn.removeClass("active");
+                }
+                // 버튼 클릭 시 토글 기능
+                wishBtn.on("click", function() {
+                    $(this).toggleClass("active");
+                });
             });
 
             function calculateToalPrice() {
@@ -382,6 +435,44 @@
                             alert(jqXHR.responseText);
                         }
 
+                    }
+                });
+            }
+
+            function addDibs() {
+                var token = $("meta[name='_csrf']").attr("content");
+                var header = $("meta[name='_csrf_header']").attr("content");
+
+                var url="/dibsAdd";
+                var type="POST";
+                var paramData = {
+                    itemId: $("#itemId").val()
+                };
+
+                if($("#wish-button").hasClass("active")){
+                    url="/dibsDelete";
+                    type="DELETE";
+                }
+
+                var param = JSON.stringify(paramData);
+                $.ajax({
+                    url: url,
+                    type: type,
+                    contentType: "application/json",
+                    data: param,
+                    beforeSend: function (xhr) {
+                        /* 데이터를 전송하기 전에 헤더에 csrf값을 설정 */
+                        xhr.setRequestHeader(header, token);
+                    },
+                    dataType: "json",
+                    cache: false,
+                    success: function (result) {
+                        dibsCount();
+                    },
+                    error: function (jqXHR, status, error) {
+                        alert('로그인 후 이용해주세요');
+                        console.log(jqXHR);
+                        location.href = '/members/login';
                     }
                 });
             }

@@ -19,18 +19,14 @@
     <script>
         function cartCount(){
             var exist=$("#ppEmail").text();
-            console.log(exist+"123");
             if(exist!=""&&exist!=null){
-                console.log("1차");
                 $.ajax({
                     url:'/cartCount',
                     type:"GET",
                     data:{email:exist},
                     dataType:"text",
                     success:function(result){
-                        console.log("2차");
                         if(result>0){
-                            console.log("3차");
                             $("#getCount").text(result).show();
                             $("#sidebarGetCount").text(result).show();
                         } else {
@@ -42,8 +38,29 @@
             }
         }
 
+        function dibsCount(){
+            var exist=$("#ppEmail").text();
+            if(exist!=""&&exist!=null){
+                $.ajax({
+                    url:'/dibsCount',
+                    type:"GET",
+                    data:{email:exist},
+                    dataType:"text",
+                    success:function(result){
+                        if(result>0){
+                            $("#getCountDibs").text(result).show();
+                        } else {
+                            $("#getCountDibs").hide();
+                        }
+                    }
+                });
+            }
+        }
+
+
         $(document).ready(function(){
             cartCount();
+            dibsCount();
             const currentUrl = window.location.pathname;
             const navLinks = document.querySelectorAll('.nav-link');
 

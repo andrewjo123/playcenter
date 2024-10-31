@@ -33,7 +33,7 @@
                     <a class="nav-link" href="/members/manageMember">회원 관리</a>
                 </li>
                 <li class="nav-item" sec:authorize="isAuthenticated()">
-                    <a class="nav-link" href="/cart">장바구니<span id="getCount"></span></a>
+                    <a class="nav-link" href="/cart">장바구니<span id="getCount" style="display:none"></span></a>
                 </li>
                 <li class="nav-item" sec:authorize="isAuthenticated()">
                     <a class="nav-link" href="/orders">구매이력</a>
@@ -43,6 +43,9 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/list">리스트</a>
+                </li>
+                <li class="nav-item" sec:authorize="isAuthenticated()">
+                    <a class="nav-link" href="/dibs">찜목록<span id="getCountDibs" style="display:none"></span></a>
                 </li>
                 <li class="nav-item" sec:authorize="isAuthenticated()">
                     <a class="nav-link" href="/members/modify">회원정보수정</a>

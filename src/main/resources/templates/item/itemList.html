@@ -63,12 +63,12 @@
         <th:block th:if="${items.getContent().size() > 0}">
             <th:block th:each="item, status: ${items.getContent()}">
                 <div class="col-md-4 margin">
-                    <div class="card">
+                    <div class="card" style="position: relative;">
                         <a th:href="'/item/' +${item.id}" class="text-dark">
                             <img th:src="${item.imgUrl}" class="card-img-top" th:alt="${item.itemNm}" height="400">
+                            <span th:if="${dibsList.contains(item.id)}" style="position: absolute; top: 10px; right: 10px; font-size: 24px;">💖</span>
                             <div class="card-body">
                                 <h4 class="card-title">[[${item.itemNm}]]</h4>
-                                <p class="card-text">[[${item.itemDetail}]]</p>
                                 <th:block th:if="${item.stockNumber<=0}">
                                     <h3 class="card-title text-danger">품절</h3>
                                 </th:block>
@@ -160,17 +160,20 @@
     <script inline="javascript">
         function appendPage(response){
             const items = response.items.content; // items 목록
+            const dibsList=response.dibsList;
             var str="";
 
             if (Array.isArray(items) && items.length > 0) {
                 items.forEach(function(item) {
                     str += '<div class="col-md-4 margin">';
-                    str += '  <div class="card">';
-                    str += '        <a href="/item/' + item.id + '" class="text-dark">'; // 수정된 부분
-                    str += '            <img src="' + item.imgUrl + '" class="card-img-top" alt="' + item.itemNm + '" height="400">'; // 수정된 부분
+                    str += '  <div class="card" style="position:relative;">';
+                    str += '        <a href="/item/' + item.id + '" class="text-dark">';
+                    str += '            <img src="' + item.imgUrl + '" class="card-img-top" alt="' + item.itemNm + '" height="400">';
+                    if (dibsList.includes(item.id)) {
+                        str += '      <span style="position: absolute; top: 10px; right: 10px; font-size: 24px;">💖</span>';
+                    }
                     str += '            <div class="card-body">';
-                    str += '                <h4 class="card-title">' + item.itemNm + '</h4>'; // 수정된 부분
-                    str += '                <p class="card-text">' + item.itemDetail + '</p>'; // 수정된 부분
+                    str += '                <h4 class="card-title">' + item.itemNm + '</h4>';
                     if (item.stockNumber <= 0) {
                         str += '                <h3 class="card-title text-danger">품절</h3>';
                     } else {
