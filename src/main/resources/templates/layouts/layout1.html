@@ -27,7 +27,7 @@
                     dataType:"text",
                     success:function(result){
                         if(result>0){
-                            $("#getCount").text(result).show();
+                            $("#getCount").text(`(${result})`).show();
                             $("#sidebarGetCount").text(result).show();
                         } else {
                             $("#getCount").hide();
@@ -48,9 +48,11 @@
                     dataType:"text",
                     success:function(result){
                         if(result>0){
-                            $("#getCountDibs").text(result).show();
+                            $("#getCountDibs").text(`(${result})`).show();
+                            $("#sidebarGetCountDibs").text(result).show();
                         } else {
                             $("#getCountDibs").hide();
+                            $("sidebarGetCountDibs").hide();
                         }
                     }
                 });
@@ -62,7 +64,7 @@
             cartCount();
             dibsCount();
             const currentUrl = window.location.pathname;
-            const navLinks = document.querySelectorAll('.nav-link');
+            const navLinks = document.querySelectorAll('.nav-link,.btn.company');
 
             navLinks.forEach(link => {
                 const linkUrl = link.getAttribute('href');
@@ -74,6 +76,11 @@
                 }
             });
         });
+
+        $(".company").on('click', function() {
+        var company = $(this).data('company');
+        
+    });
     </script>
 
     <th:block layout:fragment="script"></th:block>

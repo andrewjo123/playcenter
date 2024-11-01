@@ -81,11 +81,12 @@ margin-top:100px !important;
 background-color: gray;
 }
 
-.itemDtl .fa-solid {
-color: gray;
-font-size: 50px;
-margin: 10px 0px;
-}
+.fa-chevron-left,  .fa-chevron-right{
+    color: gray;
+    font-size: 50px;
+    margin: 10px 0px;
+    }
+    
 
 .itemDtl .d-block {
 margin: auto;

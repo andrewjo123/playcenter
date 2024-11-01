@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <head>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
@@ -8,78 +9,139 @@
 </head>
 
 <body>
-<div th:fragment="header1" class="hd1">
-    <div class="imgcontent">
-    </div>
+    <div th:fragment="header1" class="hd1">
+        <div class="imgcontent">
+        </div>
 
-    <nav class="navbar navbar-expand-sm ">
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03"
+        <nav class="navbar navbar-expand-sm ">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03"
                 aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-        <a href="/">
-            <img th:src="@{/img/logo_w.png}" />
-        </a>
-        <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
-            <ul class="nav nav-pills">
-                <li class="nav-item" sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
+            <a href="/">
+                <img th:src="@{/img/logo_w.png}" />
+            </a>
+            <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+                <ul class="nav nav-pills">
+                    <li class="nav-item">
+                        <a class="nav-link company" data-company="list" href="/list">Total</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link company" data-company="steam" href="/steam">Steam</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link company" data-company="ps" href="/ps">PS</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link company" data-company="nintendo" href="/nintendo">Nintendo</a>
+                    </li>
+                    <!-- <li class="nav-item" sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
                     <a class="nav-link" href="/admin/item/new">상품 등록</a>
                 </li>
                 <li class="nav-item" sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
                     <a class="nav-link" href="/admin/items">상품 관리</a>
-                </li>
-                <li class="nav-item" sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
-                    <a class="nav-link" href="/members/manageMember">회원 관리</a>
-                </li>
-                <li class="nav-item" sec:authorize="isAuthenticated()">
-                    <a class="nav-link" href="/cart">장바구니<span id="getCount" style="display:none"></span></a>
-                </li>
-                <li class="nav-item" sec:authorize="isAuthenticated()">
-                    <a class="nav-link" href="/orders">구매이력</a>
-                </li>
-                <li class="nav-item" sec:authorize="isAnonymous()">
-                    <a class="nav-link" href="/members/login">로그인</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/list">리스트</a>
-                </li>
-                <li class="nav-item" sec:authorize="isAuthenticated()">
-                    <a class="nav-link" href="/dibs">찜목록<span id="getCountDibs" style="display:none"></span></a>
-                </li>
-                <li class="nav-item" sec:authorize="isAuthenticated()">
-                    <a class="nav-link" href="/members/modify">회원정보수정</a>
-                </li>
-                <li class="nav-item" sec:authorize="isAuthenticated()">
-                    <a class="nav-link" href="/members/logout">로그아웃</a>
-                </li>
-                <li class="nav-item" sec:authorize="isAuthenticated()">
-                    <a class="nav-link" href="/mypage">마이페이지</a>
-                </li>
-            </ul>
-        </div>
-        <span sec:authorize="isAuthenticated()"><span  sec:authentication="principal.name"></span>님</span>
-        <span sec:authorize="isAuthenticated()" style="display:none;"><span id="ppEmail" sec:authentication="principal.email"></span></span>
-        <div class="dropdown dropstart ">
-            <button data-bs-toggle="dropdown">
-                    <span class="material-symbols-outlined">
-                        menu
-                        </span>
-            </button>
-            <ul class="dropdown-menu">
-                <li><h5 class="dropdown-header">Dropdown header 1</h5></li>
-                <li><a class="dropdown-item" href="#">Link 1</a></li>
-                <li><a class="dropdown-item" href="#">Link 2</a></li>
-                <li><a class="dropdown-item" href="#">Link 3</a></li>
-                <li><h5 class="dropdown-header">Dropdown header 2</h5></li>
-                <li><a class="dropdown-item" href="#"><span class="material-symbols-outlined">
+                </li> -->
+<!-- 
+                    <li class="nav-item">
+                        <a class="nav-link" href="/list">리스트</a>
+                    </li> 
+                    <li class="nav-item" sec:authorize="isAuthenticated()">
+                        <a class="nav-link" href="/cart">장바구니
+                          <span id="getCount" style="display:none"></span>
+                        </a>
+                    </li>
+                    <li class="nav-item" sec:authorize="isAuthenticated()">
+                        <a class="nav-link" href="/dibs">찜목록
+                            <span id="getCountDibs" style="display:none"></span> 
+                        </a>
+                    </li>
+                    <li class="nav-item" sec:authorize="isAuthenticated()">
+                        <a class="nav-link" href="/orders">구매이력</a>
+                    </li>
                     
-                    </span>logout</a></li>
-            </ul>
-        </div>
-    </nav>
-</div>
+                    <li class="nav-item" sec:authorize="isAuthenticated()">
+                        <a class="nav-link" href="/members/modify">회원정보수정</a>
+                    </li>
+                    -->
+                    <li class="nav-item" sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
+                        <a class="nav-link" href="/members/manageMember">회원 관리</a>
+                    </li>
+                    <!-- <li class="nav-item" sec:authorize="isAuthenticated()">
+                        <a class="nav-link" href="/members/logout">로그아웃</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="isAuthenticated()">
+                        <a class="nav-link" href="/mypage">마이페이지</a>
+                    </li> -->
+                </ul>
+            </div>
 
+            <span sec:authorize="isAuthenticated()" style="display:none;"><span id="ppEmail"
+                    sec:authentication="principal.email"></span></span>
+
+            <div class="dropdown" style="float:right;">
+                <span sec:authorize="isAuthenticated()">
+                    <button class="dropbtn"><i class="fa-solid fa-bars"></i></button>
+                    <div class="dropdown-content">
+                        <div class="dropdown-header user-info">
+                            <img th:src="@{/img/user_origin.png}" class="user-image" style="width: 60px; height: 60px;"/>
+                            <div style="margin-left: 10px; margin-top: 25px;">
+                                <b sec:authorize="isAuthenticated()" sec:authentication="principal.name">님</b>
+                                <p sec:authorize="isAuthenticated()" sec:authentication="principal.email"></p>
+                            </div>
+                         
+                        </div>
+                        <a class="dropdown-item" sec:authorize="isAuthenticated()" href="/mypage">🗨마이페이지</a>
+
+                        <div sec:authorize="isAuthenticated()">
+                            <div class="dropdown-divider"></div>
+                            <b class="dropdown-header">buy</b>
+
+                            <a class="nav-link" href="/dibs">❤ 찜한목록
+                                <span id="getCountDibs" style="display:none"></span>
+                            </a>
+                                <a class="dropdown-item" href="/cart">🛒 장바구니
+                                    <span id="getCount">()</span></a>
+                                    <a class="dropdown-item" href="/orders">📑 내주문</a>
+
+                        </div>
+                        <div sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
+                            <div class="dropdown-divider"></div>
+                            <b class="dropdown-header">sell</b>
+                            <a class="dropdown-item" href="/admin/item/new">🎮 상품
+                                등록</a>
+                            <a class="dropdown-item" href="/admin/items">📊 등록된 상품</a>
+
+                        </div>
+
+                        <!--                        <div sec:authorize="hasAnyAuthority('ROLE_ADMIN')">-->
+                        <!--                            <div class="dropdown-divider"></div>-->
+                        <!--                            <b class="dropdown-header">member</b>-->
+                        <!--                            <a class="nav-link" sec:authorize="hasAnyAuthority('ROLE_ADMIN')"-->
+                        <!--                                href="/members/manageMember">회원 관리</a>-->
+
+                        <!--                        </div>-->
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" sec:authorize="isAuthenticated()" href="/members/logout"> <i class="fas fa-sign-out-alt"></i> 로그아웃</a>
+                    </div>
+                </span>
+                <span sec:authorize="isAnonymous()">
+                    <a class="btn" href="/members/login">로그인</a>
+                </span>
+            </div>
+        </nav>
+    </div>
+ <script>
+        // 버튼 클릭 시 페이지 전환
+        $(".company").on('click', function() {
+            var company = $(this).data('company');
+            if (company === "list") {
+                location.href = "/list";
+            } else {
+                location.href = '/' + company;
+            }
+        });
+    </script>
 </body>
 
 </html>
