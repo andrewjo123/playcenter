@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layouts/layout1}" class="main">
+      layout:decorate="~{layouts/layout1}" class="itemList">
 <head>
     <link th:href="@{/css/layout1.css}" rel="stylesheet">
 </head>
@@ -65,7 +65,9 @@
                 <div class="col-md-4 margin">
                     <div class="card" style="position: relative;">
                         <a th:href="'/item/' +${item.id}" class="text-dark">
-                            <img th:src="${item.imgUrl}" class="card-img-top" th:alt="${item.itemNm}" height="400">
+                            <img th:src="${item.imgUrl}" class="card-img-top" th:alt="${item.itemNm}"
+                                 th:classappend="${item.stockNumber <= 0} ? 'sold-out-filter'"height="400">
+                            <span th:if="${item.stockNumber <= 0}" class="sold-out-badge">Sold Out</span>
                             <span th:if="${dibsList.contains(item.id)}" style="position: absolute; top: 10px; right: 10px; font-size: 24px;">💖</span>
                             <div class="card-body">
                                 <h4 class="card-title">[[${item.itemNm}]]</h4>
