@@ -4,9 +4,6 @@ import com.playground.dto.*;
 import com.playground.service.DibsService;
 import com.playground.service.ItemService;
 import com.playground.service.MemberService;
-import com.siot.IamportRestClient.exception.IamportResponseException;
-import com.siot.IamportRestClient.response.IamportResponse;
-import com.siot.IamportRestClient.response.Payment;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -19,7 +16,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.security.Principal;
 import java.util.*;
 
@@ -33,20 +29,21 @@ public class MainController {
 
     @GetMapping(value = {"/", "/main"})
     public String getItems(Model model) {
-        Pageable pageable = PageRequest.of(0, 3);
-
         // 모든 아이템 가져오기
-        Page<MainItemDto> allItems = itemService.getMainItem(null, null, null, pageable);
+        List<MainItemDto> all = itemService.getMainItem(null, null);
 
         // 회사별 아이템 가져오기
-        Page<MainItemDto> steamItems = itemService.getMainItem("steam", null, null, pageable);
-        Page<MainItemDto> nintendoItems = itemService.getMainItem("nintendo", null, null, pageable);
-        Page<MainItemDto> psItems = itemService.getMainItem("ps", null, null, pageable);
+        List<MainItemDto> steam = itemService.getMainItem("steam", null);
+        List<MainItemDto> nintendo = itemService.getMainItem("nintendo", null);
+        List<MainItemDto> ps = itemService.getMainItem("ps", null);
 
-        model.addAttribute("allItems", allItems);
-        model.addAttribute("steamItems", steamItems);
-        model.addAttribute("nintendoItems", nintendoItems);
-        model.addAttribute("psItems", psItems);
+        Map<String, List<MainItemDto>> result=new LinkedHashMap<>();
+        result.put("all",all);
+        result.put("steam",steam);
+        result.put("nintendo",nintendo);
+        result.put("ps",ps);
+
+        model.addAttribute("result", result);
 
         return "main";
     }

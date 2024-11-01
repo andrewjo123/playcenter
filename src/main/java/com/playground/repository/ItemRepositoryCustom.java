@@ -7,6 +7,8 @@ import com.playground.entity.Item;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 public interface ItemRepositoryCustom {
 
     Page<Item> getAdminItemPage(ItemSearchDto itemSearchDto, Pageable pageable);
@@ -15,5 +17,5 @@ public interface ItemRepositoryCustom {
 
     Page<MainItemDto> getMainItemPage2(String company, ItemSearchDto itemSearchDto, ItemCategoryDto itemCategoryDto,Pageable pageable);
 
-    Page<MainItemDto> getMainItem(String company, ItemSearchDto itemSearchDto, ItemCategoryDto itemCategoryDto, Pageable pageable);
+    List<MainItemDto> getMainItem(String company, ItemCategoryDto itemCategoryDto);
 }

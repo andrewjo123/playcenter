@@ -169,7 +169,7 @@ public class ItemServiceImpl implements ItemService {
 
 
     @Override
-    public Page<MainItemDto> getMainItem(String company, ItemSearchDto itemSearchDto, ItemCategoryDto itemCategoryDto, Pageable pageable) {
-        return itemRepository.getMainItem(company, itemSearchDto, itemCategoryDto, pageable); // Repository 메서드 호출
+    public List<MainItemDto> getMainItem(String company, ItemCategoryDto itemCategoryDto) {
+        return itemRepository.getMainItem(company, itemCategoryDto); // Repository 메서드 호출
     }
 }

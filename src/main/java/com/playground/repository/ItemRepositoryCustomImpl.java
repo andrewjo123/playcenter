@@ -4,6 +4,7 @@ import com.playground.dto.ItemCategoryDto;
 import com.playground.entity.QItemCategory;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.Wildcard;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -146,7 +147,6 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
                         new QMainItemDto(
                                 item.id,
                                 item.itemNm,
-                                item.itemDetail,
                                 itemImg.imgUrl,
                                 item.price,
                                 item.stockNumber)
@@ -216,7 +216,6 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
                         new QMainItemDto(
                                 item.id,
                                 item.itemNm,
-                                item.itemDetail,
                                 itemImg.imgUrl,
                                 item.price,
                                 item.stockNumber)
@@ -242,7 +241,7 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
     }
 
     @Override
-    public Page<MainItemDto> getMainItem(String company, ItemSearchDto itemSearchDto, ItemCategoryDto itemCategoryDto,Pageable pageable) {
+    public List<MainItemDto> getMainItem(String company, ItemCategoryDto itemCategoryDto) {
         QItem item = QItem.item;
         QItemImg itemImg = QItemImg.itemImg;
         QItemCategory itemCategory= QItemCategory.itemCategory;
@@ -252,7 +251,6 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
 
        // 기본 조건 추가
        whereClause.and(itemImg.repimgYn.eq("Y")); // 대표 이미지 조건
-   
 
        if (company != null) {
         whereClause.and(itemCategory.company.eq(company));
@@ -263,7 +261,6 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
                         new QMainItemDto(
                                 item.id,
                                 item.itemNm,
-                                item.itemDetail,
                                 itemImg.imgUrl,
                                 item.price,
                                 item.stockNumber)
@@ -272,9 +269,8 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
                 .join(itemImg.item, item)
                 .join(itemCategory).on(itemCategory.item.eq(item))
                 .where(whereClause)
-                .orderBy(item.openDate.desc(), item.id.desc()) 
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
+                .orderBy(Expressions.numberTemplate(Double.class, "rand()").asc())
+                .limit(3)
                 .fetch();
     
         long total = queryFactory
@@ -285,7 +281,7 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
                 .where(whereClause)
                 .fetchOne();
     
-        return new PageImpl<>(content, pageable, total);
+        return content;
     }
 
 }
