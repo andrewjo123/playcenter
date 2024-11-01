@@ -37,6 +37,7 @@ public class ReviewController {
       Pageable pageable = PageRequest.of(page, size,
       sort.equals("rating") ? Sort.by(Sort.Direction.DESC, "grade") : 
       sort.equals("asc") ? Sort.by(Sort.Direction.ASC, "grade") : 
+      sort.equals("recommendation") ? Sort.by(Sort.Direction.DESC, "rCnt") : 
       Sort.by(Sort.Direction.DESC, "regTime"));
       
       // 리뷰 목록을 서비스에서 받아옴

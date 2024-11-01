@@ -235,7 +235,13 @@
     <button class="sortByRating">별점 높은 순</button>
 
     <!-- 리뷰 별점 낮은순 버튼 -->
-<button class="sortByLowRating">별점 낮은 순</button>
+    <button class="sortByLowRating">별점 낮은 순</button>
+
+    <!-- 리뷰 추천순 버튼 -->
+    <button class="sortByRecommendation">추천순</button>
+
+    <!-- 리뷰 추천순 버튼 -->
+    <button class="sortByLatest">최신순</button>
 
 
     <!-- 리뷰 목록 -->
@@ -254,9 +260,8 @@
 
     <!-- 추천 수 표시 및 추천 버튼 -->
     <div class="recommend-section">
-        <span class="rCnt" th:text="${review.rCnt != null ? review.rCnt : 0}">0</span> 
-        추천
-        <button class="btn btn-sm btn-outline-primary recommendBtn" th:attr="data-reviewnum=${review.reviewnum}">추천</button>
+        <span class="rCnt">${review.rcnt != null ? review.rcnt : 0}</span> 추천
+        <button class="btn btn-sm btn-outline-primary recommendBtn" data-reviewnum="${review.reviewnum}"><i class="fas fa-thumbs-up"></i></button>
     </div>
 </div>
 
@@ -551,8 +556,8 @@ function loadReviews(page, sort="regTime") {
             <div class="reviewgrade" data-grade2="${review.grade}"></div>
             <button type="button" class="btn btn-warning modalBtn"  data-reviewnum="${review.reviewnum}" data-mid="${review.email}">수정/삭제</button>
             <div class="recommend-section">
-                <span class="rCnt">${review.rcnt != null ? review.rcnt : 0}</span> 추천
-                <button class="btn btn-sm btn-outline-primary recommendBtn" data-reviewnum="${review.reviewnum}">추천</button>
+            <span class="rCnt">${review.rcnt != null ? review.rcnt : 0}</span> 추천
+            <button class="btn btn-sm btn-outline-primary recommendBtn" data-reviewnum="${review.reviewnum}"><i class="fas fa-thumbs-up"></i></button>
             </div>
         </div>
                 `;
@@ -569,6 +574,7 @@ function loadReviews(page, sort="regTime") {
     });
 }
 
+
 // 별점 표시 함수
 function renderStars() {
     $(".reviewgrade").each(function () {
@@ -579,7 +585,7 @@ function renderStars() {
     });
 }
 
- // 리뷰 추천 버튼 클릭 이벤트
+// 리뷰 추천 버튼 클릭 이벤트
 $(".reviewList").on("click", ".recommendBtn", function(e) {
     e.stopPropagation(); // 클릭 이벤트가 상위 요소로 전파되지 않도록 함
     const reviewnum = $(this).data("reviewnum");
@@ -590,14 +596,14 @@ $(".reviewList").on("click", ".recommendBtn", function(e) {
         alert("로그인이 필요합니다. 로그인 페이지로 이동합니다.");
         window.location.href = "/members/login";
     } else {
-    $.ajax({
-        url: `/reviews/${reviewnum}/recommend`, // 추천 요청 URL
-        type: "POST",
-        data: { email: email },
-        success: function(response) {
-            alert(response); // 서버에서 받은 응답 ("추천 완료" 또는 "추천 취소")
-            loadReviews(currentPage, currentSort); // 추천 상태 변경 후 리뷰 목록 다시 로드
-        },
+        $.ajax({
+            url: `/reviews/${reviewnum}/recommend`, // 추천 요청 URL
+            type: "POST",
+            data: { email: email },
+            success: function(response) {
+                alert(response); // 서버에서 받은 응답 ("추천 완료" 또는 "추천 취소")
+                loadReviews(currentPage, currentSort); // 추천 상태 변경 후 리뷰 목록 다시 로드
+            },
         error: function(xhr) {
             console.error("Error: " + xhr.responseText);
         }
@@ -612,10 +618,21 @@ $(".sortByRating").click(function(){
     loadReviews(0, "rating");
 });
 
- // 별점 낮은 순 버튼 클릭 이벤트
- $(".sortByLowRating").click(function() {
-        loadReviews(0, "asc"); // 첫 페이지부터 별점 낮은 순 정렬
-    });
+// 별점 낮은 순 버튼 클릭 이벤트
+$(".sortByLowRating").click(function() {
+    loadReviews(0, "asc"); // 첫 페이지부터 별점 낮은 순 정렬
+});
+// 추천순 버튼 클릭 이벤트
+$(".sortByRecommendation").click(function () {
+        loadReviews(0, "recommendation"); // 추천순으로 첫 페이지부터 로드
+});
+//최신순
+$(".sortByLatest").click(function () {
+                    loadReviews(0, "latest");  // 최신순 정렬 호출
+});
+
+// 기존 로드
+loadReviews(0);
 
 // 첫 번째 페이지 로드
 loadReviews(0);
