@@ -583,17 +583,26 @@ function renderStars() {
 $(".reviewList").on("click", ".recommendBtn", function(e) {
     e.stopPropagation(); // 클릭 이벤트가 상위 요소로 전파되지 않도록 함
     const reviewnum = $(this).data("reviewnum");
-
+    const email = $("#isLoginCheck").val(); // 현재 로그인한 사용자의 이메일 가져오기
+    
+    var isLoggedIn = $("#isLoggedIn").val();
+    if (isLoggedIn === "false") {
+        alert("로그인이 필요합니다. 로그인 페이지로 이동합니다.");
+        window.location.href = "/members/login";
+    } else {
     $.ajax({
-        url: `/reviews/${reviewnum}/recommend`,
+        url: `/reviews/${reviewnum}/recommend`, // 추천 요청 URL
         type: "POST",
-        success: function() {
-            loadReviews(currentPage, currentSort); // 추천 후 목록 다시 로드            
+        data: { email: email },
+        success: function(response) {
+            alert(response); // 서버에서 받은 응답 ("추천 완료" 또는 "추천 취소")
+            loadReviews(currentPage, currentSort); // 추천 상태 변경 후 리뷰 목록 다시 로드
         },
         error: function(xhr) {
             console.error("Error: " + xhr.responseText);
         }
     });
+}
 });
 
 

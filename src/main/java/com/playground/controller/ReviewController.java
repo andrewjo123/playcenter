@@ -57,16 +57,18 @@ public class ReviewController {
         return new ResponseEntity<>( reviewnum, HttpStatus.OK);
     }
     
-    //리뷰추천
+    // 리뷰 추천 토글
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/{reviewnum}/recommend")
-    public ResponseEntity<Void> recommendReview(@PathVariable Long reviewnum) {
-    log.info("---------------recommend Review--------------" + reviewnum);
-    
-    // 서비스에서 추천 수 증가 로직 처리
-    reviewService.reviewRecommend(reviewnum);
-    
-    return new ResponseEntity<>(HttpStatus.OK);
-  }
+    public ResponseEntity<String> toggleRecommend(
+        @PathVariable Long reviewnum, 
+        @RequestParam("email") String email) {
+        
+        log.info("---------------toggle recommend Review--------------" + reviewnum);
+        String result = reviewService.toggleRecommend(reviewnum, email);
+        
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
   
     @PreAuthorize("isAuthenticated()")
     @PutMapping("/{id}/{reviewnum}")
