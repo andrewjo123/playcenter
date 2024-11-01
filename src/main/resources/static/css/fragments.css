@@ -1,56 +1,104 @@
 /*header1-------------*/
+
 .hd1 .nav-link {
-    color: #333 !important;
+    border-bottom: 2px solid transparent;
+    color: #6c757d;
+    transition: color 0.3s, font-weight 0.3s;
 }
+
+.hd1 .nav-link:hover {
+    color: #343a40;
+    font-weight: bold;
+}
+
 
 .hd1 .nav-link.active {
-    color: #7ed957 !important;
+    border-bottom: 3px solid #5cbf4e !important;
+    color: #5cbf4e !important;
+    background-color: white !important;
+    /* active 상태에서의 텍스트 색상 (원하는 경우) */
 }
 
-.hd1 .nav-link:hover,
-.hd1 .nav-link:focus {
-    color: #7ed957 !important;
-    border-bottom: 3px solid #5cbf4e;
-}
-
-.hd1 .nav-link.active::after {
-    content: '';
-    display: block;
-    width: 100%;
-    height: 2px;
-    background-color: #5cbf4e;
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: -5px;
-    transition: left 0.3s, right 0.3s;
-    border-bottom: 3px solid #5cbf4e;
-}
 
 .hd1 .nav-item {
     position: relative;
 }
 
-.hd1.dropdown-menu {
-    position: absolute;
-    left: 0; 
-    right: auto;
-    min-width: 200px; 
-    max-width: calc(100vw - 20px); 
-    overflow: hidden; 
-}
-.dropdown-toggle::after {
-    display: none; 
+
+
+.hd1 .dropbtn {
+    background-color: #d9d9d9;
+    color: white;
+    padding: 10px 15px;
+    font-size: 15px;
+    border: none;
+    cursor: pointer;
 }
 
+
+.hd1 .dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+
+.hd1 .dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+.hd1 .dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.hd1 .dropdown-content a:hover {
+    background-color: #f1f1f1;
+}
+
+.hd1 .dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.hd1.dropdown:hover .dropbtn {
+    background-color: gray;
+}
+
+
+
+
 /*sidebar-------------*/
-#sb{
-    margin-top: 15%; position: fixed; height: 100%; width: 150px;  
-   } 
-   .sb_cart{
-   text-align: center; color: gray;position: relative;  display: inline-block;
-   }
-   #getCount  {
+#sb {
+    margin-top: 15%;
+    position: fixed;
+    height: 100%;
+    width: 150px;
+}
+
+.sb_cart {
+    text-align: center;
+    color: gray;
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.sb_dibs {
+    text-align: center;
+    color: gray;
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+
+/* #getCountDibs{
     position: absolute; 
     top: -15px; 
     right: -15px; 
@@ -64,17 +112,44 @@
     height: 20px;
     line-height: 20px; 
 }
+#getCountDibs{background-color: blue;} */
 #sidebarGetCount {
-    position: absolute; 
+    position: absolute;
     top: 35px;
     right: -2px;
-    background-color: red; 
-    color: white; 
-    border-radius: 50%; 
-    padding: 2px; 
-    font-size: 12px; 
-    text-align: center; 
-    width: 20px; 
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    padding: 2px;
+    font-size: 12px;
+    text-align: center;
+    width: 20px;
     height: 20px;
-    line-height: 20px; 
+    line-height: 20px;
+}
+
+#sidebarGetCountDibs {
+    position: absolute;
+    top: 35px;
+    right: -2px;
+    background-color: blue;
+    color: white;
+    border-radius: 50%;
+    padding: 2px;
+    font-size: 12px;
+    text-align: center;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+}
+
+.user-info {
+    display: flex;
+    align-items: center; /* 수직 정렬 */
+}
+
+.user-image {
+    width: 20px; /* 너비를 10px로 설정 */
+    height: 20px; /* 높이를 10px로 설정 */
+    margin-right: 5px; /* 텍스트와의 간격 조정 */
 }
