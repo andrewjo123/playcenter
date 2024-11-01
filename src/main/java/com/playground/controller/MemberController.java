@@ -24,8 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.thymeleaf.context.Context;
 
 import java.security.Principal;
 import java.util.List;
@@ -158,9 +158,10 @@ public class MemberController {
     public ResponseEntity<String> sendCode(@RequestParam("email")String email){
         String subject="[놀이마당]이메일 인증코드 발송";
         String code=randomMix(10);
-        System.out.println(code);
-        String body="인증코드는 "+code+" 입니다.";
-        emailService.sendEmail(email, subject, body);
+        Context context=new Context();
+        context.setVariable("code", code);
+
+        emailService.sendEmail(email, subject, "mailForm/signupValidCode",context);
         memberService.setCode(email,code);
         return new ResponseEntity<>("success", HttpStatus.OK);
     }
@@ -215,10 +216,11 @@ public class MemberController {
         }
         String subject="[놀이마당]임시 비밀번호 전송";
         String newPw=randomMix(12);
-        String body="비밀번호가 "+newPw+"로 변경되었습니다. \n\n안전한 사용을 위해 로그인 후 가급적 빠르게 비밀번호를 변경해 주시길 바랍니다.";
+        Context context=new Context();
+        context.setVariable("newPw", newPw);
 
         memberService.updateMember(memberFormDto.getEmail(), passwordEncoder.encode(newPw));
-        emailService.sendEmail(memberFormDto.getEmail(), subject, body);
+        emailService.sendEmail(memberFormDto.getEmail(), subject, "mailForm/passwordChange",context);
         return "member/memberLoginForm";
     }
 

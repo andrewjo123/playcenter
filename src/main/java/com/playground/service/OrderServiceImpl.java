@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.thymeleaf.context.Context;
 import org.thymeleaf.util.StringUtils;
 
 import java.util.*;
@@ -223,22 +224,24 @@ public class OrderServiceImpl implements OrderService {
     public String sendAllCodes(Long orderId, String email) {
         String result = "";
         AtomicInteger totalPrice=new AtomicInteger(0);
-        StringBuilder mail_body=new StringBuilder();
+
         Member member1=memberRepository.findByEmail(email);
         Optional<Order> order = orderRepository.findById(orderId);
         if (order.isPresent()){
+            Map<String, List<String>> sendCodeLists=new LinkedHashMap<>();
             List<OrderItem> orderItems = order.get().getOrderItems();
             List<ItemCode> gatherCodes = new ArrayList<>();
             orderItems.forEach(item ->{
                 int count=item.getCount();
                 totalPrice.addAndGet(item.getTotalPrice());
                 List<ItemCode> codeList=codeRepository.getCode(count);
+                List<String> sendCodes=new ArrayList<>();
                 codeList.forEach(code1->{
-                    mail_body.append(item.getItem().getItemNm());
-                    mail_body.append(": ").append(code1.getCodNum()).append("\n");
+                    sendCodes.add(code1.getCodNum());
                     code1.setMember(member1);
                     gatherCodes.add(code1);
                 });
+                sendCodeLists.put(item.getItem().getItemNm(),sendCodes);
             });
             //이메일 발송 로직구현
             codeRepository.saveAll(gatherCodes);
@@ -253,7 +256,9 @@ public class OrderServiceImpl implements OrderService {
                 member1.setTotalPoint(member1.getTotalPoint()+(int)(totalPrice.get()*0.01));
                 memberRepository.save(member1);
             }
-            emailService.sendEmail(email, "[놀이마당] 게임코드 발송", String.valueOf(mail_body));
+            Context context=new Context();
+            context.setVariable("codeLists",sendCodeLists);
+            emailService.sendEmail(email, "[놀이마당] 게임코드 발송", "mailForm/sendGameCodes",context);
             result="success";
         } else{
             result="none";
