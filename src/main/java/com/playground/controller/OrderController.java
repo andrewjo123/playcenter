@@ -154,7 +154,6 @@ public class OrderController {
             params.remove("orderId");
             params.remove("totalPrice");
             params.remove("usePoint");
-
             if (!params.isEmpty()) {
                 params.forEach((key, value) -> {
                     cartService.deleteCartItem(Long.valueOf(value));

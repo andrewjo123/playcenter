@@ -1,16 +1,15 @@
 package com.playground.service;
 
+import com.playground.constant.OrderStatus;
 import com.playground.constant.Role;
 import com.playground.dto.MemberFormDto;
 import com.playground.dto.MemberSearchDto;
+import com.playground.dto.PointHistDto;
 import com.playground.entity.Cart;
 import com.playground.entity.Dibs;
 import com.playground.entity.Email;
 import com.playground.entity.Member;
-import com.playground.repository.CartRepository;
-import com.playground.repository.DibsRepository;
-import com.playground.repository.EmailRepository;
-import com.playground.repository.MemberRepository;
+import com.playground.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +20,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,6 +37,7 @@ public class MemberServiceImpl implements MemberService {
     private final PasswordEncoder passwordEncoder;
     private final CartRepository cartRepository;
     private final DibsRepository dibsRepository;
+    private final MemberPointRepository pointRepository;
 
     @Override
     public Member saveMember(Member member) {
@@ -100,6 +103,7 @@ public class MemberServiceImpl implements MemberService {
         dto.setAddressDetail(member.getAddressDetail());
         dto.setName(member.getName());
         dto.setPhone(member.getPhone());
+        dto.setTotalPoint(member.getTotalPoint());
         return dto;
     }
 
@@ -235,6 +239,23 @@ public class MemberServiceImpl implements MemberService {
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 멤버"));
         member.setResign(resign);  // 상태 변경
         memberRepository.save(member);
+    }
+
+    @Override
+    public List<PointHistDto> getPointHistory(String email, int date) {
+        List<Object[]> list=pointRepository.getPointHistory(email, date);
+
+        List<PointHistDto> dtoList = new ArrayList<>();
+        for (Object[] objArray : list) {
+            PointHistDto dto = new PointHistDto();
+            Timestamp timestamp = (Timestamp) objArray[0];
+            dto.setUseDate(timestamp.toLocalDateTime());
+            dto.setPayPoint((Integer) objArray[1]);
+            dto.setOrderStatus((String) objArray[2]);
+            dtoList.add(dto);
+        }
+
+        return dtoList;
     }
 
     //조민 끝

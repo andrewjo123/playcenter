@@ -160,7 +160,7 @@
                 $.ajax({
                     url: "/order/validDB",
                     method: "post",
-                    data:{orderId:orderNumber, totalPrice:totalP, usePoint:$("#confirmPoint").val(),...params},
+                    data:{orderId:orderNumber, totalPrice:totalP, usePoint:$("#confirmPoint").val()||0,...params},
                     dataType:"Text",
                     beforeSend : function(xhr){
                         xhr.setRequestHeader(header, token);
@@ -199,7 +199,7 @@
                             $.ajax({
                                 url: "/order/validDB",
                                 method: "post",
-                                data:{orderId:orderNumber, totalPrice:totalP, usePoint:$("#confirmPoint").val(),...params},
+                                data:{orderId:orderNumber, totalPrice:totalP, usePoint:$("#confirmPoint").val()||0,...params},
                                 dataType:"Text",
                                 beforeSend : function(xhr){
                                     xhr.setRequestHeader(header, token);

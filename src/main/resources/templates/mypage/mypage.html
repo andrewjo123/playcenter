@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:sec="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{layouts/layout1}" class="main">
+<head>
+    <link th:href="@{/css/layout1.css}" rel="stylesheet">
+</head>
+
+<div layout:fragment="content">
+    <h3>마이페이지</h3>
+
+    <div>
+
+    </div>
+    <div>
+        <table class="table">
+            <tr>
+                <td>이메일</td>
+                <td ><span sec:authentication="principal.username"></span></td>
+            </tr>
+            <tr>
+                <td>이름</td>
+                <td><span th:text="${memberForm.name}"></span></td>
+            </tr>
+            <tr>
+                <td>번호</td>
+                <td><span th:text="${memberForm.phone}"></span></td>
+            </tr>
+            <tr>
+                <td colspan="100%"> <a class="nav-link" href="/members/modify">회원정보수정</a></td>
+            </tr>
+        </table>
+
+        <p>총 포인트: <span th:text="${memberForm.totalPoint}">포인트를 불러오는 중...</span></p>
+
+        <div id="notice" class="container tab-pane active notice">
+
+            <hr />
+            <a href="#noticePoint" data-toggle="collapse">포인트 사용 내역</a>
+            <select id="pointDuration">
+                <option value="1">1개월</option>
+                <option value="3">3개월</option>
+                <option value="6" selected>6개월</option>
+                <option value="12">1년</option>
+            </select>
+            <hr />
+            <div id="noticePoint" class="collapse" style="max-height:400px; overflow:auto;">
+                <th:block th:if="${pointList.size() > 0}">
+                    검색결과: [[${pointList.size()}]]건
+                    <th:block th:each="item, status: ${pointList}">
+                        <div class="card">
+                            <span th:text="${#temporals.format(item.useDate, 'yyyy. MM. dd. HH시 mm분 ss초')}"></span>
+                            <th:block th:if="${item.payPoint>0}">
+                                <th:block th:if="${item.orderStatus=='ORDER'}">
+                                    포인트 적립 : +[[${item.payPoint}]]
+                                </th:block>
+                                <th:block th:unless="${item.orderStatus=='ORDER'}">
+                                    구매 취소 : +[[${item.payPoint}]]
+                                </th:block>
+                            </th:block>
+                            <th:block th:if="${item.payPoint<0}">
+                                구매 사용 : [[${item.payPoint}]]
+                            </th:block>
+                        </div>
+                    </th:block>
+                </th:block>
+                <th:block th:if="${pointList.size() == 0}">
+                    <div class="col-md-12 text-center">
+                        <h4>결과 없음</h4>
+                    </div>
+                </th:block>
+            </div>
+
+        </div>
+        
+    </div>
+    <script>
+        $(document).ready(function() {
+            $('#pointDuration').on('change',function() {
+                var selectedValue = $(this).val(); // 선택된 값 가져오기
+                console.log("123123");
+                $.ajax({
+                    url: '/pointDuration', // 요청할 URL
+                    method: 'GET',
+                    data: { date: selectedValue }, // 서버에 보낼 데이터
+                    success: function(pointList) {
+                        $('#noticePoint').empty();
+                        if (pointList && pointList.length > 0) {
+                            $('#noticePoint').append(`<div>검색결과: ${pointList.length}건</div>`);
+
+                            pointList.forEach(item => {
+                                let card = `<div class="card">
+                                                <span>${new Date(item.useDate).toLocaleString('ko-KR', { hour12: false })}</span>`;
+
+                                if (item.payPoint > 0) {
+                                    if (item.orderStatus === 'ORDER') {
+                                        card += `<div>포인트 적립 : +${item.payPoint}</div>`;
+                                    } else {
+                                        card += `<div>구매 취소 : +${item.payPoint}</div>`;
+                                    }
+                                } else if (item.payPoint < 0) {
+                                    card += `<div>구매 사용 : ${item.payPoint}</div>`;
+                                }
+
+                                card += `</div>`;
+                                $('#noticePoint').append(card);
+                            });
+                        } else {
+                            $('#noticePoint').append(`
+                                <div class="col-md-12 text-center">
+                                    <h4>결과 없음</h4>
+                                </div>
+                            `);
+                        }
+
+                    },
+                    error: function(xhr, status, error) {
+                        alert("잠시 후 실행해주세요");
+                    }
+                });
+            });
+        });
+
+    </script>
+
+</div>
