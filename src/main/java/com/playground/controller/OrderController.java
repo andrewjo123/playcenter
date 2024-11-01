@@ -172,8 +172,14 @@ public class OrderController {
     @RequestMapping(value="/order/checkStack",method = {RequestMethod.POST})
     @ResponseBody
     public ResponseEntity<List<String>> stack(@RequestParam Map<String, String> params){
+        Long orderId=Long.parseLong(params.get("orderId"));
         params.remove("orderId");
-        List<String> result=orderService.checkStack(params);
+        List<String> result=new ArrayList<>();
+        if(params.isEmpty()){
+            result=orderService.checkStackById(orderId);
+        }else{
+            result=orderService.checkStack(params);
+        }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 

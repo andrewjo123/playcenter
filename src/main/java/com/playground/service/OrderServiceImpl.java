@@ -276,4 +276,19 @@ public class OrderServiceImpl implements OrderService {
         return result;
     }
 
+    @Override
+    public List<String> checkStackById(Long orderId) {
+        Order order=orderRepository.findById(orderId).orElseThrow(EntityNotFoundException::new);
+        List<String> result=new ArrayList<>();
+        order.getOrderItems().forEach(oItem->{
+            if(oItem.getCount()>oItem.getItem().getStockNumber()){
+                result.add(oItem.getItem().getItemNm());
+            }
+        });
+        if (result.isEmpty()) {
+            result.add("conTinueForPay");
+        }
+        return result;
+    }
+
 }

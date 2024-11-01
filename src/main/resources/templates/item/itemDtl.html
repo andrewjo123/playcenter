@@ -364,7 +364,6 @@
                 var token = $("meta[name='_csrf']").attr("content");
                 var header = $("meta[name='_csrf_header']").attr("content");
 
-                var url = "/order";
                 var paramData = {
                     itemId: $("#itemId").val(),
                     count: $("#count").val()
@@ -373,7 +372,7 @@
                 var param = JSON.stringify(paramData);
 
                 $.ajax({
-                    url: url,
+                    url: "/cart",
                     type: "POST",
                     contentType: "application/json",
                     data: param,
@@ -384,11 +383,40 @@
                     dataType: "json",
                     cache: false,
                     success: function (result, status) {
-                            location.href='/order/payment?orderId=' + result;
+                        if(result==0){
+                            alert("죄송합니다. 수량이 부족합니다.");
+                            return;
+                        }
+                        $.ajax({
+                            url: "/order",
+                            type: "POST",
+                            contentType: "application/json",
+                            data: param,
+                            beforeSend: function (xhr) {
+                                /* 데이터를 전송하기 전에 헤더에 csrf값을 설정 */
+                                xhr.setRequestHeader(header, token);
+                            },
+                            dataType: "json",
+                            cache: false,
+                            success: function (result, status) {
+                                    location.href='/order/payment?orderId=' + result;
+                            },
+                            error: function (jqXHR, status, error) {
+                                alert('로그인 후 이용해주세요');
+                                location.href = '/members/login';
+                            }
+                        });
+
                     },
                     error: function (jqXHR, status, error) {
-                        alert('로그인 후 이용해주세요');
-                        location.href = '/members/login';
+
+                        if (jqXHR.status == '401' || jqXHR.status == '200') {
+                            alert('로그인 후 이용해주세요');
+                            location.href = '/members/login';
+                        } else {
+                            alert(jqXHR.responseText);
+                        }
+
                     }
                 });
             }
