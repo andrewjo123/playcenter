@@ -50,6 +50,7 @@ public class Review extends BaseEntity{
         joinColumns = @JoinColumn(name = "review_id"),
         inverseJoinColumns = @JoinColumn(name = "member_id")
     )
+    @Builder.Default
     private Set<Member> recommendedMembers = new HashSet<>(); // 추천한 회원 목록
 
     public void changeGrade(int grade) {
