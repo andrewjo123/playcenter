@@ -30,6 +30,7 @@
         </div>
     </div>
 
+
     <input type="hidden" name="searchQuery" th:value="${itemSearchDto.searchQuery}">
     <div th:if="${not #strings.isEmpty(itemSearchDto.searchQuery)}" class="center">
         <p class="h3 font-weight-bold" th:text="${itemSearchDto.searchQuery} + '검색 결과'" id="resultText"></p>
@@ -55,6 +56,10 @@
         <form class="form-inline my-2 my-lg-0" action="/list" method="get" id="cateSearch">
             <input name="searchQuery" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" id="search2" th:value="${itemSearchDto.searchQuery}">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            <!-- 모바일용 토글 버튼 -->
+            <button type="button" id="toggleTagSelectBtn" class="btn btn-primary">
+                장르 선택
+            </button>
         </form>
     </nav>
 
@@ -95,7 +100,6 @@
             </div>
         </th:block>
     </div>
-
     <button id="loadMore" class="btn btn-primary center" style="display:none;">더보기</button>
 
     <div id="absolute" style="border:1px solid blue; width:100px; min-height:90%; max-height:100%; ;position:absolute; left:20px; top:220px;" >
@@ -166,6 +170,15 @@
     </div>
 
     <script inline="javascript">
+        <!--모바일 토글버튼 스크립트-->
+        document.getElementById("toggleTagSelectBtn").addEventListener("click", function () {
+            const tagSelect = document.getElementById("absolute");
+            if (tagSelect.style.display === "none" || tagSelect.style.display === "") {
+                tagSelect.style.display = "block";
+            } else {
+                tagSelect.style.display = "none";
+            }
+        });
         function appendPage(response){
             const items = response.items.content; // items 목록
             const dibsList=response.dibsList;
