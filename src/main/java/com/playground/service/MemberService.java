@@ -50,4 +50,6 @@ public interface MemberService extends UserDetailsService {
     //vip 테스트
     ChallengeDto getChallengeInfo(String email);
     String validAndAcceptChallenge(String challenge, String email);
+
+    String changeProfileImg(String profileImg, String email);
 }

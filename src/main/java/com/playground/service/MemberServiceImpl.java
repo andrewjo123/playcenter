@@ -106,6 +106,7 @@ public class MemberServiceImpl implements MemberService {
         dto.setName(member.getName());
         dto.setPhone(member.getPhone());
         dto.setTotalPoint(member.getTotalPoint());
+        dto.setProfileImg(member.getProfileImg());
         return dto;
     }
 
@@ -198,6 +199,7 @@ public class MemberServiceImpl implements MemberService {
         sMember.setAddressDetail(dto.getAddressDetail());
         sMember.setFromSocial(true);
         sMember.setRole(Role.USER);
+        sMember.setProfileImg("playGround");
         memberRepository.save(sMember);
 
         Cart cart = Cart.createCart(sMember);
@@ -262,7 +264,11 @@ public class MemberServiceImpl implements MemberService {
             Timestamp timestamp = (Timestamp) objArray[0];
             dto.setUseDate(timestamp.toLocalDateTime());
             dto.setPayPoint((Integer) objArray[1]);
-            dto.setOrderStatus((String) objArray[2]);
+            if(objArray[2]!=null){
+                dto.setOrderStatus((String) objArray[2]);
+            }else{
+                dto.setOrderStatus("challenge");
+            }
             dtoList.add(dto);
         }
 
@@ -314,6 +320,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public String validAndAcceptChallenge(String challenge, String email) {
         String result="notValid";
+        int getPoint=0;
         MemberChallenge allChallenge=challengeRepository.findByMemeberEmail(email);
         if(challenge.startsWith("pay")){
             String num=challenge.substring(3);
@@ -321,30 +328,64 @@ public class MemberServiceImpl implements MemberService {
             int valid=allChallenge.getAchievementForMoney();
             if(num.equals("10")){
                 if(money<100000||valid!=0){return result;}
-                else{allChallenge.setAchievementForMoney(1); result="10";}
+                else{
+                    allChallenge.setAchievementForMoney(1); result="10";
+                    getPoint=1000;
+                }
             } else if (num.equals("40")) {
                 if(money<400000||valid!=1){return result;}
-                else{allChallenge.setAchievementForMoney(2); result="40";}
+                else{
+                    allChallenge.setAchievementForMoney(2); result="40";
+                    getPoint=5000;
+                }
             } else{
                 if(money<1000000||valid!=2){return result;}
-                else{allChallenge.setAchievementForMoney(3); result="100";}
+                else{
+                    allChallenge.setAchievementForMoney(3); result="100";
+                    getPoint=15000;
+                }
             }
         } else{
             if(challenge.equals("steam")){
                 if(allChallenge.getCountForSteam()<10||allChallenge.getAchievementForSteam()!=0){return result;}
-                else {allChallenge.setAchievementForSteam(1); result="steam";}
+                else {
+                    allChallenge.setAchievementForSteam(1); result="steam";
+                    getPoint=2000;
+                }
             }
             if(challenge.equals("nintendo")){
                 if(allChallenge.getCountForNintendo()<10||allChallenge.getAchievementForNintendo()!=0){return result;}
-                else {allChallenge.setAchievementForNintendo(1); result="nintendo";}
+                else {
+                    allChallenge.setAchievementForNintendo(1); result="nintendo";
+                    getPoint=2000;
+                }
             }
             if(challenge.equals("ps")){
                 if(allChallenge.getCountForPs()<10||allChallenge.getAchievementForPs()!=0){return result;}
-                else {allChallenge.setAchievementForPs(1); result="ps";}
+                else {
+                    allChallenge.setAchievementForPs(1); result="ps";
+                    getPoint=2000;
+                }
             }
         }
-        challengeRepository.save(allChallenge);
+        if(getPoint!=0){
+            MemberPoint point=new MemberPoint();
+            point.setPayPoint(getPoint);
+            point.setEmail(email);
+            pointRepository.save(point);
+            Member member=memberRepository.findByEmail(email);
+            member.setTotalPoint(member.getTotalPoint()+getPoint);
+            memberRepository.save(member);
+            challengeRepository.save(allChallenge);
+        }
         return result;
+    }
+
+    @Override
+    public String changeProfileImg(String profileImg, String email) {
+        Member member=memberRepository.findByEmail(email);
+        member.setProfileImg(profileImg);
+        return profileImg;
     }
 
 }

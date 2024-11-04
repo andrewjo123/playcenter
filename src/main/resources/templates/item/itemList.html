@@ -58,7 +58,13 @@
         </form>
     </nav>
 
-    <h4><span th:text="${company}" id="getCompany"></span></h4>
+    <span th:text="${company}" id="getCompany" style="display:none;"></span>
+    <select class="form-control orderBy">
+        <option value="latest" th:selected="${itemSearchDto.orderBy == 'latest'}">최신순</option>
+        <option value="sales" th:selected="${itemSearchDto.orderBy == 'sales'}">판매량순</option>
+        <option value="price_high" th:selected="${itemSearchDto.orderBy == 'price_high'}">가격높은순</option>
+        <option value="price_low" th:selected="${itemSearchDto.orderBy == 'price_low'}">가격낮은순</option>
+    </select>
     <div class="row" id="lists">
         <th:block th:if="${items.getContent().size() > 0}">
             <th:block th:each="item, status: ${items.getContent()}">
@@ -231,6 +237,12 @@
                     }));
                 });
 
+                form.append($('<input>', {
+                    type: 'hidden',
+                    name: 'orderBy',
+                    value: $(".orderBy").val()
+                }));
+
                 $('body').append(form);
                 form.submit();
             });
@@ -261,6 +273,12 @@
                     }));
                 });
 
+                form.append($('<input>', {
+                    type: 'hidden',
+                    name: 'orderBy',
+                    value: $(".orderBy").val()
+                }));
+
                 $('body').append(form);
                 form.submit();
 
@@ -283,7 +301,7 @@
                 $.ajax({
                     url: newUrl,
                     type: 'GET',
-                    data:{searchQuery:searchQuery, nthPage:currentPage, ...itemCategoryDto},
+                    data:{searchQuery:searchQuery, nthPage:currentPage, orderBy:$(".orderBy").val(), ...itemCategoryDto},
                     success: function(response) {
                         appendPage(response);
                         var maxPage = parseInt(response.maxPage);
@@ -332,6 +350,12 @@
                     }));
                 });
 
+                form.append($('<input>', {
+                    type: 'hidden',
+                    name: 'orderBy',
+                    value: $(".orderBy").val()
+                }));
+
                 $('body').append(form);
                 form.submit();
             });
@@ -344,6 +368,48 @@
                 }
                 location.href="/"+cate;
             });
+
+            $(".orderBy").on('change',function(){
+                $(".appendForm").remove();
+
+                const searchQuery = $("#search2").val();
+
+                var newUrl = '/'+$("#getCompany").text();
+                if($("#getCompany").text()=="all"){
+                    newUrl='/list';
+                }
+
+                const form = $('<form>', {
+                    class: 'appendForm',
+                    method: 'GET',
+                    action: newUrl
+                });
+
+                form.append($('<input>', {
+                    type: 'hidden',
+                    name: 'searchQuery',
+                    value: searchQuery
+                }));
+
+                $("input[type='checkbox']:checked").each(function() {
+                    var checkboxName = $(this).attr('name');
+                    var checked = $(this).is(':checked');
+                    form.append($('<input>', {
+                        type: 'hidden',
+                        name: checkboxName,
+                        value: checked
+                    }));
+                });
+
+                form.append($('<input>', {
+                    type: 'hidden',
+                    name: 'orderBy',
+                    value: $(".orderBy").val()
+                }));
+
+                $('body').append(form);
+                form.submit();
+            })
 
         })
 

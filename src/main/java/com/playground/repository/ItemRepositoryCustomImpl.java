@@ -3,6 +3,7 @@ package com.playground.repository;
 import com.playground.dto.ItemCategoryDto;
 import com.playground.entity.QItemCategory;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.Wildcard;
@@ -22,6 +23,7 @@ import org.springframework.data.domain.Pageable;
 import org.thymeleaf.util.StringUtils;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
@@ -116,6 +118,19 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
         whereClause.and(itemImg.repimgYn.eq("Y"));
         whereClause.and(itemNmLike(itemSearchDto.getSearchQuery()));
 
+        //정렬 조건 추가
+        List<OrderSpecifier<?>> orderClauses = new ArrayList<>();
+        if(itemSearchDto.getOrderBy()!=null){
+            if (itemSearchDto.getOrderBy().equals("price_high")) {
+                orderClauses.add(item.price.desc());
+            } else if (itemSearchDto.getOrderBy().equals("price_low")) {
+                orderClauses.add(item.price.asc());
+            } else if (itemSearchDto.getOrderBy().equals("sales")){
+                orderClauses.add(item.buyCnt.desc());
+            }
+        }
+        orderClauses.add(item.id.desc());
+
         // ItemCategoryDto의 필드 추가
         if (itemCategoryDto != null) {
             if (itemCategoryDto.isAction()) whereClause.and(itemCategory.action.eq(true));
@@ -139,9 +154,6 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
             if (itemCategoryDto.isMoba()) whereClause.and(itemCategory.moba.eq(true));
             if (itemCategoryDto.isMmorpg()) whereClause.and(itemCategory.mmorpg.eq(true));
         }
-        System.out.println(itemCategoryDto.isAction());
-        System.out.println("::::::::::::::::::::::::::::::::::::::");
-        System.out.println(whereClause);
         List<MainItemDto> content = queryFactory
                 .select(
                         new QMainItemDto(
@@ -149,13 +161,14 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
                                 item.itemNm,
                                 itemImg.imgUrl,
                                 item.price,
-                                item.stockNumber)
+                                item.stockNumber,
+                                item.buyCnt)
                 )
                 .from(itemImg)
                 .join(itemImg.item, item)
                 .join(itemCategory).on(itemCategory.item.eq(item))
                 .where(whereClause)
-                .orderBy(item.id.desc())
+                .orderBy(orderClauses.toArray(new OrderSpecifier[0]))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -185,6 +198,19 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
         whereClause.and(itemCategory.company.eq(company));
         whereClause.and(itemNmLike(itemSearchDto.getSearchQuery()));
 
+        //정렬 조건 추가
+        List<OrderSpecifier<?>> orderClauses = new ArrayList<>();
+        if(itemSearchDto.getOrderBy()!=null){
+            if (itemSearchDto.getOrderBy().equals("price_high")) {
+                orderClauses.add(item.price.desc());
+            } else if (itemSearchDto.getOrderBy().equals("price_low")) {
+                orderClauses.add(item.price.asc());
+            } else if (itemSearchDto.getOrderBy().equals("sales")){
+                orderClauses.add(item.buyCnt.desc());
+            }
+        }
+        orderClauses.add(item.id.desc());
+
         // ItemCategoryDto의 필드 추가
         if (itemCategoryDto != null) {
             if (itemCategoryDto.isAction()) whereClause.and(itemCategory.action.eq(true));
@@ -218,13 +244,14 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
                                 item.itemNm,
                                 itemImg.imgUrl,
                                 item.price,
-                                item.stockNumber)
+                                item.stockNumber,
+                                item.buyCnt)
                 )
                 .from(itemImg)
                 .join(itemImg.item, item)
                 .join(itemCategory).on(itemCategory.item.eq(item))
                 .where(whereClause)
-                .orderBy(item.id.desc())
+                .orderBy(orderClauses.toArray(new OrderSpecifier[0]))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -263,7 +290,8 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
                                 item.itemNm,
                                 itemImg.imgUrl,
                                 item.price,
-                                item.stockNumber)
+                                item.stockNumber,
+                                item.buyCnt)
                 )
                 .from(itemImg)
                 .join(itemImg.item, item)

@@ -35,4 +35,6 @@ public class MemberFormDto {
 
     private int totalPoint;
 
+    private String profileImg;
+
 }

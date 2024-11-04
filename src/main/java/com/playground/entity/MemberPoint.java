@@ -18,9 +18,12 @@ public class MemberPoint extends BaseTimeEntity {
     Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_id", nullable = false)
+    @JoinColumn(name = "order_id")
     private Order order;
 
     @ColumnDefault("0")
     int payPoint; // 포인트 변화
+
+    @Column(name="point_email", nullable = false)
+    String email;
 }

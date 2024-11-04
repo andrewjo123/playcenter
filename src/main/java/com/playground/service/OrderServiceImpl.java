@@ -107,6 +107,7 @@ public class OrderServiceImpl implements OrderService {
         MemberPoint returnPoint=new MemberPoint();
         returnPoint.setOrder(order);
         returnPoint.setPayPoint(-memberPoint.getPayPoint());
+        returnPoint.setEmail(member.getEmail());
 
         //1029추가
         List<Item> items = new ArrayList<>();
@@ -200,6 +201,7 @@ public class OrderServiceImpl implements OrderService {
         MemberPoint memberPoint=new MemberPoint();
         memberPoint.setOrder(order);
         memberPoint.setPayPoint((int)-usePoint);
+        memberPoint.setEmail(member.getEmail());
 
         //1029추가
         List<Item> items = new ArrayList<>();
@@ -245,15 +247,19 @@ public class OrderServiceImpl implements OrderService {
                     gatherCodes.add(code1);
                 });
                 sendCodeLists.put(item.getItem().getItemNm(),sendCodes);
-                if(categoryRepository.findByItemId(item.getId()).getCompany().equals("steam")){
+                String company=categoryRepository.findByItemId(item.getId()).getCompany();
+                if(company.equals("steam")){
                     companyCount.put("steam",companyCount.getOrDefault("steam", 0)+count);
                 }
-                if(categoryRepository.findByItemId(item.getId()).getCompany().equals("nintendo")){
+                if(company.equals("nintendo")){
                     companyCount.put("nintendo",companyCount.getOrDefault("nintendo", 0)+count);
                 }
-                if(categoryRepository.findByItemId(item.getId()).getCompany().equals("ps")){
+                if(company.equals("ps")){
                     companyCount.put("ps",companyCount.getOrDefault("ps", 0)+count);
                 }
+                Item originItem=item.getItem();
+                originItem.setBuyCnt(originItem.getBuyCnt()+count);
+                itemRepository.save(originItem);
             });
             //이메일 발송 로직구현
             codeRepository.saveAll(gatherCodes);
@@ -265,6 +271,7 @@ public class OrderServiceImpl implements OrderService {
                 MemberPoint point= new MemberPoint();
                 point.setPayPoint((int)(totalPrice.get()*0.01));
                 point.setOrder(order.get());
+                point.setEmail(email);
                 pointRepository.save(point);
                 member1.setTotalPoint(member1.getTotalPoint()+(int)(totalPrice.get()*0.01));
                 memberRepository.save(member1);

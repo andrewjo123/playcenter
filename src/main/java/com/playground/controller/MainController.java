@@ -50,8 +50,6 @@ public class MainController {
 
     @GetMapping(value = {"/list", "/steam", "/ps", "/nintendo"})
     public String defaultList(ItemSearchDto itemSearchDto, ItemCategoryDto itemCategoryDto, Optional<Integer> page, Model model, HttpServletRequest request, Principal principal) {
-        System.out.println(itemCategoryDto.isAction());
-        System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
         String company = request.getRequestURI().substring(1);
         Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 6);
         List<Long> dibsList = new ArrayList<>();
@@ -144,4 +142,12 @@ public class MainController {
         String result=memberService.validAndAcceptChallenge(challenge,principal.getName());
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
+    @RequestMapping(value={"/changeProfileImg"}, method = {RequestMethod.GET})
+    @ResponseBody
+    public ResponseEntity<String> changeProfileImg(@RequestParam("profileImg") String profileImg, Principal principal){
+        String result=memberService.changeProfileImg(profileImg,principal.getName());
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
 }

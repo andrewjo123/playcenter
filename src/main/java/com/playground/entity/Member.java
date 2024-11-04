@@ -79,11 +79,14 @@ public class Member extends BaseEntity {
         String password = passwordEncoder.encode(memberFormDto.getPassword());
         member.setPassword(password);
         member.setRole(Role.ADMIN);
+        member.setProfileImg("playGround");
         return member;
     }
 
-    // 1025 1700추가
     @ColumnDefault("0")
-    int totalPoint; // 현재 보유 포인트
+    private int totalPoint; // 현재 보유 포인트
 
+    //프로필 이미지
+    @ColumnDefault("'playGround'")
+    private String profileImg;
 }

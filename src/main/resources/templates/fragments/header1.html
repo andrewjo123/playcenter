@@ -83,28 +83,8 @@
                 <span sec:authorize="isAuthenticated()">
                     <button class="dropbtn"><i class="fa-solid fa-bars"></i></button>
                     <div class="dropdown-content">
-                        <div class="dropdown-header user-info">
-                            <img th:src="@{/img/user_origin.png}" class="user-image" style="width: 60px; height: 60px;"/>
-                            <div style="margin-left: 10px; margin-top: 25px;">
-                                <b sec:authorize="isAuthenticated()" sec:authentication="principal.name">님</b>
-                                <p sec:authorize="isAuthenticated()" sec:authentication="principal.email"></p>
-                            </div>
-                         
-                        </div>
                         <a class="dropdown-item" sec:authorize="isAuthenticated()" href="/mypage">🗨마이페이지</a>
 
-                        <div sec:authorize="isAuthenticated()">
-                            <div class="dropdown-divider"></div>
-                            <b class="dropdown-header">buy</b>
-
-                            <a class="nav-link" href="/dibs">❤ 찜한목록
-                                <span id="getCountDibs" style="display:none"></span>
-                            </a>
-                                <a class="dropdown-item" href="/cart">🛒 장바구니
-                                    <span id="getCount">()</span></a>
-                                    <a class="dropdown-item" href="/orders">📑 내주문</a>
-
-                        </div>
                         <div sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
                             <div class="dropdown-divider"></div>
                             <b class="dropdown-header">sell</b>

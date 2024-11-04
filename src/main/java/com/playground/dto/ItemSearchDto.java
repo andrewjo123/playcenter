@@ -17,4 +17,5 @@ public class ItemSearchDto {
 
     private int nthPage;
 
+    private String orderBy;
 }
