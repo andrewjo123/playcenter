@@ -31,6 +31,17 @@
   <a href="/oauth2/authorization/naver"><img th:src="@{/icon/naver.png}" style="width:150px; height:37.5px;"></a>
   <a href="/oauth2/authorization/kakao"><img th:src="@{/icon/kakao.png}" style="width:150px; height:37.5px;"></a>
 
+  <script th:inline="javascript">
+    $(document).ready(function(){
+      var msg=[[${message}]];
+      console.log(msg)
+      if(msg!==null){
+        alert(msg);
+      }
+    })
+
+  </script>
+
 </div>
 
 </html>

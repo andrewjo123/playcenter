@@ -3,7 +3,8 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:sec="http://www.w3.org/1999/xhtml"
       layout:decorate="~{layouts/layout1}" class="main">
 <head>
-    <link th:href="@{/css/layout1.css}" rel="stylesheet">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 </head>
 
 <div layout:fragment="content">
@@ -74,8 +75,112 @@
         </div>
         
     </div>
+
+    <div class="container mt-5">
+        <h1>도전과제 달성 현황</h1>
+
+        <div class="accordion" id="achievementsAccordion">
+
+            <div class="card">
+                <div class="card-header" id="challenge1">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseC1" aria-expanded="false" aria-controls="collapseC1">
+                            도전과제 / 결제
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapseC1" class="collapse" aria-labelledby="challenge1" data-parent="#achievementsAccordion">
+                    <div class="card-body">1
+                        <p th:if="${challenge.usedTotalMoney < 100000}">도전과제: 10만원 이상 결제하세요</p>
+                        <p th:if="${challenge.usedTotalMoney >= 100000 && challenge.achievementForMoney == 0}">
+                            도전과제 1 보상을 받을 수 있습니다! <button class="btn btn-primary chal" data-challenge="pay10">1000P+프로필아이콘 받기</button>
+                        </p>
+                        <p th:if="${challenge.achievementForMoney >= 1}">10만원 이상 결제 달성 및 보상 받기 완료!</p>
+
+                        <p th:if="${challenge.usedTotalMoney < 400000||challenge.achievementForMoney == 0}">도전과제: 40만원 이상 결제하세요</p>
+                        <p th:if="${challenge.usedTotalMoney >= 400000 && challenge.achievementForMoney == 1}">
+                            도전과제 2 보상을 받을 수 있습니다! <button class="btn btn-primary chal" data-challenge="pay40">5000P+프로필아이콘 받기</button>
+                        </p>
+                        <p th:if="${challenge.achievementForMoney >= 2}">40만원 이상 결제 달성 및 보상 받기 완료!</p>
+
+                        <p th:if="${challenge.usedTotalMoney < 1000000||challenge.achievementForMoney <= 1}">도전과제: 100만원 이상 결제하세요</p>
+                        <p th:if="${challenge.usedTotalMoney >= 1000000 && challenge.achievementForMoney == 2}">
+                            도전과제 3 보상을 받을 수 있습니다! <button class="btn btn-primary chal" data-challenge="pay100">15000P+프로필아이콘 받기</button>
+                        </p>
+                        <p th:if="${challenge.achievementForMoney == 3}">100만원 이상 결제 달성 및 보상 받기 완료!</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header" id="challenge2">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseC2" aria-expanded="false" aria-controls="collapseC2">
+                            도전과제 / 스팀
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapseC2" class="collapse" aria-labelledby="challenge2" data-parent="#achievementsAccordion">
+                    <div class="card-body">steam
+                        <p th:if="${challenge.countForSteam < 10}">도전과제: 스팀 게임을 10개 이상 구매하세요</p>
+                        <p th:if="${challenge.countForSteam >= 10 && challenge.achievementForSteam == 0}">
+                            보상을 받을 수 있습니다! <button class="btn btn-primary chal" data-challenge="steam">3000P+프로필아이콘 받기</button>
+                        </p>
+                        <p th:if="${challenge.achievementForSteam == 1}">스팀 게임 10개 이상 구매 및 보상 받기 완료!</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header" id="challenge3">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseC3" aria-expanded="false" aria-controls="collapseC3">
+                            도전과제 / 닌텐도
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapseC3" class="collapse" aria-labelledby="challenge3" data-parent="#achievementsAccordion">
+                    <div class="card-body">
+                        <p th:if="${challenge.countForNintendo < 10}">도전과제: 닌텐도 게임을 10개 이상 구매하세요</p>
+                        <p th:if="${challenge.countForNintendo >= 10 && challenge.achievementForNintendo == 0}">
+                            보상을 받을 수 있습니다! <button class="btn btn-primary chal" data-challenge="nintendo">3000P+프로필아이콘 받기</button>
+                        </p>
+                        <p th:if="${challenge.achievementForNintendo == 1}">닌텐도 게임 10개 이상 구매 및 보상 받기 완료!</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header" id="challenge4">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseC4" aria-expanded="false" aria-controls="collapseC4">
+                            도전과제 / 플레이스테이션
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapseC4" class="collapse" aria-labelledby="challenge4" data-parent="#achievementsAccordion">
+                    <div class="card-body">
+                        <p th:if="${challenge.countForPs < 10}">도전과제: 닌텐도 게임을 10개 이상 구매하세요</p>
+                        <p th:if="${challenge.countForPs >= 10 && challenge.achievementForPs == 0}">
+                            보상을 받을 수 있습니다! <button class="btn btn-primary chal" data-challenge="ps">3000P+프로필아이콘 받기</button>
+                        </p>
+                        <p th:if="${challenge.achievementForPs == 1}">닌텐도 게임 10개 이상 구매 및 보상 받기 완료!</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+
     <script>
         $(document).ready(function() {
+            let token = $("meta[name='_csrf']").attr("content");
+            let header = $("meta[name='_csrf_header']").attr("content");
+
             $('#pointDuration').on('change',function() {
                 var selectedValue = $(this).val(); // 선택된 값 가져오기
                 console.log("123123");
@@ -119,6 +224,48 @@
                     }
                 });
             });
+
+            $(".chal").on('click',function(e){
+
+                var challenge = $(this).data('challenge');
+
+                $.ajax({
+                    url: "/acceptChallenge",
+                    method: "post",
+                    data:{challenge:challenge},
+                    dataType:"text",
+                    beforeSend : function(xhr){
+                        xhr.setRequestHeader(header, token);
+                    },success(result){
+                        if(result!='notValid'){
+                            var msg=""
+                            switch (result) {
+                                case "10": msg="10만원 결제";
+                                    break;
+                                case "40": msg="40만원 결제";
+                                    break;
+                                case "100": msg="100만원 결제";
+                                    break;
+                                case "steam": msg="스팀 10개주문";
+                                    break;
+                                case "nintendo": msg="닌텐도 10개주문";
+                                    break;
+                                case "ps": msg="플레이스테이션 10개주문";
+                                    break;
+                            }
+                            alert(msg+" 도전과제 달성!");
+                            location.reload();
+                        }else{
+                            alert("정보가 유효하지 않습니다. 관리자에게 문의해주세요.");
+                        }
+                    },error(){
+                        alert("잠시 후 다시시도해주세요.");
+                    }
+                });
+
+            });
+
+
         });
 
     </script>

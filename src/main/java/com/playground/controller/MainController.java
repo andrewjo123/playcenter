@@ -127,6 +127,7 @@ public class MainController {
         model.addAttribute("memberForm", userDto);
         int date = 6;
         model.addAttribute("pointList", memberService.getPointHistory(principal.getName(), date));
+        model.addAttribute("challenge", memberService.getChallengeInfo(email));
         return "mypage/mypage";
     }
 
@@ -135,5 +136,12 @@ public class MainController {
     public ResponseEntity<List<PointHistDto>> addList(@RequestParam("date") int date, Principal principal) {
         List<PointHistDto> pointList = memberService.getPointHistory(principal.getName(), date);
         return new ResponseEntity<>(pointList, HttpStatus.OK);
+    }
+
+    @RequestMapping(value={"/acceptChallenge"}, method = {RequestMethod.POST})
+    @ResponseBody
+    public ResponseEntity<String> challenge(@RequestParam("challenge") String challenge, Principal principal){
+        String result=memberService.validAndAcceptChallenge(challenge,principal.getName());
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

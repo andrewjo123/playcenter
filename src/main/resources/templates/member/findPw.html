@@ -32,18 +32,17 @@
     <div id="errorMessages"></div>
     <script th:inline="javascript">
         $(document).ready(function () {
-            var result = [[${ result }]];
-            console.log(result + "123123123123");
-            if (result != null) {
-                if (result == "noEmail") {
-                    $("#errorMessages").text("회원가입되지 않은 이메일입니다.");
-                } else if (result == "notValid") {
-                    $("#errorMessages").text("회원정보가 일치하지 않습니다.");
-                }
+            let token = $("meta[name='_csrf']").attr("content");
+            let header = $("meta[name='_csrf_header']").attr("content");
+
+            var notValid=[[${notValid}]];
+            if(notValid!=null||notValid==""){
+                alert("유효기간이 만료되었습니다");
             }
 
             $(".find").on('click', function (e) {
                 e.preventDefault();
+
                 var name = $("#name").val();
                 var phone = $("#phone").val();
                 var email = $("#email").val();
@@ -78,7 +77,28 @@
                     alert("이메일을 형식에 맞게 입력해주세요. ex)hkd123@naver.com");
                     return;
                 }
-                $("#submitForm").submit();
+
+                $.ajax({
+                    url: "/members/findPw",
+                    method: "post",
+                    data:{name:name, phone:phone, email:email},
+                    dataType:"Text",
+                    beforeSend : function(xhr){
+                        xhr.setRequestHeader(header, token);
+                    },success(result){
+                        if(result=='valid'){
+                            alert("메일을 확인 해 주세요");
+                        }else if(result=='notValid'){
+                            alert("일치하는 정보가 없습니다");
+                        }else if(result=='noEmail'){
+                            alert("가입된 정보가 없습니다");
+                        }else{
+                            alert("비밀번호 찾기는 "+result+" 후에 가능합니다");
+                        }
+                    },error(){
+                        alert("잠시 후 다시시도해주세요.");
+                    }
+                })
             });
         });
     </script>

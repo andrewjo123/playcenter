@@ -1,9 +1,6 @@
 package com.playground.service;
 
-import com.playground.dto.ItemSearchDto;
-import com.playground.dto.MemberFormDto;
-import com.playground.dto.MemberSearchDto;
-import com.playground.dto.PointHistDto;
+import com.playground.dto.*;
 import com.playground.entity.Item;
 import com.playground.entity.Member;
 import org.springframework.data.domain.Page;
@@ -44,4 +41,13 @@ public interface MemberService extends UserDetailsService {
 
     //1031 1650 - 포인트 내역
     List<PointHistDto> getPointHistory(String email, int date);
+
+    //1101 1720 - 비밀번호 찾기
+    String createPasswordResetToken(String email);
+    String validPwToken(String token);
+    String findEmailFromToken(String token);
+
+    //vip 테스트
+    ChallengeDto getChallengeInfo(String email);
+    String validAndAcceptChallenge(String challenge, String email);
 }

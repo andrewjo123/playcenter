@@ -146,6 +146,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public int saveCodes(Long itemId, List<String> codes) {
         Item item = itemRepository.findById(itemId).get();
+        int beforeStock=item.getStockNumber();
         List<ItemCode> itemCodes = new ArrayList<>();
 
         codes.forEach(code -> {
@@ -159,17 +160,19 @@ public class ItemServiceImpl implements ItemService {
         item.setStockNumber(item.getStockNumber()+codes.size());
         itemRepository.save(item);
 
-        List<Object> getList=memberRepository.findEmailFromItemId(item.getId());
-        if(getList!=null){
-            List<String> emailList = getList.stream().map(obj -> (String) obj).toList();
-            String subject="[놀이마당] "+item.getItemNm()+" 입고되었습니다.";
-            Context context=new Context();
-            context.setVariable("itemId", item.getId());
-            context.setVariable("itemNm",item.getItemNm());
-            context.setVariable("count",codes.size());
-            context.setVariable("itemImgUrl",itemImgRepository.findByItemId(itemId).get(0).getImgUrl());
+        if(beforeStock==0){
+            List<Object> getList=memberRepository.findEmailFromItemId(item.getId());
+            if(getList!=null){
+                List<String> emailList = getList.stream().map(obj -> (String) obj).toList();
+                String subject="[놀이마당] "+item.getItemNm()+" 입고되었습니다.";
+                Context context=new Context();
+                context.setVariable("itemId", item.getId());
+                context.setVariable("itemNm",item.getItemNm());
+                context.setVariable("count",codes.size());
+                context.setVariable("itemImgUrl",itemImgRepository.findByItemId(itemId).get(0).getImgUrl());
 
-            emailService.sendEmailToMany(emailList, subject, "mailForm/stockNotification",context);
+                emailService.sendEmailToMany(emailList, subject, "mailForm/stockNotification",context);
+            }
         }
         return codes.size(); // 반복한 횟수 반환
     }

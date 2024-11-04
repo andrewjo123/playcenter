@@ -3,77 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <title> </title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            color: #333;
-            margin: 0;
-            padding: 20px;
-        }
-        .container {
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-        }
-        .header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .logo {
-            width: 100px;
-            height: 100px;
-        }
-        .product-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        .product-name {
-            width: 50%;
-            background-color: #eaf8e7;
-            padding: 10px;
-            font-size: 1.2em;
-            color: #7ED957;
-            border: 1px solid #7ED957;
-            vertical-align: top;
-            text-align:center;
-        }
-        .product-code {
-            width: 50%;
-            border: 1px solid #7ED957;
-            vertical-align: top;
-            text-align: left;
-            padding: 10px;
-            background-color: #f9f9f9;
-        }
-        .code {
-            display: block;
-            margin: 5px 0;
-            padding: 5px 10px;
-            background-color: #7ED957;
-            color: white;
-            border-radius: 3px;
-        }
-        .copy-instruction {
-            font-size: 0.9em;
-            color: #555;
-            margin-top: 5px;
-        }
-    </style>
 </head>
-<body>
-    <div class="container">
-        <div class="header">
-            <img th:src="@{'http://localhost:8887/img/logo_s.png'}" alt="로고" class="logo">
+<body style="font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 20px;">
+    <div style="background-color: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); padding: 20px;">
+        <div style="text-align: center; margin-bottom: 20px;">
+            <img src="http://localhost:8887/img/logo_s.png" alt="로고" style="width: 100px; height: 100px;">
         </div>
-        <table class="product-table">
+        <table style="width: 100%; border-collapse: collapse;">
             <th:block th:each="codeList, status: ${codeLists}">
                 <tr>
-                    <td class="product-name" th:text="${codeList.key}"></td>
-                    <td class="product-code">
+                    <td style="width: 50%; background-color: #eaf8e7; padding: 10px; font-size: 1.2em; color: #7ED957; border: 1px solid #7ED957; vertical-align: top; text-align: center;" th:text="${codeList.key}"></td>
+                    <td style="width: 50%; border: 1px solid #7ED957; vertical-align: top; text-align: left; padding: 10px; background-color: #f9f9f9;">
                         <th:block th:each="code, status: ${codeList.value}">
-                            <span class="code" th:text="${code}"></span>
+                            <span style="display: block; margin: 5px 0; padding: 5px 10px; background-color: #7ED957; color: white; border-radius: 3px;" th:text="${code}"></span>
                         </th:block>
                     </td>
                 </tr>

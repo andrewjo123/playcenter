@@ -32,6 +32,8 @@ public class OrderServiceImpl implements OrderService {
     private final EmailService emailService;
     private final MemberPointRepository pointRepository;
     private final CartItemRepository cartItemRepository;
+    private final MemberChallengeRepsoitory challengeRepository;
+    private final ItemCategoryRepository categoryRepository;
 
     @Override
     public Long order(OrderDto orderDto, String email) {
@@ -231,6 +233,7 @@ public class OrderServiceImpl implements OrderService {
             Map<String, List<String>> sendCodeLists=new LinkedHashMap<>();
             List<OrderItem> orderItems = order.get().getOrderItems();
             List<ItemCode> gatherCodes = new ArrayList<>();
+            Map<String,Integer> companyCount=new HashMap<>();
             orderItems.forEach(item ->{
                 int count=item.getCount();
                 totalPrice.addAndGet(item.getTotalPrice());
@@ -242,19 +245,38 @@ public class OrderServiceImpl implements OrderService {
                     gatherCodes.add(code1);
                 });
                 sendCodeLists.put(item.getItem().getItemNm(),sendCodes);
+                if(categoryRepository.findByItemId(item.getId()).getCompany().equals("steam")){
+                    companyCount.put("steam",companyCount.getOrDefault("steam", 0)+count);
+                }
+                if(categoryRepository.findByItemId(item.getId()).getCompany().equals("nintendo")){
+                    companyCount.put("nintendo",companyCount.getOrDefault("nintendo", 0)+count);
+                }
+                if(categoryRepository.findByItemId(item.getId()).getCompany().equals("ps")){
+                    companyCount.put("ps",companyCount.getOrDefault("ps", 0)+count);
+                }
             });
             //이메일 발송 로직구현
             codeRepository.saveAll(gatherCodes);
             order.get().setSendCode(true);
             orderRepository.save(order.get());
+            int payPoint=pointRepository.findOldestOne(order.get().getId()).getPayPoint();
             //포인트 적립
-            if((int)(totalPrice.get()*0.01)>0){
+            if((int)((totalPrice.get()-payPoint)*0.01)>0){
                 MemberPoint point= new MemberPoint();
                 point.setPayPoint((int)(totalPrice.get()*0.01));
                 point.setOrder(order.get());
                 pointRepository.save(point);
                 member1.setTotalPoint(member1.getTotalPoint()+(int)(totalPrice.get()*0.01));
                 memberRepository.save(member1);
+            }
+            //도전과제
+            if(totalPrice.get()-payPoint>0){
+                MemberChallenge challenge=challengeRepository.findByMemeberEmail(member1.getEmail());
+                challenge.setUsedTotalMoney(challenge.getUsedTotalMoney()+totalPrice.get()-payPoint);
+                challenge.setCountForSteam(challenge.getCountForSteam() + companyCount.getOrDefault("steam", 0));
+                challenge.setCountForNintendo(challenge.getCountForNintendo() + companyCount.getOrDefault("nintendo", 0));
+                challenge.setCountForPs(challenge.getCountForPs() + companyCount.getOrDefault("ps", 0));
+                challengeRepository.save(challenge);
             }
             Context context=new Context();
             context.setVariable("codeLists",sendCodeLists);
