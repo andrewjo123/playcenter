@@ -6,25 +6,31 @@ html {
 body {
     min-height: 100%;
 }
-.footer {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    width: 100%;
-    padding: 15px 0;
-    text-align: center;
-}
 .content{
     margin-bottom:100px;
     margin-top: 50px;
     margin-left: 175px;
     margin-right: 175px;
 }
-
 li,ul{
     text-decoration:none ;
 }
+/* footer */
+.footer {
+    padding: 20px 0;
+    background-color: #d9d9d9;
+    color: #6C757D;
+    text-align: left;
+    font-size: 12px
+}
+.footer a {
+    font-size: 12px
+}
+
+.footer .info {
+    padding: 0 20px;
+}
+/* footer end */
 
 /* main */
 .main .carousel-inner > .item {
