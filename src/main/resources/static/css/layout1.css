@@ -103,5 +103,97 @@ li,ul{
     font-size: 14px;
 }
 
+/* 모바일 화면 전용 스타일 */
+@media (max-width: 768px) {
+    html, body {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        margin-left: 0;
+        margin-right: 0;
+        overflow-x: hidden; /* 가로 스크롤 방지 */
+    }
+    .container-fluid {
+        padding-left: 0;
+        padding-right: 0;
+    }
+    /* 모든 .content 요소의 마진 제거 */
+    .content {
+        padding-top: 5px;
+        padding-bottom: 5px;
+        padding-left: 0;
+        padding-right: 0;
+        margin: 0; /* 모바일 화면에서 좌우 마진 제거 */
+    }
+    .margin {
+        margin-bottom: 20px;
+    }
+
+    /*캐럿셀 배너 시작*/
+    #carouselControls {
+        width: 100%;          /* 가로를 화면에 맞춤 */
+        max-height: 12vh;    /* 최대 높이를 화면 높이에 맞춤 */
+        overflow: hidden;     /* 화면을 벗어나는 공백을 숨김 */
+    }
+    .carousel-inner, .carousel-item {
+        width: 100%;
+        max-height: 12vh;
+        height: auto;
+    }
+    .carousel-inner .carousel-item img {
+        width: 100%;    /* 가로를 꽉 채움 */
+        height: auto;   /* 세로는 자동으로 비율에 맞춰 조정 */
+        object-fit: cover; /* 이미지를 잘라내지 않고 꽉 채우기 */
+    }
+    .carousel-indicators {
+        display: none;
+    }
+    /*캐럿셀 배너 끝*/
+    /* main 시작 */
+    .main .content {
+        padding: 10px;
+    }
+    /* 카드 이미지 크기 조정 */
+    .main .card img {
+        height: auto;
+        max-height: 250px; /* 모바일에 맞게 적절한 높이 설정 */
+    }
+    .main .company-items {
+        width: 100%;
+    }
+    .main .card img {
+        width: 100%;
+        height: auto;
+    }
+    /*main 끝*/
+
+    /*footer 시작*/
+    .footer {
+        text-align: center;
+        padding: 20px 10px; /* 양옆 패딩을 줄여서 화면에 맞추기 */
+        font-size: 10px; /* 글자 크기를 줄여서 모바일에 맞춤 */
+    }
+
+    .footer .row {
+        flex-direction: column; /* 모바일에서 세로 정렬 */
+        align-items: center;
+    }
+
+    .footer .btn, .footer .info {
+        width: 100%; /* 너비 100%로 설정 */
+        padding: 10px;
+    }
+
+    .footer .qr {
+        margin-top: 15px;
+        text-align: center;
+    }
+
+    .footer .qr img {
+        width: 80px; /* 모바일 화면에 맞게 QR 코드 크기 줄임 */
+        height: auto;
+    }
+    /*footer 끝*/
+}
+
 
 

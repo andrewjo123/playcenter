@@ -99,18 +99,18 @@
 }
 
 /* #getCountDibs{
-    position: absolute; 
-    top: -15px; 
-    right: -15px; 
-    background-color: red; 
-    color: white; 
-    border-radius: 50%; 
-    padding: 2px; 
-    font-size: 12px; 
-    text-align: center; 
-    width: 20px; 
+    position: absolute;
+    top: -15px;
+    right: -15px;
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    padding: 2px;
+    font-size: 12px;
+    text-align: center;
+    width: 20px;
     height: 20px;
-    line-height: 20px; 
+    line-height: 20px;
 }
 #getCountDibs{background-color: blue;} */
 #sidebarGetCount {
@@ -152,4 +152,93 @@
     width: 20px; /* 너비를 10px로 설정 */
     height: 20px; /* 높이를 10px로 설정 */
     margin-right: 5px; /* 텍스트와의 간격 조정 */
+}
+
+/* 모바일 화면 전용 스타일 */
+.mobile-simple-navbar {
+    display: none;
+}
+.mobile-logo {
+    display: none;
+}
+@media (min-width: 992px) {
+    /*화면 클때는 가림*/
+    .mobile-navbar {
+        display: none;
+    }
+}
+@media (max-width: 768px) {
+    .desktop-navbar {
+        display: none; /* PC용 네비게이션 바 숨기기 */
+    }
+    /*모바일 기본설정*/
+    .container-fluid {
+        padding-left: 0;
+        padding-right: 0;
+    }
+    /* haeder1 시작 */
+    /* 모바일 전용 네비게이션 바 스타일 */
+    .desktop-logo {
+        display: none; /* 모바일 화면에서는 숨기기 */
+    }
+    .mobile-logo {
+        display: block;
+        width: auto;
+        height: 10vh;
+    }
+    .mobile-simple-navbar {
+        position: sticky;
+        top: 0; /* 스크롤할 때 화면의 상단에 고정 */
+        z-index: 100; /* 다른 요소보다 앞에 보이도록 설정 */
+        display: flex;
+        width: 100%;
+        background-color: #f8f9fa;
+    }
+    .mobile-simple-navbar, .mobile-navbar {
+        background-color: #ffffff;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        padding: 10px 15px;
+    }
+    .mobile-simple-navbar ul {
+        padding: 0;
+        margin: 0;
+        width: 100%;
+    }
+
+    .mobile-simple-navbar .nav-item {
+        flex: 1;
+        text-align: center;
+    }
+
+    .mobile-simple-navbar .nav-link {
+        padding: 10px;
+        color: #333;
+        font-weight: bold;
+    }
+
+    .mobile-simple-navbar .nav-link:hover {
+        background-color: #e9ecef;
+        color: #000;
+    }
+    .navbar-header {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px;
+        width: 100%;
+    }
+    .nav.flex-column .nav-link {
+        padding: 10px 15px;
+        color: #333;
+    }
+    .navbar-toggler-icon {
+        background-image: url('https://upload.wikimedia.org/wikipedia/commons/b/b2/Hamburger_icon.svg');
+        width: 24px;
+        height: 24px;
+        display: block;
+    }
+    .nav.flex-column .nav-link:hover {
+        background-color: #f1f1f1;
+    }
+
+     /* haeder1 끝 */
 }

@@ -12,15 +12,65 @@
     <div th:fragment="header1" class="hd1">
         <div class="imgcontent">
         </div>
+        <!-- 모바일 전용 네비게이션 바 -->
+        <nav class="mobile-navbar">
+            <div class="navbar-header">
+                <a href="/" class="navbar-logo">
+                    <img th:src="@{/img/logo_w.png}" alt="Mobile Logo" class="mobile-logo">
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mobileMenu" aria-controls="mobileMenu" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </div>
+            <div class="collapse navbar-collapse" id="mobileMenu">
+                <ul class="nav flex-column">
+                    <!-- 회원 관리 메뉴 (관리자 권한) -->
+                    <li class="nav-item" sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
+                        <a class="nav-link" href="/members/manageMember">회원 관리</a>
+                    </li>
 
-        <nav class="navbar navbar-expand-sm ">
+                    <!-- 사용자 메뉴 (로그인된 사용자) -->
+                    <li class="nav-item" sec:authorize="isAuthenticated()">
+                        <a class="nav-link" href="/mypage">마이페이지</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="isAuthenticated()">
+                        <a class="nav-link" href="/dibs">찜한목록 <span id="getCountDibs" style="display:none"></span></a>
+                    </li>
+                    <li class="nav-item" sec:authorize="isAuthenticated()">
+                        <a class="nav-link" href="/cart">장바구니 <span id="getCount">()</span></a>
+                    </li>
+                    <li class="nav-item" sec:authorize="isAuthenticated()">
+                        <a class="nav-link" href="/orders">내주문</a>
+                    </li>
+
+                    <!-- 관리자 전용 메뉴 -->
+                    <li class="nav-item" sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
+                        <a class="nav-link" href="/admin/item/new">상품 등록</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
+                        <a class="nav-link" href="/admin/items">등록된 상품</a>
+                    </li>
+
+                    <!-- 로그아웃 (로그인된 사용자) -->
+                    <li class="nav-item" sec:authorize="isAuthenticated()">
+                        <a class="nav-link" href="/members/logout">로그아웃</a>
+                    </li>
+
+                    <!-- 로그인 (비로그인 사용자) -->
+                    <li class="nav-item" sec:authorize="isAnonymous()">
+                        <a class="nav-link" href="/members/login">로그인</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <nav class="desktop-navbar navbar navbar-expand-sm ">
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03"
                 aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
             <a href="/">
-                <img th:src="@{/img/logo_w.png}" />
+                <img th:src="@{/img/logo_w.png}" class="desktop-logo" />
             </a>
             <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
                 <ul class="nav nav-pills">
@@ -83,8 +133,28 @@
                 <span sec:authorize="isAuthenticated()">
                     <button class="dropbtn"><i class="fa-solid fa-bars"></i></button>
                     <div class="dropdown-content">
+                        <div class="dropdown-header user-info">
+                            <img th:src="@{/img/user_origin.png}" class="user-image" style="width: 60px; height: 60px;"/>
+                            <div style="margin-left: 10px; margin-top: 25px;">
+                                <b sec:authorize="isAuthenticated()" sec:authentication="principal.name">님</b>
+                                <p sec:authorize="isAuthenticated()" sec:authentication="principal.email"></p>
+                            </div>
+                         
+                        </div>
                         <a class="dropdown-item" sec:authorize="isAuthenticated()" href="/mypage">🗨마이페이지</a>
 
+                        <div sec:authorize="isAuthenticated()">
+                            <div class="dropdown-divider"></div>
+                            <b class="dropdown-header">buy</b>
+
+                            <a class="nav-link" href="/dibs">❤ 찜한목록
+                                <span id="getCountDibs" style="display:none"></span>
+                            </a>
+                                <a class="dropdown-item" href="/cart">🛒 장바구니
+                                    <span id="getCount">()</span></a>
+                                    <a class="dropdown-item" href="/orders">📑 내주문</a>
+
+                        </div>
                         <div sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
                             <div class="dropdown-divider"></div>
                             <b class="dropdown-header">sell</b>
@@ -110,18 +180,37 @@
                 </span>
             </div>
         </nav>
+        <!-- 모바일 전용 간단 네비게이션 바 -->
+        <nav class="mobile-simple-navbar">
+            <ul class="nav flex-row justify-content-around">
+                <li class="nav-item">
+                    <a class="nav-link company" data-company="list" href="/list">Total</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link company" data-company="steam" href="/steam">Steam</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link company" data-company="ps" href="/ps">PS</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link company" data-company="nintendo" href="/nintendo">Nintendo</a>
+                </li>
+            </ul>
+        </nav>
     </div>
- <script>
-        // 버튼 클릭 시 페이지 전환
-        $(".company").on('click', function() {
-            var company = $(this).data('company');
-            if (company === "list") {
-                location.href = "/list";
-            } else {
-                location.href = '/' + company;
-            }
-        });
-    </script>
+
+<script>
+    // 버튼 클릭 시 페이지 전환
+    $(".company").on('click', function() {
+        var company = $(this).data('company');
+        if (company === "list") {
+            location.href = "/list";
+        } else {
+            location.href = '/' + company;
+        }
+    });
+</script>
+
 </body>
 
 </html>
