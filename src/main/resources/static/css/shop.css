@@ -210,26 +210,96 @@ margin: auto;
 
 /* itemForm--------------------------------------------------------*/
 
+/* 입력 그룹 스타일 */
 .itemForm .input-group {
-margin-bottom: 15px
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
 }
-
-.itemForm .img-div {
-margin-bottom: 10px
+.itemForm .input-group-prepend {
+    background-color: #e9ecef;
+    border: 1px solid #ddd;
+    border-radius: 4px 0 0 4px;
 }
-
-.itemForm .fieldError {
-color: #bd2130;
+.itemForm .input-group .input-group-text,
+.itemForm .form-control,
+.itemForm .custom-select {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px; /* 동일한 패딩 적용 */
+    height: 100%; /* 높이 일치 */
+    border: 1px solid #ddd; /* 동일한 테두리 */
+    font-size: 16px; /* 동일한 폰트 크기 */
+    box-sizing: border-box;
 }
-
+.itemForm .input-group .input-group-text {
+    font-weight: bold;
+    border-radius: 4px 0 0 4px;
+}
+.itemForm .form-control,
+.itemForm .custom-select {
+    border-radius: 0 4px 4px 0;
+}
+/* 체크박스 그룹 스타일 */
 .itemForm .label {
-padding-top: 5px;
-padding-left: 10px;
-
+    padding-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
 }
-
+.itemForm .label label {
+    display: flex;
+    align-items: center;
+    background-color: #f0f2f5;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.itemForm .label label:hover {
+    background-color: #e4e6ea;
+}
+.itemForm .label input[type="checkbox"] {
+    margin-right: 5px;
+    transform: scale(1.1);
+}
+/* 에러 메시지 스타일 */
+.itemForm .fieldError {
+    color: #bd2130;
+    font-size: 12px;
+    margin-top: 5px;
+    display: block;
+    font-weight: bold;
+}
+/* 이미지 파일 입력 스타일 */
+.itemForm .img-div {
+    margin-bottom: 10px;
+}
+.itemForm .custom-file-label {
+    cursor: pointer;
+    color: #555;
+}
+.itemForm .custom-file-input:hover {
+    background-color: #f1f3f5;
+}
+/* 버튼 스타일 */
 .itemForm .itemformbtn {
-text-align: center;
+    text-align: center;
+    margin-top: 20px;
+}
+.itemForm .btn {
+    padding: 10px 20px;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    border-radius: 6px;
+    transition: background-color 0.3s, transform 0.2s;
+    background-color: #7FDA56;
+    color: #ffffff;
+}
+.itemForm .btn:hover {
+    background-color: #6bbf49;
+    transform: scale(1.05);
 }
 
 /* itemMng--------------------------------------------------------*/
@@ -237,9 +307,199 @@ text-align: center;
 margin-right: 10px;
 width: auto;
 }
+.itemMng .table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+    background-color: #f9f9f9; /* 테이블 배경을 밝은 회색으로 */
+    color: #333;
+}
 
-.itemMng .cartsrc {
-margin: 20px;
+.itemMng .table th,
+.itemMng .table td {
+    padding: 12px 15px; /* 셀 내부 여백 */
+    text-align: center;
+    border: 1px solid #ddd; /* 셀 테두리 색상 */
+}
+
+.itemMng .table th {
+    background-color: #7FDA56; /* 트레이드 마크 색상으로 헤더 배경 */
+    color: #ffffff; /* 헤더 글씨를 흰색으로 */
+    font-weight: bold;
+}
+
+.itemMng .table tbody tr:nth-child(even) {
+    background-color: #ffffff; /* 짝수 행에 흰색 배경 */
+}
+
+.itemMng .form-inline {
+    margin: 20px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.itemMng .form-control {
+    width: auto;
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    background-color: #ffffff; /* 입력 필드 흰색 배경 */
+    color: #333;
+}
+
+.itemMng .form-control::placeholder {
+    color: #666; /* 플레이스홀더 색상 */
+}
+
+.itemMng .btn-primary {
+    padding: 6px 12px; /* 버튼 크기를 약간 줄임 */
+    color: #fff;
+    background-color: #7FDA56; /* 트레이드 마크 색상 */
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.itemMng .btn-primary:hover {
+    background-color: #6bbf49; /* 호버 시 색상 */
+    transform: scale(1.05);
+}
+
+.itemMng .pagination {
+    display: flex;
+    justify-content: center;
+    padding: 10px 0;
+    list-style: none;
+}
+
+.itemMng .pagination .page-item {
+    margin: 0 5px;
+}
+
+.itemMng .pagination .page-link {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    color: #7FDA56; /* 트레이드 마크 색상 */
+    background-color: #f9f9f9;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.itemMng .pagination .page-link:hover {
+    background-color: #7FDA56;
+    color: #ffffff;
+}
+
+.itemMng .pagination .active .page-link {
+    background-color: #7FDA56;
+    color: #ffffff;
+    border: 1px solid #7FDA56;
+}
+
+.itemMng .page-item.disabled .page-link {
+    color: #bbb;
+}
+.itemMng .code-link {
+    display: inline-block; /* 링크를 블록 요소로 변경하여 버튼 스타일 적용 */
+    padding: 6px 12px; /* 내부 여백 추가 */
+    background-color: #7FDA56;
+    color: #ffffff; /* 텍스트 색상 */
+    border-radius: 4px; /* 모서리를 둥글게 */
+    font-weight: bold;
+    text-decoration: none; /* 밑줄 제거 */
+    transition: background-color 0.3s, transform 0.2s;
+}
+.itemMng .code-link:hover {
+    background-color: #6bbf49; /* 호버 시 색상 변경 */
+    transform: scale(1.05); /* 호버 시 약간 확대 */
+}
+
+/*insertCode 코드입력창 시작*/
+/* 기본 스타일 */
+.insertCode {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f4f6f9;
+    padding: 20px;
+}
+
+/* 제목 스타일 */
+.insertCode h2 {
+    font-size: 24px;
+    color: #7FDA56;
+    font-weight: bold;
+}
+
+/* 게임 정보 */
+.insertCode .game-info p {
+    font-size: 18px;
+    color: #333;
+}
+
+/* 코드 입력 섹션 */
+.insertCode #inputDiv {
+    margin: 10px 0;
+    text-align: left;
+}
+
+/* 입력 레이블 스타일 */
+.insertCode .code {
+    display: block;
+    margin: 8px 0;
+}
+
+/* 에러 메시지 스타일 */
+.insertCode .error {
+    color: red;
+    font-size: 12px;
+    display: none;
+}
+
+/* 버튼 스타일 */
+.insertCode .btn {
+    padding: 8px 15px;
+    margin: 8px 5px;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #fff;
+    transition: background-color 0.3s;
+}
+
+.insertCode .btn-info {
+    background-color: #5bc0de;
+}
+
+.insertCode .btn-info:hover {
+    background-color: #46b8da;
+}
+
+.insertCode .btn-success {
+    background-color: #7FDA56;
+}
+
+.insertCode .btn-success:hover {
+    background-color: #6bbf49;
+}
+
+.insertCode .btn-warning {
+    background-color: #f0ad4e;
+}
+
+.insertCode .btn-warning:hover {
+    background-color: #eea236;
+}
+
+/* 아이콘 스타일 */
+.insertCode .emoji {
+    font-size: 30px;
+    margin-right: 5px;
 }
 
 /* orderHist--------------------------------------------------------*/
@@ -436,4 +696,70 @@ font-size: 24px
     font-size: 16px;
     }
     /*cartList 반응형 끝*/
+    /*itemMng 아이템관리페이지 시작*/
+    .itemMng .pc-table {
+        display: none !important; /* 모바일 화면에서 테이블 숨기기 */
+    }
+    .itemMng .table {
+        display: block;
+        width: 100%;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    .itemMng .table th, .table td {
+        font-size: 0.9em; /* 글씨 크기 조정 */
+        padding: 8px;
+    }
+    /* 아이템 관리페이지 끝 */
+
+    /*아이템 코드 입력 페이지 시작*/
+    .insertCode {
+        padding: 10px;
+    }
+    /* 제목 스타일 조정 */
+    .insertCode h2 {
+        font-size: 20px;
+        text-align: center;
+        margin-bottom: 15px;
+    }
+    .insertCode .game-info {
+        text-align: center;
+        margin: 15px 0;
+    }
+    /* 게임 정보 */
+    .insertCode .game-info p {
+        margin: 8px 0;
+        font-size: 16px;
+    }
+    /* 코드 입력 방식 중앙 정렬 */
+    .insertCode .how-input {
+        text-align: center;
+        margin: 10px 0;
+        font-size: 16px;
+    }
+    /* 코드 입력 필드 */
+    .insertCode #inputDiv {
+        text-align: center; /* 모바일에서는 가운데 정렬 */
+    }
+    /* 입력 필드 내부 텍스트 중앙 정렬 */
+    .insertCode .insert {
+        text-align: center; /* 입력 필드 내부 텍스트 중앙 정렬 */
+    }
+    /* 입력 레이블 스타일 */
+    .insertCode .code {
+        margin: 5px 0;
+        text-align: center;
+    }
+    /* 에러 메시지 스타일 */
+    .insertCode .error {
+        font-size: 10px;
+    }
+    /* 버튼 스타일 조정 */
+    .insertCode .btn {
+        font-size: 0.9em;
+        padding: 6px 10px;
+        margin: 5px 3px;
+    }
+    /*아이템 코드 입력 페이지 끝*/
 }

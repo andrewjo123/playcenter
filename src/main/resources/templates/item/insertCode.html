@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/layout1}"
-      class="itemMng">
+      class="insertCode">
 
 <head>
   <link th:href="@{/css/shop.css}" rel="stylesheet">
@@ -12,33 +12,36 @@
 
 
 <div layout:fragment="content">
-  <style>
-    .code{display:block; margin-bottom:2px;}
-    .error{color: red; display: none;}
-  </style>
+  <!-- 상단 제목과 게임 아이콘 -->
+  <h2><span class="emoji">🎮</span> 상품 재고 코드 입력 <span class="emoji">🎮</span></h2>
+
+  <!-- 게임 정보 -->
+  <div class="game-info">
+    <p><strong>게임 ID:</strong> <span id="itemId" th:text="${itemId}"></span></p>
+    <p><strong>게임 이름:</strong> <span th:text="${itemNm}"></span></p>
+  </div>
 
   <div>
-    <p>코드등록</p>
-    <p>게임 id: <span id="itemId" th:text="${itemId}"></span></p>
-    <p>게임 이름: <span th:text="${itemNm}"></span></p>
-
-    <div>
-      코드 입력
-      <label><input type="radio" name="option" value="exist" checked>- 있음</label>
-      <label><input type="radio" name="option" value="none">- 없음</label><br/>
-      <div id="inputDiv">
-        <label class="code">1: <span class="error"></span><input class="form-control insert"></label>
-        <label class="code">2: <span class="error"></span><input class="form-control insert"></label>
-        <label class="code">3: <span class="error"></span><input class="form-control insert"></label>
-        <label class="code">4: <span class="error"></span><input class="form-control insert"></label>
-        <label class="code">5: <span class="error"></span><input class="form-control insert"></label>
-      </div>
-      <button class="btn btn-info addInput">입력칸 추가</button>
-      <button class="btn btn-success regCodes">코드 등록</button>
-      <!-- 새 버튼 추가 -->
-      <button class="btn btn-warning fillCodes">코드 자동 채우기</button>
+    <!-- 코드 등록 옵션 선택 -->
+    <div class="how-input">
+      <p><strong>코드 입력 방식:</strong></p>
+      <label><input type="radio" name="option" value="exist" checked> 있음</label>
+      <label><input type="radio" name="option" value="none"> 없음</label><br/>
     </div>
 
+    <!-- 코드 입력 필드 -->
+    <div id="inputDiv">
+      <label class="code">1: <span class="error"></span><input class="form-control insert"></label>
+      <label class="code">2: <span class="error"></span><input class="form-control insert"></label>
+      <label class="code">3: <span class="error"></span><input class="form-control insert"></label>
+      <label class="code">4: <span class="error"></span><input class="form-control insert"></label>
+      <label class="code">5: <span class="error"></span><input class="form-control insert"></label>
+    </div>
+
+    <!-- 버튼들 -->
+    <button class="btn btn-info addInput">➕ 입력칸 추가</button>
+    <button class="btn btn-success regCodes">✔️ 코드 등록</button>
+    <button class="btn btn-warning fillCodes">🔄 코드 자동 채우기</button>
   </div>
 
 </div>

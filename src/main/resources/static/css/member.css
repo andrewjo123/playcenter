@@ -56,6 +56,10 @@
 }
 
 /* memberMng 회원관리창*/
+.memberMng .select {
+margin-right: 10px;
+width: auto;
+}
 .memberMng .table th {
     background-color: #7FDA56;
     color: #ffffff; /* 헤더 글씨를 흰색으로 */
@@ -72,12 +76,19 @@
     cursor: pointer;
     transition: background-color 0.3s, transform 0.2s;
 }
-
 .memberMng .btn-primary:hover {
     background-color: #6bbf49;
     transform: scale(1.05);
 }
-
+.memberMng .pagination {
+    display: flex;
+    justify-content: center;
+    padding: 10px 0;
+    list-style: none;
+}
+.memberMng .pagination .page-item {
+    margin: 0 5px;
+}
 .memberMng .pagination .page-link {
     padding: 10px 15px;
     border: 1px solid #ddd;
