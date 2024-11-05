@@ -1,4 +1,4 @@
-/* cartList--------------------------------------------------------*/
+/* cartList-------------------------------------------------------- */
 .cartList .content-mg {
 margin-left: 25%;
 margin-right: 25%;
@@ -13,8 +13,9 @@ height: auto;
 }
 
 .cartList .repImg {
-height: 100px;
-width: 100px;
+width: 100%;
+height: auto;
+max-width: 200px;
 }
 
 .cartList .fs18 {
@@ -23,6 +24,21 @@ font-size: 18px
 
 .cartList .fs24 {
 font-size: 24px
+}
+
+.cartList .cartItem {
+margin: 0;
+background-color: #d9d9d9;
+}
+
+.cartList .table {
+width: 100%;
+table-layout:fixed;
+}
+
+.cartList .btn {
+padding: 8px 16px;
+font-size: 14px
 }
 
 /* itemDtl--------------------------------------------------------*/
@@ -351,4 +367,56 @@ font-size: 24px
     .itemdtl .reviewModal .modal-body .form-group, .itemdtl .imageModal .modal-body {
         font-size: 0.9rem;
     }
+
+    /*cartlist 반응형 시작*/
+
+    .cartList .content-mg {
+    margin-left: 15%;
+    margin-right: 15%;
+    margin-top: 2%;
+    margin-bottom: 100px;
+    }
+
+    .cartList .repImgDiv {
+    margin-right: 10px;
+    margin-left: 10px;
+    height: auto;
+    width: auto;
+    }
+
+    .cartList .repImg {
+    min-width: 80px;
+    }
+
+    .cartList .fs18 {
+    font-size: clamp(10px, 2vw, 14px);
+    }
+
+    .cartList .fs24 {
+    font-size: clamp(14px, 2vw, 18px);
+    }
+
+    .cartList .cartItem {
+    margin: 5px 0;
+    background-color: #d9d9d9;
+    }
+
+    .cartList .table {
+    width: 100%;
+    table-layout:fixed;
+    }
+
+    .cartList .custom-margin {
+    min-width: 8px;
+    }
+
+    .cartList .mb4 {
+    font-size: 24px
+    }
+
+    .cartList .btn {
+    padding: 10px 20px;
+    font-size: 16px;
+    }
+    /*cartList 반응형 끝*/
 }
