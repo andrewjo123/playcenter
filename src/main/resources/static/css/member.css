@@ -54,3 +54,83 @@
 #profileImgBtn{
     cursor:pointer;
 }
+
+/* memberMng 회원관리창*/
+.memberMng .table th {
+    background-color: #7FDA56;
+    color: #ffffff; /* 헤더 글씨를 흰색으로 */
+    font-weight: bold;
+}
+
+.memberMng .btn-primary {
+    padding: 6px 12px;
+    color: #fff;
+    background-color: #7FDA56;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.memberMng .btn-primary:hover {
+    background-color: #6bbf49;
+    transform: scale(1.05);
+}
+
+.memberMng .pagination .page-link {
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    color: #7FDA56; /* 페이지 링크 트레이드 마크 색상 */
+    background-color: #f9f9f9;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.memberMng .pagination .page-link:hover {
+    background-color: #7FDA56; /* 호버 시 배경색 */
+    color: #ffffff; /* 호버 시 글씨 색상 */
+}
+.memberMng .pagination .active .page-link {
+    background-color: #7FDA56; /* 현재 페이지 색상 강조 */
+    color: #fff;
+    border: 1px solid #7FDA56;
+}
+/* 활성화 상태 버튼 스타일 */
+.memberMng .active-btn {
+    padding: 6px 12px;
+    border: none;
+    background-color: #7FDA56; /* 트레이드 마크 색상 */
+    color: #ffffff;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.memberMng .active-btn:hover {
+    background-color: #6bbf49; /* 활성화 버튼 호버 시 어두운 녹색 */
+    transform: scale(1.05);
+}
+
+/* 비활성화 상태 버튼 스타일 */
+.memberMng .inactive-btn {
+    padding: 6px 12px;
+    border: none;
+    background-color: #cccccc; /* 회색 배경 */
+    color: #666666;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    opacity: 0.7;
+}
+
+/*모바일 반응형*/
+@media (max-width: 768px) {
+    /*memberMng 회원관리 페이지 시작*/
+    .memberMng .pc-table {
+        display: none !important; /* 모바일 화면에서 테이블 숨기기 */
+    }
+    /*memberMng 끝*/
+}

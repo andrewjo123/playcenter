@@ -2,10 +2,10 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/layout1}"
-      class="itemMng">
+      class="memberMng">
 
 <head>
-    <link th:href="@{/css/shop.css}" rel="stylesheet">
+    <link th:href="@{/css/member.css}" rel="stylesheet">
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 </head>
@@ -14,16 +14,16 @@
 <div layout:fragment="content">
 
     <form th:action="@{'/members/manageMember' + ${members.number}}" role="form" method="get" th:object="${members}">
-        <table class="table">
+        <table class="table pc-table">
             <thead>
             <tr>
                 <td>회원 ID</td>
                 <td>이름</td>
                 <td>이메일</td>
                 <td>전화번호</td>
-                <td>상태</td>
                 <td>역할</td>
                 <td>등록일</td>
+                <td>상태</td>
             </tr>
             </thead>
             <tbody>
@@ -32,19 +32,36 @@
                 <td th:text="${member.name}"></td>
                 <td th:text="${member.email}"></td>
                 <td th:text="${member.phone}"></td>
-                <td th:text="${member.resign ? '비활성화' : '활성화'}"></td>
                 <td th:text="${member.role}"></td>
                 <td th:text="${member.regTime}"></td>
                 <td>
                     <button type="button"
-                            th:text="${member.resign ? '활성화' : '비활성화'}"
+                            th:classappend="${member.resign ? 'inactive-btn' : 'active-btn'}"
+                            th:text="${member.resign ? '비활성화됨' : '활성화됨'}"
                             th:onclick="|toggleStatus(${member.id}, ${!member.resign})|">
-                        활성화/비활성화
                     </button>
                 </td>
             </tr>
             </tbody>
         </table>
+
+        <!-- 모바일용 카드 레이아웃 -->
+        <div class="d-block d-md-none">
+            <div th:each="member : ${members.getContent()}" class="card mb-2 p-2">
+                <div><strong>ID:</strong> <span th:text="${member.id}"></span></div>
+                <div><strong>이름:</strong> <span th:text="${member.name}"></span></div>
+                <div><strong>이메일:</strong> <span th:text="${member.email}"></span></div>
+                <div><strong>전화번호:</strong> <span th:text="${member.phone}"></span></div>
+                <div><strong>역할:</strong> <span th:text="${member.role}"></span></div>
+                <div><strong>등록일:</strong> <span th:text="${member.regTime}"></span></div>
+                <div><strong>상태:</strong> <button type="button"
+                                                  th:classappend="${member.resign ? 'inactive-btn' : 'active-btn'}"
+                                                  th:text="${member.resign ? '비활성화됨' : '활성화됨'}"
+                                                  th:onclick="|toggleStatus(${member.id}, ${!member.resign})|">
+                                            </button>
+                </div>
+            </div>
+        </div>
 
         <div class="form-inline justify-content-center" th:object="${memberSearchDto}">
             <select th:field="*{searchBy}" class="form-control" style="width:auto;">
