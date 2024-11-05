@@ -9,169 +9,174 @@
 </head>
 
 <div layout:fragment="content">
-    <div>
-        <table class="table">
-            <tr>
-                <td>
-                    <span id="getPImg"></span>
-                    <input type="hidden" value="" id="currentPImg">
-                    <div id="profileImgBtn">프로필 사진 변경</div>
-                </td>
-                <td>
-                    <div>이메일: <span sec:authentication="principal.username"></span> </div>
-                    <div>이름: <span th:text="${memberForm.name}"></span></div>
-                    <div>번호: <span th:text="${memberForm.phone}"></span></div>
-                    <div><a class="nav-link" href="/members/modify">회원정보수정</a></div>
-                </td>
-            </tr>
-            <tr>
-                <td><a class="dropdown-item" href="/dibs">❤ 찜한목록<span id="getCountDibs" style="display:none"></span></a></td>
-                <td><a class="dropdown-item" href="/cart">🛒 장바구니<span id="getCount">()</span></a></td>
-                <td><a class="dropdown-item" href="/orders">📑 내주문</a></td>
-            </tr>
-        </table>
+    <div class="container mt-5">
+        <div class="row text-center mb-4">
+            <div class="col-md-5 d-flex justify-content-center">
+                <div id="getPImg" class="profile-img"></div>
+                <input type="hidden" value="" id="currentPImg">
+            </div>
+            <div class="col-md-7">
+                <h2 th:text="${memberForm.name}" class="member-name"></h2>
+                <div>Email: <span sec:authentication="principal.username"></span></div>
+                <div>Phone: <span th:text="${memberForm.phone}"></span></div>
+                <div><a class="nav-link" href="/members/modify">회원 정보 수정</a></div>
+            </div>
+        </div>
 
-        <p>총 포인트: <span th:text="${memberForm.totalPoint}">포인트를 불러오는 중...</span></p>
+        <div class="linkList row mb-5">
+            <div><a class="dropdown-item" href="/dibs" title="찜">❤</a></div>
+            <div><a class="dropdown-item" href="/cart" title="장바구니">🛒</a></div>
+            <div><a class="dropdown-item" href="/orders" title="주문내역">📑</a></div>
+        </div>
 
-        <div id="notice" class="container tab-pane active notice">
-
-            <hr />
-            <a href="#noticePoint" data-toggle="collapse">포인트 사용 내역</a>
-            <select id="pointDuration">
-                <option value="1">1개월</option>
-                <option value="3">3개월</option>
-                <option value="6" selected>6개월</option>
-                <option value="12">1년</option>
-            </select>
-            <hr />
-            <div id="noticePoint" class="collapse" style="max-height:400px; overflow:auto;">
-                <th:block th:if="${pointList.size() > 0}">
-                    검색결과: [[${pointList.size()}]]건
-                    <th:block th:each="item, status: ${pointList}">
-                        <div class="card">
-                            <span th:text="${#temporals.format(item.useDate, 'yyyy. MM. dd. HH시 mm분 ss초')}"></span>
-                            <th:block th:if="${item.orderStatus=='challenge'}">
-                                도전과제 : +[[${item.payPoint}]]
-                            </th:block>
-                            <th:block th:unless="${item.orderStatus=='challenge'}">
-                                <th:block th:if="${item.payPoint>0}">
-                                    <th:block th:if="${item.orderStatus=='ORDER'}">
-                                        포인트 적립 : +[[${item.payPoint}]]
+        <div class="point-management">
+            <h3 style="text-align:center;">포인트관리</h3>
+            <div class="total-points" style="font-size:20px;">
+                보유 포인트: <span th:text="${memberForm.totalPoint}" style="font-size: 2em; font-weight: bold; color: #7ED957;"></span><span> Point</span>
+            </div>
+            <div id="notice" class="tab-pane active notice">
+                <a href="#noticePoint" data-toggle="collapse" class="toggle-points">포인트 사용/적립 내역</a>
+                <select id="pointDuration" class="mt-2">
+                    <option value="1">1개월</option>
+                    <option value="3">3개월</option>
+                    <option value="6" selected>6개월</option>
+                    <option value="12">1년</option>
+                </select>
+                <hr />
+                <div id="noticePoint" class="collapse">
+                    <th:block th:if="${pointList.size() > 0}">
+                        검색결과: [[${pointList.size()}]]건
+                        <th:block th:each="item, status: ${pointList}">
+                            <div class="card mt-2">
+                                <span th:text="${#temporals.format(item.useDate, 'yyyy. MM. dd. HH시 mm분 ss초')}"></span>
+                                <th:block th:if="${item.orderStatus=='challenge'}">
+                                    <p>도전과제 : +[[${item.payPoint}]]</p>
+                                </th:block>
+                                <th:block th:unless="${item.orderStatus=='challenge'}">
+                                    <th:block th:if="${item.payPoint > 0}">
+                                        <th:block th:if="${item.orderStatus=='ORDER'}">
+                                            <p>포인트 적립 : +[[${item.payPoint}]]</p>
+                                        </th:block>
+                                        <th:block th:unless="${item.orderStatus=='ORDER'}">
+                                            <p>구매 취소 : +[[${item.payPoint}]]</p>
+                                        </th:block>
                                     </th:block>
-                                    <th:block th:unless="${item.orderStatus=='ORDER'}">
-                                        구매 취소 : +[[${item.payPoint}]]
+                                    <th:block th:if="${item.payPoint < 0}">
+                                        <p>구매 사용 : [[${item.payPoint}]]</p>
                                     </th:block>
                                 </th:block>
-                                <th:block th:if="${item.payPoint<0}">
-                                    구매 사용 : [[${item.payPoint}]]
-                                </th:block>
-                            </th:block>
+                            </div>
+                        </th:block>
+                    </th:block>
+                    <th:block th:if="${pointList.size() == 0}">
+                        <div class="col-md-12 text-center">
+                            <h4>결과 없음</h4>
                         </div>
                     </th:block>
-                </th:block>
-                <th:block th:if="${pointList.size() == 0}">
-                    <div class="col-md-12 text-center">
-                        <h4>결과 없음</h4>
-                    </div>
-                </th:block>
+                </div>
             </div>
-
         </div>
-        
     </div>
 
     <div class="container mt-5">
-        <h1>도전과제 달성 현황</h1>
+        <h3 class="text-center mb-4">도전과제</h3>
 
         <div class="accordion" id="achievementsAccordion">
 
-            <div class="card">
+            <div class="card mb-3">
                 <div class="card-header" id="challenge1">
                     <h5 class="mb-0">
-                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseC1" aria-expanded="false" aria-controls="collapseC1">
+                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseC1" aria-expanded="false" aria-controls="collapseC1" style="color:#63BBE1;">
                             도전과제 / 결제
                         </button>
                     </h5>
                 </div>
                 <div id="collapseC1" class="collapse" aria-labelledby="challenge1" data-parent="#achievementsAccordion">
                     <div class="card-body">
-                        <p th:if="${challenge.usedTotalMoney < 100000}">도전과제: 10만원 이상 결제하세요</p>
+                        <p th:if="${challenge.usedTotalMoney < 100000}" class="text-warning">10만원 이상 결제하세요</p>
                         <p th:if="${challenge.usedTotalMoney >= 100000 && challenge.achievementForMoney == 0}">
-                            도전과제 1 보상을 받을 수 있습니다! <button class="btn btn-primary chal" data-challenge="pay10">1000P+프로필아이콘 받기</button>
+                            도전과제 1 보상을 받을 수 있습니다!
+                            <button class="btn btn-primary chal" data-challenge="pay10">1000P + 프로필 아이콘 받기</button>
                         </p>
-                        <p th:if="${challenge.achievementForMoney >= 1}">10만원 이상 결제 달성 및 보상 받기 완료!</p>
+                        <p th:if="${challenge.achievementForMoney >= 1}" class="text-success">✅ 10만원 이상 결제 달성 및 보상 받기 완료!</p>
 
-                        <p th:if="${challenge.usedTotalMoney < 400000||challenge.achievementForMoney == 0}">도전과제: 40만원 이상 결제하세요</p>
+                        <p th:if="${challenge.usedTotalMoney < 400000 || challenge.achievementForMoney == 0}" class="text-warning">40만원 이상 결제하세요</p>
                         <p th:if="${challenge.usedTotalMoney >= 400000 && challenge.achievementForMoney == 1}">
-                            도전과제 2 보상을 받을 수 있습니다! <button class="btn btn-primary chal" data-challenge="pay40">5000P+프로필아이콘 받기</button>
+                            도전과제 2 보상을 받을 수 있습니다!
+                            <button class="btn btn-primary chal" data-challenge="pay40">5000P + 프로필 아이콘 받기</button>
                         </p>
-                        <p th:if="${challenge.achievementForMoney >= 2}">40만원 이상 결제 달성 및 보상 받기 완료!</p>
+                        <p th:if="${challenge.achievementForMoney >= 2}" class="text-success">✅ 40만원 이상 결제 달성 및 보상 받기 완료!</p>
 
-                        <p th:if="${challenge.usedTotalMoney < 1000000||challenge.achievementForMoney <= 1}">도전과제: 100만원 이상 결제하세요</p>
+                        <p th:if="${challenge.usedTotalMoney < 1000000 || challenge.achievementForMoney <= 1}" class="text-warning">100만원 이상 결제하세요</p>
                         <p th:if="${challenge.usedTotalMoney >= 1000000 && challenge.achievementForMoney == 2}">
-                            도전과제 3 보상을 받을 수 있습니다! <button class="btn btn-primary chal" data-challenge="pay100">15000P+프로필아이콘 받기</button>
+                            도전과제 3 보상을 받을 수 있습니다!
+                            <button class="btn btn-primary chal" data-challenge="pay100">15000P + 프로필 아이콘 받기</button>
                         </p>
-                        <p th:if="${challenge.achievementForMoney == 3}">100만원 이상 결제 달성 및 보상 받기 완료!</p>
+                        <p th:if="${challenge.achievementForMoney == 3}" class="text-success">✅ 100만원 이상 결제 달성 및 보상 받기 완료!</p>
                     </div>
                 </div>
             </div>
 
-            <div class="card">
+            <div class="card mb-3">
                 <div class="card-header" id="challenge2">
                     <h5 class="mb-0">
-                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseC2" aria-expanded="false" aria-controls="collapseC2">
+                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseC2" aria-expanded="false" aria-controls="collapseC2" style="color:#1B2839;">
                             도전과제 / 스팀
                         </button>
                     </h5>
                 </div>
                 <div id="collapseC2" class="collapse" aria-labelledby="challenge2" data-parent="#achievementsAccordion">
                     <div class="card-body">
-                        <p th:if="${challenge.countForSteam < 10}">도전과제: 스팀 게임을 10개 이상 구매하세요</p>
+                        <p th:if="${challenge.countForSteam < 10}" class="text-warning">스팀 게임을 10개 이상 구매하세요</p>
                         <p th:if="${challenge.countForSteam >= 10 && challenge.achievementForSteam == 0}">
-                            보상을 받을 수 있습니다! <button class="btn btn-primary chal" data-challenge="steam">3000P+프로필아이콘 받기</button>
+                            보상을 받을 수 있습니다!
+                            <button class="btn btn-primary chal" data-challenge="steam">3000P + 프로필 아이콘 받기</button>
                         </p>
-                        <p th:if="${challenge.achievementForSteam == 1}">스팀 게임 10개 이상 구매 및 보상 받기 완료!</p>
+                        <p th:if="${challenge.achievementForSteam == 1}" class="text-success">✅ 스팀 게임 10개 이상 구매 및 보상 받기 완료!</p>
                     </div>
                 </div>
             </div>
 
-            <div class="card">
+            <div class="card mb-3">
                 <div class="card-header" id="challenge3">
                     <h5 class="mb-0">
-                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseC3" aria-expanded="false" aria-controls="collapseC3">
+                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseC3" aria-expanded="false" aria-controls="collapseC3" style="color:#D11927;">
                             도전과제 / 닌텐도
                         </button>
                     </h5>
                 </div>
                 <div id="collapseC3" class="collapse" aria-labelledby="challenge3" data-parent="#achievementsAccordion">
                     <div class="card-body">
-                        <p th:if="${challenge.countForNintendo < 10}">도전과제: 닌텐도 게임을 10개 이상 구매하세요</p>
+                        <p th:if="${challenge.countForNintendo < 10}" class="text-warning">닌텐도 게임을 10개 이상 구매하세요</p>
                         <p th:if="${challenge.countForNintendo >= 10 && challenge.achievementForNintendo == 0}">
-                            보상을 받을 수 있습니다! <button class="btn btn-primary chal" data-challenge="nintendo">2000P+프로필아이콘 받기</button>
+                            보상을 받을 수 있습니다!
+                            <button class="btn btn-primary chal" data-challenge="nintendo">2000P + 프로필 아이콘 받기</button>
                         </p>
-                        <p th:if="${challenge.achievementForNintendo == 1}">닌텐도 게임 10개 이상 구매 및 보상 받기 완료!</p>
+                        <p th:if="${challenge.achievementForNintendo == 1}" class="text-success">✅ 닌텐도 게임 10개 이상 구매 및 보상 받기 완료!</p>
                     </div>
                 </div>
             </div>
 
-            <div class="card">
+            <div class="card mb-3">
                 <div class="card-header" id="challenge4">
                     <h5 class="mb-0">
-                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseC4" aria-expanded="false" aria-controls="collapseC4">
+                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseC4" aria-expanded="false" aria-controls="collapseC4" style="color:#005499;">
                             도전과제 / 플레이스테이션
                         </button>
                     </h5>
                 </div>
                 <div id="collapseC4" class="collapse" aria-labelledby="challenge4" data-parent="#achievementsAccordion">
                     <div class="card-body">
-                        <p th:if="${challenge.countForPs < 10}">도전과제: 닌텐도 게임을 10개 이상 구매하세요</p>
+                        <p th:if="${challenge.countForPs < 10}" class="text-warning">플레이스테이션 게임을 10개 이상 구매하세요</p>
                         <p th:if="${challenge.countForPs >= 10 && challenge.achievementForPs == 0}">
-                            보상을 받을 수 있습니다! <button class="btn btn-primary chal" data-challenge="ps">3000P+프로필아이콘 받기</button>
+                            보상을 받을 수 있습니다!
+                            <button class="btn btn-primary chal" data-challenge="ps">3000P + 프로필 아이콘 받기</button>
                         </p>
-                        <p th:if="${challenge.achievementForPs == 1}">닌텐도 게임 10개 이상 구매 및 보상 받기 완료!</p>
+                        <p th:if="${challenge.achievementForPs == 1}" class="text-success">✅ 플레이스테이션 게임 10개 이상 구매 및 보상 받기 완료!</p>
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 
@@ -213,7 +218,7 @@
     <script>
         function showProfileImg(pImg){
             $("#getPImg").empty();
-            var str='<img src="icon/icon_'+pImg+'.svg" class="user-image" style="width: 60px; height: 60px;"/>';
+            var str='<img src="icon/icon_'+pImg+'.svg" class="user-image" style="width: 100px; height: 100px;"/>';
             $("#getPImg").append(str);
             $("#currentPImg").val(pImg);
         }
@@ -311,7 +316,7 @@
 
             });
 
-            $("#profileImgBtn").on('click',function(){
+            $("#getPImg").on('click',function(){
                 $("#profileImgList").modal('show');
             })
 

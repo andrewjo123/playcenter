@@ -285,7 +285,8 @@ public class MemberServiceImpl implements MemberService {
             passwordRepository.save(newPasswordReset);
         } else{
             if(passwordReset.get().isExpired()){
-                passwordReset.get().setExpirationTime(LocalDateTime.now());
+                passwordReset.get().setToken(token);
+                passwordReset.get().setExpirationTime(LocalDateTime.now().plusMinutes(10));
                 passwordRepository.save(passwordReset.get());
             }
         }
