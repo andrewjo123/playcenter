@@ -375,14 +375,9 @@
 
                     },
                     error: function (jqXHR, status, error) {
-
-                        if (jqXHR.status == '401' || jqXHR.status == '200') {
-                            alert('로그인 후 이용해주세요');
-                            location.href = '/members/login';
-                        } else {
-                            alert(jqXHR.responseText);
-                        }
-
+                        alert('로그인 후 이용해주세요');
+                        console.log(jqXHR);
+                        location.href = '/members/login';
                     }
                 });
             }
@@ -422,14 +417,9 @@
                         }
                     },
                     error: function (jqXHR, status, error) {
-
-                        if (jqXHR.status == '401' || jqXHR.status == '200') {
-                            alert('로그인 후 이용해주세요');
-                            location.href = '/members/login';
-                        } else {
-                            alert(jqXHR.responseText);
-                        }
-
+                        alert('로그인 후 이용해주세요');
+                        console.log(jqXHR);
+                        location.href = '/members/login';
                     }
                 });
             }
