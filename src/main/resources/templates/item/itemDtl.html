@@ -14,7 +14,7 @@
 
     <input type="hidden" id="itemId" th:value="${item.id}">
 
-    <div class="d-flex itemdtl">
+    <div class="d-flex">
         <div class="repImgDiv">
             <img th:src="${item.itemImgDtoList[0].imgUrl}" class="rounded repImg" th:alt="${item.itemNm}">
         </div>
@@ -55,47 +55,8 @@
             <div id="wish-button" class="wish-button" aria-label="찜하기" onclick="addDibs()"></div>
         </div>
     </div>
-    <style>
-        .wish-button {
-            width: 40px;
-            height: 40px;
-            background-color: #bbb;
-            cursor: pointer;
-            position: relative;
-            outline:none;
-            border-radius: 5px;
-            transform: rotate(45deg);
-        }
 
-        .wish-button::before,
-        .wish-button::after {
-            content: '';
-            width: 40px;
-            height: 40px;
-            background-color: #bbb;
-            border-radius: 50%;
-            position: absolute;
-        }
-
-        .wish-button::before {
-            left: -20px;
-            top:0;
-        }
-
-        .wish-button::after {
-            top: -20px;
-            left:0;
-        }
-
-        .wish-button.active::before,
-        .wish-button.active::after,
-        .wish-button.active{
-            background-color: #ff1744;
-        }
-
-    </style>
-
-    <div class="jumbotron jumbotron-fluid mgt-30 itemdtl">
+    <div class="jumbotron jumbotron-fluid mgt-30">
         <div><span class="dtlinfo">플랫폼:</span> <span th:text="${item.company}"></span></div>
         <div>
             <span class="dtlinfo">장르:</span>
@@ -225,7 +186,7 @@
     <!--   이미지캐러셀 end-->
 
     <div th:each="itemImg : ${item.itemImgDtoList}" class="text-center">
-        <img th:if="${not #strings.isEmpty(itemImg.imgUrl)}" th:src="${itemImg.imgUrl}" class="rounded mgb-15" width="800">
+        <img th:if="${not #strings.isEmpty(itemImg.imgUrl)}" th:src="${itemImg.imgUrl}" class="rounded mgb-15 responsive-img">
     </div>
 
     <!-- 리뷰 등록 버튼 -->
