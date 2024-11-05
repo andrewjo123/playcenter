@@ -33,4 +33,8 @@ public class MemberFormDto {
 
     private boolean fromSocial;
 
+    private int totalPoint;
+
+    private String profileImg;
+
 }

@@ -37,6 +37,7 @@ public class ReviewController {
       Pageable pageable = PageRequest.of(page, size,
       sort.equals("rating") ? Sort.by(Sort.Direction.DESC, "grade") : 
       sort.equals("asc") ? Sort.by(Sort.Direction.ASC, "grade") : 
+      sort.equals("recommendation") ? Sort.by(Sort.Direction.DESC, "rCnt") : 
       Sort.by(Sort.Direction.DESC, "regTime"));
       
       // 리뷰 목록을 서비스에서 받아옴
@@ -57,16 +58,18 @@ public class ReviewController {
         return new ResponseEntity<>( reviewnum, HttpStatus.OK);
     }
     
-    //리뷰추천
+    // 리뷰 추천 토글
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/{reviewnum}/recommend")
-    public ResponseEntity<Void> recommendReview(@PathVariable Long reviewnum) {
-    log.info("---------------recommend Review--------------" + reviewnum);
-    
-    // 서비스에서 추천 수 증가 로직 처리
-    reviewService.reviewRecommend(reviewnum);
-    
-    return new ResponseEntity<>(HttpStatus.OK);
-  }
+    public ResponseEntity<String> toggleRecommend(
+        @PathVariable Long reviewnum, 
+        @RequestParam("email") String email) {
+        
+        log.info("---------------toggle recommend Review--------------" + reviewnum);
+        String result = reviewService.toggleRecommend(reviewnum, email);
+        
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
   
     @PreAuthorize("isAuthenticated()")
     @PutMapping("/{id}/{reviewnum}")

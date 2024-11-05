@@ -4,6 +4,8 @@
 
 <head>
   <link th:href="@{/css/member.css}" rel="stylesheet">
+  <meta name="_csrf" th:content="${_csrf.token}" />
+  <meta name="_csrf_header" th:content="${_csrf.headerName}" />
 </head>
 
 <div layout:fragment="content">
@@ -28,6 +30,17 @@
   <a href="/oauth2/authorization/google"><img th:src="@{/icon/google.svg}" style="width:165px; height:37.5px;"></a>
   <a href="/oauth2/authorization/naver"><img th:src="@{/icon/naver.png}" style="width:150px; height:37.5px;"></a>
   <a href="/oauth2/authorization/kakao"><img th:src="@{/icon/kakao.png}" style="width:150px; height:37.5px;"></a>
+
+  <script th:inline="javascript">
+    $(document).ready(function(){
+      var msg=[[${message}]];
+      console.log(msg)
+      if(msg!==null){
+        alert(msg);
+      }
+    })
+
+  </script>
 
 </div>
 

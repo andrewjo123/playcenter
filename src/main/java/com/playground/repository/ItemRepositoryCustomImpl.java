@@ -1,8 +1,13 @@
 package com.playground.repository;
 
+import com.playground.dto.ItemCategoryDto;
 import com.playground.entity.QItemCategory;
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.Wildcard;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.playground.constant.ItemSellStatus;
 import com.playground.dto.ItemSearchDto;
@@ -18,6 +23,7 @@ import org.springframework.data.domain.Pageable;
 import org.thymeleaf.util.StringUtils;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
@@ -29,7 +35,17 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
     }
 
     private BooleanExpression searchSellStatusEq(ItemSellStatus searchSellStatus){
-        return searchSellStatus == null ? null : QItem.item.itemSellStatus.eq(searchSellStatus);
+        if (searchSellStatus == null) {
+            return null;
+        }
+        // searchSellStatus 값에 따라 조건을 설정
+        if (searchSellStatus == ItemSellStatus.SOLD_OUT) {
+            return QItem.item.stockNumber.eq(0); // 품절 상태 + stockNumber가 0
+        } else if (searchSellStatus == ItemSellStatus.SELL) {
+            return QItem.item.stockNumber.gt(0); // 재고 있음 + stockNumber가 0보다 큼
+        } else {
+            return null; //기본 값
+        }
     }
 
     private BooleanExpression regDtsAfter(String searchDateType){
@@ -91,24 +107,68 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
     }
 
     @Override
-    public Page<MainItemDto> getMainItemPage(ItemSearchDto itemSearchDto, Pageable pageable) {
+    public Page<MainItemDto> getMainItemPage(ItemSearchDto itemSearchDto, ItemCategoryDto itemCategoryDto,Pageable pageable) {
         QItem item = QItem.item;
         QItemImg itemImg = QItemImg.itemImg;
+        QItemCategory itemCategory= QItemCategory.itemCategory;
 
+        BooleanBuilder whereClause = new BooleanBuilder();
+
+        // 기본 조건 추가
+        whereClause.and(itemImg.repimgYn.eq("Y"));
+        whereClause.and(itemNmLike(itemSearchDto.getSearchQuery()));
+
+        //정렬 조건 추가
+        List<OrderSpecifier<?>> orderClauses = new ArrayList<>();
+        if(itemSearchDto.getOrderBy()!=null){
+            if (itemSearchDto.getOrderBy().equals("price_high")) {
+                orderClauses.add(item.price.desc());
+            } else if (itemSearchDto.getOrderBy().equals("price_low")) {
+                orderClauses.add(item.price.asc());
+            } else if (itemSearchDto.getOrderBy().equals("sales")){
+                orderClauses.add(item.buyCnt.desc());
+            }
+        }
+        orderClauses.add(item.id.desc());
+
+        // ItemCategoryDto의 필드 추가
+        if (itemCategoryDto != null) {
+            if (itemCategoryDto.isAction()) whereClause.and(itemCategory.action.eq(true));
+            if (itemCategoryDto.isAdventure()) whereClause.and(itemCategory.adventure.eq(true));
+            if (itemCategoryDto.isRpg()) whereClause.and(itemCategory.rpg.eq(true));
+            if (itemCategoryDto.isShooter()) whereClause.and(itemCategory.shooter.eq(true));
+            if (itemCategoryDto.isStrategy()) whereClause.and(itemCategory.strategy.eq(true));
+            if (itemCategoryDto.isSimulation()) whereClause.and(itemCategory.simulation.eq(true));
+            if (itemCategoryDto.isPuzzle()) whereClause.and(itemCategory.puzzle.eq(true));
+            if (itemCategoryDto.isSports()) whereClause.and(itemCategory.sports.eq(true));
+            if (itemCategoryDto.isRacing()) whereClause.and(itemCategory.racing.eq(true));
+            if (itemCategoryDto.isFighting()) whereClause.and(itemCategory.fighting.eq(true));
+            if (itemCategoryDto.isSurvival()) whereClause.and(itemCategory.survival.eq(true));
+            if (itemCategoryDto.isRhythm()) whereClause.and(itemCategory.rhythm.eq(true));
+            if (itemCategoryDto.isSandbox()) whereClause.and(itemCategory.sandbox.eq(true));
+            if (itemCategoryDto.isBattleRoyale()) whereClause.and(itemCategory.battleRoyale.eq(true));
+            if (itemCategoryDto.isCard()) whereClause.and(itemCategory.card.eq(true));
+            if (itemCategoryDto.isBoardGame()) whereClause.and(itemCategory.boardGame.eq(true));
+            if (itemCategoryDto.isHorror()) whereClause.and(itemCategory.horror.eq(true));
+            if (itemCategoryDto.isPlatformer()) whereClause.and(itemCategory.platformer.eq(true));
+            if (itemCategoryDto.isMoba()) whereClause.and(itemCategory.moba.eq(true));
+            if (itemCategoryDto.isMmorpg()) whereClause.and(itemCategory.mmorpg.eq(true));
+        }
         List<MainItemDto> content = queryFactory
                 .select(
                         new QMainItemDto(
                                 item.id,
                                 item.itemNm,
-                                item.itemDetail,
                                 itemImg.imgUrl,
-                                item.price)
+                                item.price,
+                                item.stockNumber,
+                                item.buyCnt)
                 )
                 .from(itemImg)
                 .join(itemImg.item, item)
-                .where(itemImg.repimgYn.eq("Y"))
-                .where(itemNmLike(itemSearchDto.getSearchQuery()))
-                .orderBy(item.id.desc())
+                .join(itemCategory).on(itemCategory.item.eq(item))
+                .where(whereClause)
+                .orderBy(orderClauses.toArray(new OrderSpecifier[0]))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -117,8 +177,8 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
                 .select(Wildcard.count)
                 .from(itemImg)
                 .join(itemImg.item, item)
-                .where(itemImg.repimgYn.eq("Y"))
-                .where(itemNmLike(itemSearchDto.getSearchQuery()))
+                .join(itemCategory).on(itemCategory.item.eq(item))
+                .where(whereClause)
                 .fetchOne()
                 ;
 
@@ -126,27 +186,72 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
     }
 
     @Override
-    public Page<MainItemDto> getMainItemPage2(String company, ItemSearchDto itemSearchDto, Pageable pageable) {
+    public Page<MainItemDto> getMainItemPage2(String company, ItemSearchDto itemSearchDto, ItemCategoryDto itemCategoryDto,Pageable pageable) {
         QItem item = QItem.item;
         QItemImg itemImg = QItemImg.itemImg;
-        QItemCategory itemCategory = QItemCategory.itemCategory;
+        QItemCategory itemCategory= QItemCategory.itemCategory;
 
+        BooleanBuilder whereClause = new BooleanBuilder();
+
+        // 기본 조건 추가
+        whereClause.and(itemImg.repimgYn.eq("Y"));
+        whereClause.and(itemCategory.company.eq(company));
+        whereClause.and(itemNmLike(itemSearchDto.getSearchQuery()));
+
+        //정렬 조건 추가
+        List<OrderSpecifier<?>> orderClauses = new ArrayList<>();
+        if(itemSearchDto.getOrderBy()!=null){
+            if (itemSearchDto.getOrderBy().equals("price_high")) {
+                orderClauses.add(item.price.desc());
+            } else if (itemSearchDto.getOrderBy().equals("price_low")) {
+                orderClauses.add(item.price.asc());
+            } else if (itemSearchDto.getOrderBy().equals("sales")){
+                orderClauses.add(item.buyCnt.desc());
+            }
+        }
+        orderClauses.add(item.id.desc());
+
+        // ItemCategoryDto의 필드 추가
+        if (itemCategoryDto != null) {
+            if (itemCategoryDto.isAction()) whereClause.and(itemCategory.action.eq(true));
+            if (itemCategoryDto.isAdventure()) whereClause.and(itemCategory.adventure.eq(true));
+            if (itemCategoryDto.isRpg()) whereClause.and(itemCategory.rpg.eq(true));
+            if (itemCategoryDto.isShooter()) whereClause.and(itemCategory.shooter.eq(true));
+            if (itemCategoryDto.isStrategy()) whereClause.and(itemCategory.strategy.eq(true));
+            if (itemCategoryDto.isSimulation()) whereClause.and(itemCategory.simulation.eq(true));
+            if (itemCategoryDto.isPuzzle()) whereClause.and(itemCategory.puzzle.eq(true));
+            if (itemCategoryDto.isSports()) whereClause.and(itemCategory.sports.eq(true));
+            if (itemCategoryDto.isRacing()) whereClause.and(itemCategory.racing.eq(true));
+            if (itemCategoryDto.isFighting()) whereClause.and(itemCategory.fighting.eq(true));
+            if (itemCategoryDto.isSurvival()) whereClause.and(itemCategory.survival.eq(true));
+            if (itemCategoryDto.isRhythm()) whereClause.and(itemCategory.rhythm.eq(true));
+            if (itemCategoryDto.isSandbox()) whereClause.and(itemCategory.sandbox.eq(true));
+            if (itemCategoryDto.isBattleRoyale()) whereClause.and(itemCategory.battleRoyale.eq(true));
+            if (itemCategoryDto.isCard()) whereClause.and(itemCategory.card.eq(true));
+            if (itemCategoryDto.isBoardGame()) whereClause.and(itemCategory.boardGame.eq(true));
+            if (itemCategoryDto.isHorror()) whereClause.and(itemCategory.horror.eq(true));
+            if (itemCategoryDto.isPlatformer()) whereClause.and(itemCategory.platformer.eq(true));
+            if (itemCategoryDto.isMoba()) whereClause.and(itemCategory.moba.eq(true));
+            if (itemCategoryDto.isMmorpg()) whereClause.and(itemCategory.mmorpg.eq(true));
+        }
+
+        System.out.println("::::::::::::::::::::::::::::::::::::::");
+        System.out.println(whereClause);
         List<MainItemDto> content = queryFactory
                 .select(
                         new QMainItemDto(
                                 item.id,
                                 item.itemNm,
-                                item.itemDetail,
                                 itemImg.imgUrl,
-                                item.price)
+                                item.price,
+                                item.stockNumber,
+                                item.buyCnt)
                 )
                 .from(itemImg)
                 .join(itemImg.item, item)
                 .join(itemCategory).on(itemCategory.item.eq(item))
-                .where(itemImg.repimgYn.eq("Y"))
-                .where(itemCategory.company.eq(company))
-                .where(itemNmLike(itemSearchDto.getSearchQuery()))
-                .orderBy(item.id.desc())
+                .where(whereClause)
+                .orderBy(orderClauses.toArray(new OrderSpecifier[0]))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -156,13 +261,55 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
                 .from(itemImg)
                 .join(itemImg.item, item)
                 .join(itemCategory).on(itemCategory.item.eq(item))
-                .where(itemImg.repimgYn.eq("Y"))
-                .where(itemCategory.company.eq(company))
-                .where(itemNmLike(itemSearchDto.getSearchQuery()))
-                .fetchOne()
-                ;
+                .where(whereClause)
+                .fetchOne();
 
         return new PageImpl<>(content, pageable, total);
+    }
+
+    @Override
+    public List<MainItemDto> getMainItem(String company, ItemCategoryDto itemCategoryDto) {
+        QItem item = QItem.item;
+        QItemImg itemImg = QItemImg.itemImg;
+        QItemCategory itemCategory= QItemCategory.itemCategory;
+
+        BooleanBuilder whereClause = new BooleanBuilder();
+           JPAQuery<Item> query = queryFactory.selectFrom(item);
+
+       // 기본 조건 추가
+       whereClause.and(itemImg.repimgYn.eq("Y")); // 대표 이미지 조건
+
+       if (company != null) {
+        whereClause.and(itemCategory.company.eq(company));
+        }
+    
+        List<MainItemDto> content = queryFactory
+                .select(
+                        new QMainItemDto(
+                                item.id,
+                                item.itemNm,
+                                itemImg.imgUrl,
+                                item.price,
+                                item.stockNumber,
+                                item.buyCnt)
+                )
+                .from(itemImg)
+                .join(itemImg.item, item)
+                .join(itemCategory).on(itemCategory.item.eq(item))
+                .where(whereClause)
+                .orderBy(Expressions.numberTemplate(Double.class, "rand()").asc())
+                .limit(3)
+                .fetch();
+    
+        long total = queryFactory
+                .select(Wildcard.count)
+                .from(itemImg)
+                .join(itemImg.item, item)
+                .join(itemCategory).on(itemCategory.item.eq(item))
+                .where(whereClause)
+                .fetchOne();
+    
+        return content;
     }
 
 }

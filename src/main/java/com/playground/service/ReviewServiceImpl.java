@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.playground.dto.ReviewDto;
 import com.playground.entity.Item;
+import com.playground.entity.Member;
 import com.playground.entity.Review;
 import com.playground.repository.MemberRepository;
 import com.playground.repository.ReviewRepository;
@@ -66,19 +67,31 @@ public class ReviewServiceImpl implements ReviewService {
         reviewRepository.deleteById(reviewnum);
     }    
 
-    @Override
-    public void reviewRecommend(Long reviewnum) {
-        // 리뷰 조회
-        Review review = reviewRepository.findById(reviewnum)
-            .orElseThrow(() -> new IllegalArgumentException("Invalid review ID: " + reviewnum));
+   // 추천 상태 토글 메서드
+   @Override
+   public String toggleRecommend(Long reviewnum, String email) {
+       // 리뷰 조회
+    Review review = reviewRepository.findById(reviewnum)
+    .orElseThrow(() -> new IllegalArgumentException("Invalid review ID: " + reviewnum));
 
-        // 추천 수 증가
-        review.incrementRCnt();
-
-        // 변경 사항 저장
-        reviewRepository.save(review);
+    // 이메일로 회원 조회
+    Member member = memberRepository.findByEmail(email);
+    if (member == null) {
+        throw new IllegalArgumentException("Invalid email: " + email);
     }
 
-
+    // 추천 상태 토글
+    if (review.getRecommendedMembers().contains(member)) {
+        review.getRecommendedMembers().remove(member);
+        review.decrementRCnt(); // 추천 수 감소
+        reviewRepository.save(review);
+        return "추천 취소";
+    } else {
+        review.getRecommendedMembers().add(member);
+        review.incrementRCnt(); // 추천 수 증가
+        reviewRepository.save(review);
+        return "추천 완료";
+            }
+    }
 }
 

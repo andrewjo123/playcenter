@@ -24,10 +24,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.thymeleaf.context.Context;
 
 import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -158,9 +159,10 @@ public class MemberController {
     public ResponseEntity<String> sendCode(@RequestParam("email")String email){
         String subject="[놀이마당]이메일 인증코드 발송";
         String code=randomMix(10);
-        System.out.println(code);
-        String body="인증코드는 "+code+" 입니다.";
-        emailService.sendEmail(email, subject, body);
+        Context context=new Context();
+        context.setVariable("code", code);
+
+        emailService.sendEmail(email, subject, "mailForm/signupValidCode",context);
         memberService.setCode(email,code);
         return new ResponseEntity<>("success", HttpStatus.OK);
     }
@@ -203,23 +205,45 @@ public class MemberController {
         return "member/findPw";
     }
 
-    @PostMapping("/findPw")
-    @Transactional
-    public String sendEmail(MemberFormDto memberFormDto, RedirectAttributes attr) {
-        System.out.println(memberFormDto.getEmail());
+    @RequestMapping(value="/findPw",method = {RequestMethod.POST})
+    @ResponseBody
+    public ResponseEntity<String> validMemberInfo(MemberFormDto memberFormDto) {
         String result=memberService.validBeforeSendPwd(memberFormDto.getEmail(), memberFormDto.getName(), memberFormDto.getPhone());
-        System.out.println(result);
-        if(result.equals("noEmail")||result.equals("notValid")){
-            attr.addFlashAttribute("result",result);
+
+        if(result.equals("valid")){
+            String token=memberService.createPasswordResetToken(memberFormDto.getEmail());
+            String subject="[놀이마당]임시 비밀번호 전송";
+            Context context=new Context();
+            context.setVariable("token",token);
+            emailService.sendEmail(memberFormDto.getEmail(), subject, "mailForm/passwordChange",context);
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK); //valid가 통과
+    }
+
+    @GetMapping("/resetPw")
+    public String resetPw(@RequestParam("token") String token, Model model, RedirectAttributes attr) {
+        String result=memberService.validPwToken(token);
+
+        if(result.equals("valid")){
+            model.addAttribute("token", token);
+            return "member/resetPw";
+        }else{
+            attr.addFlashAttribute("notValid",result);
             return "redirect:/members/findPw";
         }
-        String subject="[놀이마당]임시 비밀번호 전송";
-        String newPw=randomMix(12);
-        String body="비밀번호가 "+newPw+"로 변경되었습니다. \n\n안전한 사용을 위해 로그인 후 가급적 빠르게 비밀번호를 변경해 주시길 바랍니다.";
+    }
 
-        memberService.updateMember(memberFormDto.getEmail(), passwordEncoder.encode(newPw));
-        emailService.sendEmail(memberFormDto.getEmail(), subject, body);
-        return "member/memberLoginForm";
+    @PostMapping("/resetPw")
+    public String resetPassword(MemberFormDto dto,@RequestParam("token") String token, RedirectAttributes attr) {
+        String result=memberService.validPwToken(token);
+
+        if (result.equals("valid")) {
+            memberService.updateMember(memberService.findEmailFromToken(token), passwordEncoder.encode(dto.getPassword()));
+            attr.addFlashAttribute("message", "비밀번호가 성공적으로 재설정되었습니다");
+        }else{
+            attr.addFlashAttribute("message", "인증이 실패했습니다");
+        }
+        return "redirect:/members/login";
     }
 
     // 난수 생성 코드

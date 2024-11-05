@@ -81,11 +81,12 @@ margin-top:100px !important;
 background-color: gray;
 }
 
-.itemDtl .fa-solid {
-color: gray;
-font-size: 50px;
-margin: 10px 0px;
-}
+.fa-chevron-left,  .fa-chevron-right{
+    color: gray;
+    font-size: 50px;
+    margin: 10px 0px;
+    }
+    
 
 .itemDtl .d-block {
 margin: auto;
@@ -109,6 +110,69 @@ margin: auto;
     height: 100%;
     object-fit: cover;
 }
+.itemDtl .responsive-img {
+    width: 800px; /* 기본 화면에서의 너비 */
+    max-width: 100%; /* 기본 너비보다 커지지 않도록 제한 */
+    height: auto; /* 비율 유지 */
+}
+
+.itemDtl .instructions {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+}
+
+.itemDtl .instructions h2 {
+    color: #333;
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+.itemDtl .instructions ol {
+    list-style-type: decimal;
+    padding-left: 20px;
+}
+
+.itemDtl .instructions li {
+    margin-bottom: 10px;
+}
+
+.itemDtl .instructions strong {
+    color: #0073e6; /* 강조할 부분에 색상 추가 */
+}
+/*찜 버튼 부분*/
+.itemDtl .wish-button {
+    width: 40px;
+    height: 40px;
+    background-color: #bbb;
+    cursor: pointer;
+    position: relative;
+    outline:none;
+    border-radius: 5px;
+    transform: rotate(45deg);
+}
+.itemDtl .wish-button::before,
+.itemDtl .wish-button::after {
+    content: '';
+    width: 40px;
+    height: 40px;
+    background-color: #bbb;
+    border-radius: 50%;
+    position: absolute;
+}
+.itemDtl .wish-button::before {
+    left: -20px;
+    top:0;
+}
+.itemDtl .wish-button::after {
+    top: -20px;
+    left:0;
+}
+.itemDtl .wish-button.active::before,
+.itemDtl .wish-button.active::after,
+.itemDtl .wish-button.active{
+    background-color: #ff1744;
+}
+
 
 
 /* itemForm--------------------------------------------------------*/
@@ -177,4 +241,114 @@ font-size: 18px
 
 .orderHist .fs24 {
 font-size: 24px
+}
+
+/* 모바일 환경용 CSS */
+@media (max-width: 768px) {
+
+    /* 공통 레이아웃 스타일 */
+    .itemdtl {
+        flex-direction: column;
+        align-items: center;
+        padding: 15px;
+    }
+
+     .itemDtl .d-flex {
+         display: block !important; /* 작은 화면에서는 요소들을 수직으로 쌓음 */
+     }
+
+     .itemDtl .repImgDiv {
+         width: 100% !important; /* 모바일에서 전체 너비 */
+         margin-right: 0 !important; /* 중앙 정렬을 위해 오른쪽 여백 제거 */
+         margin-bottom: 15px !important; /* 이미지 아래에 간격 추가 */
+     }
+
+     .itemDtl .repImg {
+         width: 100% !important;
+         height: auto !important; /* 비율 유지 */
+         object-fit: cover !important;
+     }
+
+     .itemDtl .wd50 {
+         width: 100% !important; /* 이미지 아래에서 전체 너비 차지 */
+         text-align: center !important; /* 콘텐츠를 중앙 정렬 */
+         margin: 0 auto !important; /* 수평 중앙 정렬 */
+     }
+
+    /* 버튼 크기와 정렬 조정 */
+    .itemDtl .btn {
+        font-size: 0.9em !important; /* 버튼 글씨 크기 조정 */
+        padding: 8px 12px !important; /* 버튼 여백 조정 */
+        width: auto; /* 너비 자동 설정 */
+        margin: 5px 2px !important; /* 버튼 사이 간격 */
+    }
+    .itemDtl .text-right {
+        text-align: center !important; /* 버튼들을 가운데 정렬 */
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    /* 찜하기 버튼 조정 */
+    .itemDtl .wish-button {
+        width: 30px !important;
+        height: 30px !important;
+        margin-left: 8px !important; /* 버튼 간격 */
+    }
+    .itemDtl .wish-button::before,
+    .itemDtl .wish-button::after {
+        width: 30px !important;
+        height: 30px !important;
+    }
+    /*상품상세 안내 부분*/
+    .itemdtl .jumbotron.jumbotron-fluid.mgt-30{
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+    .itemdtl .product-details h3, .itemdtl .product-details p, .itemdtl .instructions h2, .itemdtl .instructions ol {
+        font-size: 0.9rem;
+    }
+    /* 캐러셀 */
+    .itemdtl #carouselControls {
+        display: none !important; /* 모바일 화면에서 캐러셀 숨기기 */
+    }
+    .itemdtl .responsive-img {
+        width: 100%; /* 부모 요소 너비에 맞게 조절 */
+        max-width: 100%; /* 최대 너비 제한 */
+        height: auto; /* 비율 유지 */
+        margin-bottom: 15px; /* 기존 여백 유지 */
+    }
+
+    /* 리뷰 목록 스타일 */
+    .itemdtl .reviewList .card-body {
+        padding: 15px;
+        font-size: 0.9rem;
+    }
+    .itemdtl .reviewList .btn {
+        font-size: 0.8rem;
+    }
+
+    /* 페이지 네비게이션 */
+    .itemdtl .pagination {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+    }
+    .itemdtl .pagination button {
+        font-size: 0.9rem;
+        padding: 8px 15px;
+    }
+
+    /* 리뷰 모달 */
+    .itemdtl .reviewModal .modal-dialog, .itemdtl .imageModal .modal-dialog {
+        max-width: 90%;
+        margin: 0 auto;
+    }
+    .itemdtl .reviewModal .modal-content, .itemdtl .imageModal .modal-content {
+        padding: 10px;
+    }
+    .itemdtl .reviewModal .modal-body .form-group, .itemdtl .imageModal .modal-body {
+        font-size: 0.9rem;
+    }
 }

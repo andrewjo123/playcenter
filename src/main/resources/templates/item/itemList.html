@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}" class="itemList">
+<head>
+    <link th:href="@{/css/layout1.css}" rel="stylesheet">
+</head>
+
+<div layout:fragment="content">
+
+    <div id="carouselControls" class="carousel slide margin" data-ride="carousel">
+        <ul class="carousel-indicators">
+            <li data-target="#carouselControls" data-slide-to="0" class="active"></li>
+            <li data-target="#carouselControls" data-slide-to="1"></li>
+            <li data-target="#carouselControls" data-slide-to="2"></li>
+        </ul>
+        <div class="carousel-inner">
+            <div class="carousel-item active item">
+                <img class="d-block w-100 banner" src="/img/ad1.png"
+                     alt="First slide">
+            </div>
+            <div class="carousel-item item">
+                <img class="d-block w-100 banner" src="/img/ad3.png"
+                     alt="First slide">
+            </div>
+            <div class="carousel-item item">
+                <img class="d-block w-100 banner" src="/img/temp_ad3.png"
+                     alt="First slide">
+            </div>
+        </div>
+    </div>
+
+
+    <input type="hidden" name="searchQuery" th:value="${itemSearchDto.searchQuery}">
+    <div th:if="${not #strings.isEmpty(itemSearchDto.searchQuery)}" class="center">
+        <p class="h3 font-weight-bold" th:text="${itemSearchDto.searchQuery} + '검색 결과'" id="resultText"></p>
+    </div>
+
+    <nav class="navbar navbar-expand-sm navbar-dark" style="background:black">
+        <div class="collapse navbar-collapse" id="navbarToggleDemo03">
+            <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                <li class="nav-item">
+                    <button class="btn btn-secondary company" data-company="list">Total</button>
+                </li>
+                <li class="nav-item">
+                    <button class="btn btn-primary company" data-company="steam">Steam</button>
+                </li>
+                <li class="nav-item">
+                    <button class="btn btn-success company" data-company="ps">PS</button>
+                </li>
+                <li class="nav-item">
+                    <button class="btn btn-warning company" data-company="nintendo">Nintendo</button>
+                </li>
+            </ul>
+        </div>
+        <form class="form-inline my-2 my-lg-0" action="/list" method="get" id="cateSearch">
+            <input name="searchQuery" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" id="search2" th:value="${itemSearchDto.searchQuery}">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            <!-- 모바일용 토글 버튼 -->
+            <button type="button" id="toggleTagSelectBtn" class="btn btn-primary">
+                장르 선택
+            </button>
+        </form>
+    </nav>
+
+    <span th:text="${company}" id="getCompany" style="display:none;"></span>
+    <select class="form-control orderBy">
+        <option value="latest" th:selected="${itemSearchDto.orderBy == 'latest'}">최신순</option>
+        <option value="sales" th:selected="${itemSearchDto.orderBy == 'sales'}">판매량순</option>
+        <option value="price_high" th:selected="${itemSearchDto.orderBy == 'price_high'}">가격높은순</option>
+        <option value="price_low" th:selected="${itemSearchDto.orderBy == 'price_low'}">가격낮은순</option>
+    </select>
+    <div class="row" id="lists">
+        <th:block th:if="${items.getContent().size() > 0}">
+            <th:block th:each="item, status: ${items.getContent()}">
+                <div class="col-md-4 margin">
+                    <div class="card" style="position: relative;">
+                        <a th:href="'/item/' +${item.id}" class="text-dark">
+                            <img th:src="${item.imgUrl}" class="card-img-top" th:alt="${item.itemNm}"
+                                 th:classappend="${item.stockNumber <= 0} ? 'sold-out-filter'"height="400">
+                            <span th:if="${item.stockNumber <= 0}" class="sold-out-badge">Sold Out</span>
+                            <span th:if="${dibsList.contains(item.id)}" style="position: absolute; top: 10px; right: 10px; font-size: 24px;">💖</span>
+                            <div class="card-body">
+                                <h4 class="card-title">[[${item.itemNm}]]</h4>
+                                <th:block th:if="${item.stockNumber<=0}">
+                                    <h3 class="card-title text-danger">품절</h3>
+                                </th:block>
+                                <th:block th:unless="${item.stockNumber<=0}">
+                                    <h3 class="card-title text-danger">[[${item.price}]]원</h3>
+                                </th:block>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </th:block>
+        </th:block>
+        <th:block th:if="${items.getContent().size() == 0}">
+            <div class="col-md-12 text-center">
+                <h4>결과 없음</h4>
+            </div>
+        </th:block>
+    </div>
+    <button id="loadMore" class="btn btn-primary center" style="display:none;">더보기</button>
+
+    <div id="absolute" style="border:1px solid blue; width:100px; min-height:90%; max-height:100%; ;position:absolute; left:20px; top:220px;" >
+        <div id="tagSelect" style="border:1px solid red; width:100px; position:sticky; left:0px; top:50px;">
+            <label>
+                <input type="checkbox" name="action" th:checked="${tag.action}"> 액션
+            </label>
+            <label>
+                <input type="checkbox" name="adventure" th:checked="${tag.adventure}"> 모험
+            </label>
+            <label>
+                <input type="checkbox" name="rpg" th:checked="${tag.rpg}"> RPG
+            </label>
+            <label>
+                <input type="checkbox" name="shooter" th:checked="${tag.shooter}"> 슈팅
+            </label>
+            <label>
+                <input type="checkbox" name="strategy" th:checked="${tag.strategy}"> 전략
+            </label>
+            <label>
+                <input type="checkbox" name="simulation" th:checked="${tag.simulation}"> 시뮬레이션
+            </label>
+            <label>
+                <input type="checkbox" name="puzzle" th:checked="${tag.puzzle}"> 퍼즐
+            </label>
+            <label>
+                <input type="checkbox" name="sports" th:checked="${tag.sports}"> 스포츠
+            </label>
+            <label>
+                <input type="checkbox" name="racing" th:checked="${tag.racing}"> 레이싱
+            </label>
+            <label>
+                <input type="checkbox" name="fighting" th:checked="${tag.fighting}"> 격투
+            </label>
+            <label>
+                <input type="checkbox" name="survival" th:checked="${tag.survival}"> 생존
+            </label>
+            <label>
+                <input type="checkbox" name="rhythm" th:checked="${tag.rhythm}"> 리듬게임
+            </label>
+            <label>
+                <input type="checkbox" name="sandbox" th:checked="${tag.sandbox}"> 샌드박스
+            </label>
+            <label>
+                <input type="checkbox" name="battleRoyale" th:checked="${tag.battleRoyale}"> 대전
+            </label>
+            <label>
+                <input type="checkbox" name="card" th:checked="${tag.card}"> 카드
+            </label>
+            <label>
+                <input type="checkbox" name="boardGame" th:checked="${tag.boardGame}"> 보드게임
+            </label>
+            <label>
+                <input type="checkbox" name="horror" th:checked="${tag.horror}"> 공포
+            </label>
+            <label>
+                <input type="checkbox" name="platformer" th:checked="${tag.platformer}"> 플랫포머
+            </label>
+            <label>
+                <input type="checkbox" name="moba" th:checked="${tag.moba}"> MOBA
+            </label>
+            <label>
+                <input type="checkbox" name="mmorpg" th:checked="${tag.mmorpg}"> MMORPG
+            </label>
+            <button type="button" id="searchTagBtn" class="btn btn-info">장르 검색</button>
+            <button type="button" id="checkResetBtn" class="btn btn-warning">선택 취소</button>
+        </div>
+    </div>
+
+    <script inline="javascript">
+        <!--모바일 토글버튼 스크립트-->
+        document.getElementById("toggleTagSelectBtn").addEventListener("click", function () {
+            const tagSelect = document.getElementById("absolute");
+            if (tagSelect.style.display === "none" || tagSelect.style.display === "") {
+                tagSelect.style.display = "block";
+            } else {
+                tagSelect.style.display = "none";
+            }
+        });
+        function appendPage(response){
+            const items = response.items.content; // items 목록
+            const dibsList=response.dibsList;
+            var str="";
+
+            if (Array.isArray(items) && items.length > 0) {
+                items.forEach(function(item) {
+                    str += '<div class="col-md-4 margin">';
+                    str += '  <div class="card" style="position:relative;">';
+                    str += '        <a href="/item/' + item.id + '" class="text-dark">';
+                    str += '            <img src="' + item.imgUrl + '" class="card-img-top" alt="' + item.itemNm + '" height="400">';
+                    if (dibsList.includes(item.id)) {
+                        str += '      <span style="position: absolute; top: 10px; right: 10px; font-size: 24px;">💖</span>';
+                    }
+                    str += '            <div class="card-body">';
+                    str += '                <h4 class="card-title">' + item.itemNm + '</h4>';
+                    if (item.stockNumber <= 0) {
+                        str += '                <h3 class="card-title text-danger">품절</h3>';
+                    } else {
+                        str += '                <h3 class="card-title text-danger">' + item.price + '원</h3>';
+                    }
+                    str += '            </div></a></div></div>';
+                });
+
+                $("#lists").append(str);
+            }
+
+        }
+
+        $(document).ready(function(){
+            var currentPage = 0;
+
+            var max=[[${maxPage}]];
+
+            if(max>1){
+                $("#loadMore").show();
+            }
+
+            $("#cateSearch").on('submit', function(event) {
+                event.preventDefault();
+                $(".appendForm").remove();
+
+                const searchQuery = $("#search2").val();
+
+                var newUrl = '/'+$("#getCompany").text();
+                if($("#getCompany").text()=="all"){
+                    newUrl='/list';
+                }
+
+                const form = $('<form>', {
+                    class: 'appendForm',
+                    method: 'GET',
+                    action: newUrl
+                });
+
+                form.append($('<input>', {
+                    type: 'hidden',
+                    name: 'searchQuery',
+                    value: searchQuery
+                }));
+
+                $("input[type='checkbox']:checked").each(function() {
+                    var checkboxName = $(this).attr('name');
+                    var checked = $(this).is(':checked');
+                    form.append($('<input>', {
+                        type: 'hidden',
+                        name: checkboxName,
+                        value: checked
+                    }));
+                });
+
+                form.append($('<input>', {
+                    type: 'hidden',
+                    name: 'orderBy',
+                    value: $(".orderBy").val()
+                }));
+
+                $('body').append(form);
+                form.submit();
+            });
+
+            $(".company").on('click',function(){
+
+                var company = $(this).data('company');
+
+                // Total을 reset???
+                if(company=="list"){
+                    location.href="/list";
+                    return;
+                }
+
+                var form = $('<form>', {
+                    class: 'appendForm',
+                    method: 'get',
+                    action: '/'+company
+                });
+
+                $("input[type='checkbox']:checked").each(function() {
+                    var checkboxName = $(this).attr('name');
+                    var checked = $(this).is(':checked');
+                    form.append($('<input>', {
+                        type: 'hidden',
+                        name: checkboxName,
+                        value: checked
+                    }));
+                });
+
+                form.append($('<input>', {
+                    type: 'hidden',
+                    name: 'orderBy',
+                    value: $(".orderBy").val()
+                }));
+
+                $('body').append(form);
+                form.submit();
+
+            });
+
+            $("#loadMore").on('click',function(){
+                const searchQuery = $("#search2").val();
+
+                var cate=$("#getCompany").text();
+                const newUrl = "/"+cate+"More";
+                currentPage++;
+                var itemCategoryDto = {};
+
+                $("input[type='checkbox']:checked").each(function() {
+                    var checkboxName = $(this).attr('name');
+                    var checked = $(this).is(':checked');
+                    itemCategoryDto[checkboxName]=checked;
+                });
+
+                $.ajax({
+                    url: newUrl,
+                    type: 'GET',
+                    data:{searchQuery:searchQuery, nthPage:currentPage, orderBy:$(".orderBy").val(), ...itemCategoryDto},
+                    success: function(response) {
+                        appendPage(response);
+                        var maxPage = parseInt(response.maxPage);
+                        if(currentPage>=parseInt(maxPage-1)){
+                            $("#loadMore").hide();
+                        } else{
+                            $("#loadMore").show();
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("AJAX Error:", error);
+                    }
+                });
+
+            });
+
+            $("input[type='checkbox']").change(function(){
+                const checkCount = $("input[type='checkbox']:checked").length;
+                if (checkCount > 4) {
+                  $(this).prop('checked', false);
+                  alert("장르는 4개까지 선택이 가능합니다");
+                }
+            });
+
+            $("#searchTagBtn").on('click', function() {
+
+                $(".appendForm").remove();
+                var cate=$("#getCompany").text();
+                if(cate=="all"){
+                    cate="list";
+                }
+
+                var form = $('<form>', {
+                    class: 'appendForm',
+                    method: 'get',
+                    action: '/'+cate
+                });
+
+                $("input[type='checkbox']:checked").each(function() {
+                    var checkboxName = $(this).attr('name');
+                    var checked = $(this).is(':checked');
+                    form.append($('<input>', {
+                        type: 'hidden',
+                        name: checkboxName,
+                        value: checked
+                    }));
+                });
+
+                form.append($('<input>', {
+                    type: 'hidden',
+                    name: 'orderBy',
+                    value: $(".orderBy").val()
+                }));
+
+                $('body').append(form);
+                form.submit();
+            });
+
+
+            $("#checkResetBtn").on('click',function(){
+                var cate=$("#getCompany").text();
+                if(cate=="all"){
+                    cate="list";
+                }
+                location.href="/"+cate;
+            });
+
+            $(".orderBy").on('change',function(){
+                $(".appendForm").remove();
+
+                const searchQuery = $("#search2").val();
+
+                var newUrl = '/'+$("#getCompany").text();
+                if($("#getCompany").text()=="all"){
+                    newUrl='/list';
+                }
+
+                const form = $('<form>', {
+                    class: 'appendForm',
+                    method: 'GET',
+                    action: newUrl
+                });
+
+                form.append($('<input>', {
+                    type: 'hidden',
+                    name: 'searchQuery',
+                    value: searchQuery
+                }));
+
+                $("input[type='checkbox']:checked").each(function() {
+                    var checkboxName = $(this).attr('name');
+                    var checked = $(this).is(':checked');
+                    form.append($('<input>', {
+                        type: 'hidden',
+                        name: checkboxName,
+                        value: checked
+                    }));
+                });
+
+                form.append($('<input>', {
+                    type: 'hidden',
+                    name: 'orderBy',
+                    value: $(".orderBy").val()
+                }));
+
+                $('body').append(form);
+                form.submit();
+            })
+
+        })
+
+    </script>
+
+
+</div>
+
+</html>

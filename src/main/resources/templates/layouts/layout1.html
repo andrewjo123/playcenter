@@ -6,6 +6,7 @@
     <title>Title</title>
 
     <!-- CSS only -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link th:href="@{/css/layout1.css}" rel="stylesheet">
     <link th:href="@{/css/fragments.css}" rel="stylesheet">
@@ -19,19 +20,15 @@
     <script>
         function cartCount(){
             var exist=$("#ppEmail").text();
-            console.log(exist+"123");
             if(exist!=""&&exist!=null){
-                console.log("1차");
                 $.ajax({
                     url:'/cartCount',
                     type:"GET",
                     data:{email:exist},
                     dataType:"text",
                     success:function(result){
-                        console.log("2차");
                         if(result>0){
-                            console.log("3차");
-                            $("#getCount").text(result).show();
+                            $("#getCount").text(`(${result})`).show();
                             $("#sidebarGetCount").text(result).show();
                         } else {
                             $("#getCount").hide();
@@ -42,10 +39,33 @@
             }
         }
 
+        function dibsCount(){
+            var exist=$("#ppEmail").text();
+            if(exist!=""&&exist!=null){
+                $.ajax({
+                    url:'/dibsCount',
+                    type:"GET",
+                    data:{email:exist},
+                    dataType:"text",
+                    success:function(result){
+                        if(result>0){
+                            $("#getCountDibs").text(`(${result})`).show();
+                            $("#sidebarGetCountDibs").text(result).show();
+                        } else {
+                            $("#getCountDibs").hide();
+                            $("sidebarGetCountDibs").hide();
+                        }
+                    }
+                });
+            }
+        }
+
+
         $(document).ready(function(){
             cartCount();
+            dibsCount();
             const currentUrl = window.location.pathname;
-            const navLinks = document.querySelectorAll('.nav-link');
+            const navLinks = document.querySelectorAll('.nav-link,.btn.company');
 
             navLinks.forEach(link => {
                 const linkUrl = link.getAttribute('href');
@@ -57,6 +77,11 @@
                 }
             });
         });
+
+        $(".company").on('click', function() {
+        var company = $(this).data('company');
+        
+    });
     </script>
 
     <th:block layout:fragment="script"></th:block>
@@ -68,16 +93,15 @@
 <body>
 <div th:replace="~{fragments/header1::header1}"></div>
 
-<div th:replace="~{fragments/header::header}"></div>
 
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-11">
+        <div class="col-12 col-md-11">
             <div layout:fragment="content" class="content"></div>
         </div>
 
-        <div class="col-md-1">
+        <div class="col-12 col-md-1">
             <div th:replace="~{fragments/sidebar::sidebar}"></div>
         </div>
     </div>
@@ -85,7 +109,7 @@
 
 
 
-<!--    <div th:replace="~{fragments/footer::footer}"></div>-->
+<div th:replace="~{fragments/footer::footer}"></div>
 <div><p><a href="/support">지원 페이지로 가기</a></p></div>
 </body>
 

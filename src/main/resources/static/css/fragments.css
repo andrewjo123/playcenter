@@ -1,8 +1,8 @@
 /*header1-------------*/
 
 .hd1 .nav-link {
-    border-bottom: 2px solid transparent; 
-    color: #6c757d; 
+    border-bottom: 2px solid transparent;
+    color: #6c757d;
     transition: color 0.3s, font-weight 0.3s;
 }
 
@@ -13,9 +13,10 @@
 
 
 .hd1 .nav-link.active {
-    border-bottom: 3px solid #5cbf4e !important; 
+    border-bottom: 3px solid #5cbf4e !important;
     color: #5cbf4e !important;
-    background-color: white  !important; /* active 상태에서의 텍스트 색상 (원하는 경우) */
+    background-color: white !important;
+    /* active 상태에서의 텍스트 색상 (원하는 경우) */
 }
 
 
@@ -23,50 +24,221 @@
     position: relative;
 }
 
-.hd1.dropdown-menu {
-    position: absolute;
-    left: 0; /* 드롭다운 메뉴를 왼쪽으로 정렬 */
-    right: auto; /* 오른쪽 정렬 해제 */
-    min-width: 200px; /* 최소 너비 설정 */
-    max-width: calc(100vw - 20px); /* 뷰포트의 가로폭에 따라 조정 */
-    overflow: hidden; /* 내용이 넘치지 않도록 처리 */
-}
-.dropdown-toggle::after {
-    display: none; /* 화살표 숨기기 */
+
+
+.hd1 .dropbtn {
+    background-color: #d9d9d9;
+    color: white;
+    padding: 10px 15px;
+    font-size: 15px;
+    border: none;
+    cursor: pointer;
 }
 
-/*sidebar-------------*/
-#sb{
-    margin-top: 15%; position: fixed; height: 100%; width: 150px;  
-   } 
-   .sb_cart{
-   text-align: center; color: gray;position: relative;  display: inline-block;
-   cursor: pointer; }
-   #getCount  {
-    position: absolute; 
-    top: -15px; 
-    right: -15px; 
-    background-color: red; 
-    color: white; 
-    border-radius: 50%; 
-    padding: 2px; 
-    font-size: 12px; 
-    text-align: center; 
-    width: 20px; 
-    height: 20px;
-    line-height: 20px; 
+
+.hd1 .dropdown {
+    position: relative;
+    display: inline-block;
 }
+
+
+.hd1 .dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+.hd1 .dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.hd1 .dropdown-content a:hover {
+    background-color: #f1f1f1;
+}
+
+.hd1 .dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.hd1.dropdown:hover .dropbtn {
+    background-color: gray;
+}
+
+
+
+
+/*sidebar-------------*/
+#sb {
+    margin-top: 15%;
+    position: fixed;
+    height: 100%;
+    width: 150px;
+}
+
+.sb_cart {
+    text-align: center;
+    color: gray;
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.sb_dibs {
+    text-align: center;
+    color: gray;
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+
+/* #getCountDibs{
+    position: absolute;
+    top: -15px;
+    right: -15px;
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    padding: 2px;
+    font-size: 12px;
+    text-align: center;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+}
+#getCountDibs{background-color: blue;} */
 #sidebarGetCount {
-    position: absolute; 
+    position: absolute;
     top: 35px;
     right: -2px;
-    background-color: red; 
-    color: white; 
-    border-radius: 50%; 
-    padding: 2px; 
-    font-size: 12px; 
-    text-align: center; 
-    width: 20px; 
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    padding: 2px;
+    font-size: 12px;
+    text-align: center;
+    width: 20px;
     height: 20px;
-    line-height: 20px; 
+    line-height: 20px;
+}
+
+#sidebarGetCountDibs {
+    position: absolute;
+    top: 35px;
+    right: -2px;
+    background-color: blue;
+    color: white;
+    border-radius: 50%;
+    padding: 2px;
+    font-size: 12px;
+    text-align: center;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+}
+
+.user-info {
+    display: flex;
+    align-items: center; /* 수직 정렬 */
+}
+
+.user-image {
+    width: 20px; /* 너비를 10px로 설정 */
+    height: 20px; /* 높이를 10px로 설정 */
+    margin-right: 5px; /* 텍스트와의 간격 조정 */
+}
+
+/* 모바일 화면 전용 스타일 */
+.mobile-simple-navbar {
+    display: none;
+}
+.mobile-logo {
+    display: none;
+}
+@media (min-width: 992px) {
+    /*화면 클때는 가림*/
+    .mobile-navbar {
+        display: none;
+    }
+}
+@media (max-width: 768px) {
+    .desktop-navbar {
+        display: none; /* PC용 네비게이션 바 숨기기 */
+    }
+    /*모바일 기본설정*/
+    .container-fluid {
+        padding-left: 0;
+        padding-right: 0;
+    }
+    /* haeder1 시작 */
+    /* 모바일 전용 네비게이션 바 스타일 */
+    .desktop-logo {
+        display: none; /* 모바일 화면에서는 숨기기 */
+    }
+    .mobile-logo {
+        display: block;
+        width: auto;
+        height: 10vh;
+    }
+    .mobile-simple-navbar {
+        position: sticky;
+        top: 0; /* 스크롤할 때 화면의 상단에 고정 */
+        z-index: 100; /* 다른 요소보다 앞에 보이도록 설정 */
+        display: flex;
+        width: 100%;
+        background-color: #f8f9fa;
+    }
+    .mobile-simple-navbar, .mobile-navbar {
+        background-color: #ffffff;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        padding: 10px 15px;
+    }
+    .mobile-simple-navbar ul {
+        padding: 0;
+        margin: 0;
+        width: 100%;
+    }
+
+    .mobile-simple-navbar .nav-item {
+        flex: 1;
+        text-align: center;
+    }
+
+    .mobile-simple-navbar .nav-link {
+        padding: 10px;
+        color: #333;
+        font-weight: bold;
+    }
+
+    .mobile-simple-navbar .nav-link:hover {
+        background-color: #e9ecef;
+        color: #000;
+    }
+    .navbar-header {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px;
+        width: 100%;
+    }
+    .nav.flex-column .nav-link {
+        padding: 10px 15px;
+        color: #333;
+    }
+    .navbar-toggler-icon {
+        background-image: url('https://upload.wikimedia.org/wikipedia/commons/b/b2/Hamburger_icon.svg');
+        width: 24px;
+        height: 24px;
+        display: block;
+    }
+    .nav.flex-column .nav-link:hover {
+        background-color: #f1f1f1;
+    }
+
+     /* haeder1 끝 */
 }

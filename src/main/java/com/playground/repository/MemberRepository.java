@@ -1,14 +1,12 @@
 package com.playground.repository;
 
-import com.playground.dto.MemberSearchDto;
 import com.playground.entity.Member;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
 import java.util.Optional;
+import java.util.List;
 
 public interface MemberRepository extends JpaRepository<Member, Long> , QuerydslPredicateExecutor<Member>, MemberRepositoryCustom  {
 
@@ -23,4 +21,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> , Querydsl
     Member findBuyer(@Param("orderId") Long orderId);
     //추가 1023 1330
     Optional<Member> findByEmailAndResign(String email, boolean resign);
+
+    @Query(value="SELECT m.email FROM member m JOIN dibs d ON m.member_id=d.member_id JOIN dibs_item di ON di.dibs_id=d.dibs_id WHERE di.item_id=:itemId", nativeQuery = true)
+    List<Object> findEmailFromItemId(Long itemId);
 }

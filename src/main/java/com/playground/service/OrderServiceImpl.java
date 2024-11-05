@@ -13,12 +13,10 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.thymeleaf.context.Context;
 import org.thymeleaf.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
@@ -33,6 +31,9 @@ public class OrderServiceImpl implements OrderService {
     private final ItemCodeRepository codeRepository;
     private final EmailService emailService;
     private final MemberPointRepository pointRepository;
+    private final CartItemRepository cartItemRepository;
+    private final MemberChallengeRepsoitory challengeRepository;
+    private final ItemCategoryRepository categoryRepository;
 
     @Override
     public Long order(OrderDto orderDto, String email) {
@@ -106,6 +107,17 @@ public class OrderServiceImpl implements OrderService {
         MemberPoint returnPoint=new MemberPoint();
         returnPoint.setOrder(order);
         returnPoint.setPayPoint(-memberPoint.getPayPoint());
+        returnPoint.setEmail(member.getEmail());
+
+        //1029추가
+        List<Item> items = new ArrayList<>();
+        order.getOrderItems().forEach(oItem -> {
+            Item item = oItem.getItem();
+            item.setStockNumber(item.getStockNumber() + oItem.getCount());
+            items.add(item);
+        });
+
+        itemRepository.saveAll(items);
         pointRepository.save(returnPoint);
         memberRepository.save(member);
     }
@@ -189,6 +201,17 @@ public class OrderServiceImpl implements OrderService {
         MemberPoint memberPoint=new MemberPoint();
         memberPoint.setOrder(order);
         memberPoint.setPayPoint((int)-usePoint);
+        memberPoint.setEmail(member.getEmail());
+
+        //1029추가
+        List<Item> items = new ArrayList<>();
+        order.getOrderItems().forEach(oItem -> {
+            Item item = oItem.getItem();
+            item.setStockNumber(item.getStockNumber() - oItem.getCount());
+            items.add(item);
+        });
+
+        itemRepository.saveAll(items);
         orderRepository.save(order);
         memberRepository.save(member);
         pointRepository.save(memberPoint);
@@ -205,41 +228,101 @@ public class OrderServiceImpl implements OrderService {
     public String sendAllCodes(Long orderId, String email) {
         String result = "";
         AtomicInteger totalPrice=new AtomicInteger(0);
-        StringBuilder mail_body=new StringBuilder();
+
         Member member1=memberRepository.findByEmail(email);
         Optional<Order> order = orderRepository.findById(orderId);
         if (order.isPresent()){
+            Map<String, List<String>> sendCodeLists=new LinkedHashMap<>();
             List<OrderItem> orderItems = order.get().getOrderItems();
             List<ItemCode> gatherCodes = new ArrayList<>();
+            Map<String,Integer> companyCount=new HashMap<>();
             orderItems.forEach(item ->{
                 int count=item.getCount();
                 totalPrice.addAndGet(item.getTotalPrice());
                 List<ItemCode> codeList=codeRepository.getCode(count);
+                List<String> sendCodes=new ArrayList<>();
                 codeList.forEach(code1->{
-                    mail_body.append(item.getItem().getItemNm());
-                    mail_body.append(": ").append(code1.getCodNum()).append("\n");
+                    sendCodes.add(code1.getCodNum());
                     code1.setMember(member1);
                     gatherCodes.add(code1);
                 });
+                sendCodeLists.put(item.getItem().getItemNm(),sendCodes);
+                String company=categoryRepository.findByItemId(item.getId()).getCompany();
+                if(company.equals("steam")){
+                    companyCount.put("steam",companyCount.getOrDefault("steam", 0)+count);
+                }
+                if(company.equals("nintendo")){
+                    companyCount.put("nintendo",companyCount.getOrDefault("nintendo", 0)+count);
+                }
+                if(company.equals("ps")){
+                    companyCount.put("ps",companyCount.getOrDefault("ps", 0)+count);
+                }
+                Item originItem=item.getItem();
+                originItem.setBuyCnt(originItem.getBuyCnt()+count);
+                itemRepository.save(originItem);
             });
             //이메일 발송 로직구현
             codeRepository.saveAll(gatherCodes);
             order.get().setSendCode(true);
             orderRepository.save(order.get());
+            int payPoint=pointRepository.findOldestOne(order.get().getId()).getPayPoint();
             //포인트 적립
-            if((int)(totalPrice.get()*0.01)>0){
+            if((int)((totalPrice.get()-payPoint)*0.01)>0){
                 MemberPoint point= new MemberPoint();
                 point.setPayPoint((int)(totalPrice.get()*0.01));
                 point.setOrder(order.get());
+                point.setEmail(email);
                 pointRepository.save(point);
                 member1.setTotalPoint(member1.getTotalPoint()+(int)(totalPrice.get()*0.01));
                 memberRepository.save(member1);
             }
-            emailService.sendEmail(email, "[놀이마당] 게임코드 발송", String.valueOf(mail_body));
+            //도전과제
+            if(totalPrice.get()-payPoint>0){
+                MemberChallenge challenge=challengeRepository.findByMemeberEmail(member1.getEmail());
+                challenge.setUsedTotalMoney(challenge.getUsedTotalMoney()+totalPrice.get()-payPoint);
+                challenge.setCountForSteam(challenge.getCountForSteam() + companyCount.getOrDefault("steam", 0));
+                challenge.setCountForNintendo(challenge.getCountForNintendo() + companyCount.getOrDefault("nintendo", 0));
+                challenge.setCountForPs(challenge.getCountForPs() + companyCount.getOrDefault("ps", 0));
+                challengeRepository.save(challenge);
+            }
+            Context context=new Context();
+            context.setVariable("codeLists",sendCodeLists);
+            emailService.sendEmail(email, "[놀이마당] 게임코드 발송", "mailForm/sendGameCodes",context);
             result="success";
         } else{
             result="none";
         }
         return result;
     }
+
+    @Override
+    public List<String> checkStack(Map<String, String> cartIds) {
+        List<String> result=new ArrayList<>();
+        cartIds.forEach((key, value) -> {
+            Optional<CartItem> cartItem=cartItemRepository.findById(Long.valueOf(value));
+            if(cartItem.get().getCount()>cartItem.get().getItem().getStockNumber()){
+                result.add(cartItem.get().getItem().getItemNm());
+            }
+        });
+        if (result.isEmpty()) {
+            result.add("conTinueForPay");
+        }
+        return result;
+    }
+
+    @Override
+    public List<String> checkStackById(Long orderId) {
+        Order order=orderRepository.findById(orderId).orElseThrow(EntityNotFoundException::new);
+        List<String> result=new ArrayList<>();
+        order.getOrderItems().forEach(oItem->{
+            if(oItem.getCount()>oItem.getItem().getStockNumber()){
+                result.add(oItem.getItem().getItemNm());
+            }
+        });
+        if (result.isEmpty()) {
+            result.add("conTinueForPay");
+        }
+        return result;
+    }
+
 }

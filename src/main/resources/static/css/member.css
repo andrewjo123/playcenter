@@ -35,3 +35,22 @@
     width: 200px;
     display: inline;
 }
+
+/* 마이페이지 ------------------------------*/
+.imgCandidate{
+    width:40px; height:40px;
+    border: 2px solid #aaa;
+}
+.pImgAvailable{
+    cursor:pointer;
+}
+.pImgAvailable:hover{
+    border: 2px solid #7FDA56;
+}
+.pImgNot{
+    opacity: 0.5;
+    filter: grayscale(100%);
+}
+#profileImgBtn{
+    cursor:pointer;
+}

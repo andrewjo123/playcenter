@@ -7,6 +7,7 @@ import com.playground.entity.ItemCode;
 import com.playground.entity.ItemImg;
 import com.playground.repository.*;
 import com.playground.repository.ItemRepository;
+
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -14,17 +15,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.thymeleaf.context.Context;
 
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-
-import javax.print.DocPrintJob;
+import java.util.stream.Collectors;
 
 import static com.playground.dto.ItemCategoryDto.modelMapper;
 
@@ -38,8 +33,8 @@ public class ItemServiceImpl implements ItemService {
     private final ItemImgRepository itemImgRepository;
     private final ItemCategoryRepository categoryRepository;
     private final ItemCodeRepository itemCodeRepository;
-
-
+    private final EmailService emailService;
+    private final MemberRepository memberRepository;
 
     @Override
     @Transactional
@@ -137,13 +132,13 @@ public class ItemServiceImpl implements ItemService {
 
     @Transactional(readOnly = true)
     @Override
-    public Page<MainItemDto> getMainItemPage(ItemSearchDto itemSearchDto, Pageable pageable) {
-        return itemRepository.getMainItemPage(itemSearchDto, pageable);
+    public Page<MainItemDto> getMainItemPage(ItemSearchDto itemSearchDto, ItemCategoryDto itemCategoryDto, Pageable pageable) {
+        return itemRepository.getMainItemPage(itemSearchDto, itemCategoryDto, pageable);
     }
 
     @Override
-    public Page<MainItemDto> getMainItemPage2(String company, ItemSearchDto itemSearchDto, Pageable pageable) {
-        return itemRepository.getMainItemPage2(company, itemSearchDto, pageable);
+    public Page<MainItemDto> getMainItemPage2(String company, ItemSearchDto itemSearchDto, ItemCategoryDto itemCategoryDto,Pageable pageable) {
+        return itemRepository.getMainItemPage2(company, itemSearchDto, itemCategoryDto, pageable);
     }
 
     // 1024추가
@@ -151,6 +146,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public int saveCodes(Long itemId, List<String> codes) {
         Item item = itemRepository.findById(itemId).get();
+        int beforeStock=item.getStockNumber();
         List<ItemCode> itemCodes = new ArrayList<>();
 
         codes.forEach(code -> {
@@ -163,6 +159,27 @@ public class ItemServiceImpl implements ItemService {
         itemCodeRepository.saveAll(itemCodes);
         item.setStockNumber(item.getStockNumber()+codes.size());
         itemRepository.save(item);
+
+        if(beforeStock==0){
+            List<Object> getList=memberRepository.findEmailFromItemId(item.getId());
+            if(getList!=null){
+                List<String> emailList = getList.stream().map(obj -> (String) obj).toList();
+                String subject="[놀이마당] "+item.getItemNm()+" 입고되었습니다.";
+                Context context=new Context();
+                context.setVariable("itemId", item.getId());
+                context.setVariable("itemNm",item.getItemNm());
+                context.setVariable("count",codes.size());
+                context.setVariable("itemImgUrl",itemImgRepository.findByItemId(itemId).get(0).getImgUrl());
+
+                emailService.sendEmailToMany(emailList, subject, "mailForm/stockNotification",context);
+            }
+        }
         return codes.size(); // 반복한 횟수 반환
+    }
+
+
+    @Override
+    public List<MainItemDto> getMainItem(String company, ItemCategoryDto itemCategoryDto) {
+        return itemRepository.getMainItem(company, itemCategoryDto); // Repository 메서드 호출
     }
 }

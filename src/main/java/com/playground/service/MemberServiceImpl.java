@@ -1,12 +1,13 @@
 package com.playground.service;
 
+import com.playground.constant.OrderStatus;
 import com.playground.constant.Role;
+import com.playground.dto.ChallengeDto;
 import com.playground.dto.MemberFormDto;
 import com.playground.dto.MemberSearchDto;
-import com.playground.entity.Email;
-import com.playground.entity.Member;
-import com.playground.repository.EmailRepository;
-import com.playground.repository.MemberRepository;
+import com.playground.dto.PointHistDto;
+import com.playground.entity.*;
+import com.playground.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,8 +18,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
-import java.util.List;
+import java.sql.Timestamp;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,11 +32,25 @@ public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
     private final EmailRepository emailRepository;
     private final PasswordEncoder passwordEncoder;
+    private final CartRepository cartRepository;
+    private final DibsRepository dibsRepository;
+    private final MemberPointRepository pointRepository;
+    private final PasswordResetRepository passwordRepository;
+    private final MemberChallengeRepsoitory challengeRepository;
 
     @Override
     public Member saveMember(Member member) {
         validateDuplicateMember(member);
-        return memberRepository.save(member);
+
+        Member member1=memberRepository.save(member);
+        Cart cart = Cart.createCart(member1);
+        cartRepository.save(cart);
+        Dibs dibs= Dibs.createDibs(member1);
+        dibsRepository.save(dibs);
+        MemberChallenge challenge=new MemberChallenge();
+        challenge.setMember(member1);
+        challengeRepository.save(challenge);
+        return member1;
     }
 
     private void validateDuplicateMember(Member member) {
@@ -88,6 +105,8 @@ public class MemberServiceImpl implements MemberService {
         dto.setAddressDetail(member.getAddressDetail());
         dto.setName(member.getName());
         dto.setPhone(member.getPhone());
+        dto.setTotalPoint(member.getTotalPoint());
+        dto.setProfileImg(member.getProfileImg());
         return dto;
     }
 
@@ -157,6 +176,12 @@ public class MemberServiceImpl implements MemberService {
             return result = "noEmail";
         }
         if (member.getName().equals(name) && member.getPhone().equals(phone)) {
+            if(passwordRepository.findByMember_Id(member.getId()).isPresent()) {
+                if (!passwordRepository.findByMember_Id(member.getId()).get().isExpired()){
+                    Duration duration=Duration.between(LocalDateTime.now(),passwordRepository.findByMember_Id(member.getId()).get().getExpirationTime());
+                    return duration.toMinutes()+"분 "+(duration.getSeconds()%60)+"초";
+                }
+            }
             return result = "valid";
         }
         return result = "notValid";
@@ -174,7 +199,16 @@ public class MemberServiceImpl implements MemberService {
         sMember.setAddressDetail(dto.getAddressDetail());
         sMember.setFromSocial(true);
         sMember.setRole(Role.USER);
+        sMember.setProfileImg("playGround");
         memberRepository.save(sMember);
+
+        Cart cart = Cart.createCart(sMember);
+        cartRepository.save(cart);
+        Dibs dibs=Dibs.createDibs(sMember);
+        dibsRepository.save(dibs);
+        MemberChallenge challenge=new MemberChallenge();
+        challenge.setMember(sMember);
+        challengeRepository.save(challenge);
     }
 
     // 1022 1600 추가
@@ -220,5 +254,138 @@ public class MemberServiceImpl implements MemberService {
         memberRepository.save(member);
     }
 
+    @Override
+    public List<PointHistDto> getPointHistory(String email, int date) {
+        List<Object[]> list=pointRepository.getPointHistory(email, date);
+
+        List<PointHistDto> dtoList = new ArrayList<>();
+        for (Object[] objArray : list) {
+            PointHistDto dto = new PointHistDto();
+            Timestamp timestamp = (Timestamp) objArray[0];
+            dto.setUseDate(timestamp.toLocalDateTime());
+            dto.setPayPoint((Integer) objArray[1]);
+            if(objArray[2]!=null){
+                dto.setOrderStatus((String) objArray[2]);
+            }else{
+                dto.setOrderStatus("challenge");
+            }
+            dtoList.add(dto);
+        }
+
+        return dtoList;
+    }
     //조민 끝
+
+    public String createPasswordResetToken(String email) {
+        String token = UUID.randomUUID().toString();
+        Member member=memberRepository.findByEmail(email);
+        Optional<PasswordReset> passwordReset=passwordRepository.findByMember_Id(member.getId());
+        if(passwordReset.isEmpty()){
+            PasswordReset newPasswordReset = new PasswordReset(token, member);
+            passwordRepository.save(newPasswordReset);
+        } else{
+            if(passwordReset.get().isExpired()){
+                passwordReset.get().setExpirationTime(LocalDateTime.now());
+                passwordRepository.save(passwordReset.get());
+            }
+        }
+        return token;
+    }
+
+    public String validPwToken(String token){
+        Optional<PasswordReset> passwordReset=passwordRepository.findByToken(token);
+        String result="";
+        if(passwordReset.isPresent()){
+            if(passwordReset.get().isExpired()){
+                result="notValid";
+            }else{
+                result="valid";
+            }
+        }else{
+            result="notValid";
+        }
+        return result;
+    }
+    public String findEmailFromToken(String token){
+        Optional<PasswordReset> passwordReset=passwordRepository.findByToken(token);
+        return passwordReset.get().getMember().getEmail();
+    }
+
+    @Override
+    public ChallengeDto getChallengeInfo(String email) {
+        MemberChallenge memberChallenge=challengeRepository.findByMemeberEmail(email);
+        return ChallengeDto.of(memberChallenge);
+    }
+
+    @Override
+    public String validAndAcceptChallenge(String challenge, String email) {
+        String result="notValid";
+        int getPoint=0;
+        MemberChallenge allChallenge=challengeRepository.findByMemeberEmail(email);
+        if(challenge.startsWith("pay")){
+            String num=challenge.substring(3);
+            int money=allChallenge.getUsedTotalMoney();
+            int valid=allChallenge.getAchievementForMoney();
+            if(num.equals("10")){
+                if(money<100000||valid!=0){return result;}
+                else{
+                    allChallenge.setAchievementForMoney(1); result="10";
+                    getPoint=1000;
+                }
+            } else if (num.equals("40")) {
+                if(money<400000||valid!=1){return result;}
+                else{
+                    allChallenge.setAchievementForMoney(2); result="40";
+                    getPoint=5000;
+                }
+            } else{
+                if(money<1000000||valid!=2){return result;}
+                else{
+                    allChallenge.setAchievementForMoney(3); result="100";
+                    getPoint=15000;
+                }
+            }
+        } else{
+            if(challenge.equals("steam")){
+                if(allChallenge.getCountForSteam()<10||allChallenge.getAchievementForSteam()!=0){return result;}
+                else {
+                    allChallenge.setAchievementForSteam(1); result="steam";
+                    getPoint=2000;
+                }
+            }
+            if(challenge.equals("nintendo")){
+                if(allChallenge.getCountForNintendo()<10||allChallenge.getAchievementForNintendo()!=0){return result;}
+                else {
+                    allChallenge.setAchievementForNintendo(1); result="nintendo";
+                    getPoint=2000;
+                }
+            }
+            if(challenge.equals("ps")){
+                if(allChallenge.getCountForPs()<10||allChallenge.getAchievementForPs()!=0){return result;}
+                else {
+                    allChallenge.setAchievementForPs(1); result="ps";
+                    getPoint=2000;
+                }
+            }
+        }
+        if(getPoint!=0){
+            MemberPoint point=new MemberPoint();
+            point.setPayPoint(getPoint);
+            point.setEmail(email);
+            pointRepository.save(point);
+            Member member=memberRepository.findByEmail(email);
+            member.setTotalPoint(member.getTotalPoint()+getPoint);
+            memberRepository.save(member);
+            challengeRepository.save(allChallenge);
+        }
+        return result;
+    }
+
+    @Override
+    public String changeProfileImg(String profileImg, String email) {
+        Member member=memberRepository.findByEmail(email);
+        member.setProfileImg(profileImg);
+        return profileImg;
+    }
+
 }

@@ -14,14 +14,14 @@
 
     <input type="hidden" id="itemId" th:value="${item.id}">
 
-    <div class="d-flex itemdtl">
+    <div class="d-flex">
         <div class="repImgDiv">
             <img th:src="${item.itemImgDtoList[0].imgUrl}" class="rounded repImg" th:alt="${item.itemNm}">
         </div>
         <div class="wd50">
-            <span th:if="${item.itemSellStatus == T(com.playground.constant.ItemSellStatus).SELL}"
+            <span th:if="${item.stockNumber!=0}"
                   class="badge badge-primary mgb-15">판매중</span>
-            <span th:unless="${item.itemSellStatus == T(com.playground.constant.ItemSellStatus).SELL}"
+            <span th:if="${item.stockNumber==0}"
                   class="badge btn-danger mgb-15">품절</span>
             <div class="h4" th:text="${item.itemNm}"></div>
             <hr class="my-4">
@@ -44,18 +44,19 @@
                 <h5>결제 금액</h5>
                 <h3 name="totalPrice" id="totalPrice" class="font-weight-bold"></h3>
             </div>
-            <div th:if="${item.itemSellStatus == T(com.playground.constant.ItemSellStatus).SELL}" class="text-right">
+            <div th:unless="${item.stockNumber==0}" class="text-right">
                 <button type="button" class="btn btn-light border border-primary btn-lg" onclick="addCart()">장바구니
                     담기</button>
                 <button type="button" class="btn btn-primary btn-lg" onclick="order()">주문하기</button>
             </div>
-            <div th:unless="${item.itemSellStatus == T(com.playground.constant.ItemSellStatus).SELL}" class="text-right">
+            <div th:if="${item.stockNumber==0}" class="text-right">
                 <button type="button" class="btn btn-danger btn-lg no-cursor">품절</button>
             </div>
+            <div id="wish-button" class="wish-button" aria-label="찜하기" onclick="addDibs()"></div>
         </div>
     </div>
 
-    <div class="jumbotron jumbotron-fluid mgt-30 itemdtl">
+    <div class="jumbotron jumbotron-fluid mgt-30">
         <div><span class="dtlinfo">플랫폼:</span> <span th:text="${item.company}"></span></div>
         <div>
             <span class="dtlinfo">장르:</span>
@@ -91,8 +92,59 @@
         </div>
         <div>리뷰수: <span th:text="${item.allReview}"></span></div>
         <div class="container">
-            <h4 class="display-5">상품 상세 설명</h4>
+            <h2 class="display-5">상품 상세 안내</h2>
             <hr class="my-4">
+            <div class="product-details">
+                <h3>구매 절차</h3>
+                <p>본 상품은 구매 완료 후, 고유 코드가 발급되며, <strong>"코드 전송"</strong> 버튼을 클릭하시면 회원님의 이메일로 발송됩니다.<br>
+                    코드 전송 후에는 교환 및 환불이 불가하므로, 결제 및 코드 수령 과정에서 유의해주시기 바랍니다.</p>
+
+                <h3>교환 및 환불 정책</h3>
+                <p>결제 완료 후에는 발급된 코드가 회원님의 이메일로 발송되므로, <strong>교환 및 환불이 불가</strong>합니다.<br>
+                    코드를 발송하기 전에는 결제 취소가 가능하지만, 발송 이후에는 불가능합니다.</p>
+
+                <h3>고객 주의 사항</h3>
+                <p>코드 전송 버튼을 클릭하기 전, 이메일 주소를 정확히 확인해주시기 바랍니다.<br>
+                    오기입으로 인한 코드 미수령은 고객님 책임이므로 주의 바랍니다.<br>
+                    상품 사용을 위한 고유 코드의 유효 기간은 <strong>[유효 기간 예시: 발급일로부터 30일]</strong>입니다.</p>
+
+                <h3>사용법 및 유의사항</h3>
+                <p>본 상품의 코드는 1회 사용만 가능하며, 타인에게 양도가 불가능합니다.<br>
+                    코드 사용 시, 지정된 플랫폼 또는 애플리케이션에서만 유효합니다.</p>
+
+                <h3>고객 지원</h3>
+                <p>코드 발송 후 문의사항이나 도움이 필요하시면 <a href="[고객 지원 링크]">고객 지원</a>으로 문의해 주시기 바랍니다.</p>
+            </div>
+            <!-- 닌텐도 안내문 -->
+            <div class="instructions" th:if="${item.company == 'nintendo'}">
+                <h2>닌텐도 스위치에서 코드 입력 방법</h2>
+                <ol>
+                    <li><strong>홈 메뉴</strong>에서 <strong>"닌텐도 e샵"</strong>을 실행하세요.</li>
+                    <li>사용하실 <strong>계정을 선택</strong>해 주세요.</li>
+                    <li>화면 왼쪽에서 <strong>"Enter Code (코드 입력)"</strong>를 선택하세요.</li>
+                    <li>총 16자의 다운로드 코드를 입력해 주세요.</li>
+                    <li><strong>"확인"</strong>을 선택합니다.</li>
+                </ol>
+            </div>
+            <!-- 스팀 안내문 -->
+            <div class="instructions" th:if="${item.company == 'steam'}">
+                <h2>스팀에서 코드 입력 방법</h2>
+                <ol>
+                    <li><strong>스팀 클라이언트</strong>에 접속하여 <strong>스팀에 로그인</strong>합니다.</li>
+                    <li>스팀 클라이언트 <strong>왼쪽 하단</strong>에 있는 <strong>'게임 추가 - STEAM에 제품 등록'</strong>을 클릭합니다.</li>
+                    <li>제품 등록 약관에 동의한 후 메일에 적혀있는 <strong>게임 코드를 입력</strong>합니다.</li>
+                </ol>
+            </div>
+            <!-- PS 안내문 -->
+            <div class="instructions" th:if="${item.company == 'ps'}">
+                <h2>PlayStation Store에서 코드 입력 방법</h2>
+                <ol>
+                    <li><strong>PlayStation Store</strong>로 이동하여 화면 상단의 <strong>프로필</strong>을 선택하세요.</li>
+                    <li>드롭다운 메뉴에서 <strong>코드 번호 입력</strong>을 선택하세요.</li>
+                    <li>16자리 코드를 정확하게 입력한 후 <strong>계속</strong>을 선택하세요.</li>
+                    <li>그러면 크레딧 또는 콘텐츠가 계정에 적용됩니다.</li>
+                </ol>
+            </div>
             <p class="lead" th:text="${item.itemDetail}"></p>
         </div>
     </div>
@@ -134,7 +186,7 @@
     <!--   이미지캐러셀 end-->
 
     <div th:each="itemImg : ${item.itemImgDtoList}" class="text-center">
-        <img th:if="${not #strings.isEmpty(itemImg.imgUrl)}" th:src="${itemImg.imgUrl}" class="rounded mgb-15" width="800">
+        <img th:if="${not #strings.isEmpty(itemImg.imgUrl)}" th:src="${itemImg.imgUrl}" class="rounded mgb-15 responsive-img">
     </div>
 
     <!-- 리뷰 등록 버튼 -->
@@ -144,7 +196,13 @@
     <button class="sortByRating">별점 높은 순</button>
 
     <!-- 리뷰 별점 낮은순 버튼 -->
-<button class="sortByLowRating">별점 낮은 순</button>
+    <button class="sortByLowRating">별점 낮은 순</button>
+
+    <!-- 리뷰 추천순 버튼 -->
+    <button class="sortByRecommendation">추천순</button>
+
+    <!-- 리뷰 추천순 버튼 -->
+    <button class="sortByLatest">최신순</button>
 
 
     <!-- 리뷰 목록 -->
@@ -163,9 +221,8 @@
 
     <!-- 추천 수 표시 및 추천 버튼 -->
     <div class="recommend-section">
-        <span class="rCnt" th:text="${review.rCnt != null ? review.rCnt : 0}">0</span> 
-        추천
-        <button class="btn btn-sm btn-outline-primary recommendBtn" th:attr="data-reviewnum=${review.reviewnum}">추천</button>
+        <span class="rCnt">${review.rcnt != null ? review.rcnt : 0}</span> 추천
+        <button class="btn btn-sm btn-outline-primary recommendBtn" data-reviewnum="${review.reviewnum}"><i class="fas fa-thumbs-up"></i></button>
     </div>
 </div>
 
@@ -247,6 +304,19 @@
                 $("#count").change(function () {
                     calculateToalPrice();
                 });
+
+                //찜하기 버튼 로직
+                const dibs = [[${callDibs}]]; // 또는 false로 변경 가능
+                const wishBtn = $("#wish-button");
+                if (dibs) {
+                    wishBtn.addClass("active");
+                } else {
+                    wishBtn.removeClass("active");
+                }
+                // 버튼 클릭 시 토글 기능
+                wishBtn.on("click", function() {
+                    $(this).toggleClass("active");
+                });
             });
 
             function calculateToalPrice() {
@@ -260,7 +330,6 @@
                 var token = $("meta[name='_csrf']").attr("content");
                 var header = $("meta[name='_csrf_header']").attr("content");
 
-                var url = "/order";
                 var paramData = {
                     itemId: $("#itemId").val(),
                     count: $("#count").val()
@@ -269,7 +338,7 @@
                 var param = JSON.stringify(paramData);
 
                 $.ajax({
-                    url: url,
+                    url: "/cart",
                     type: "POST",
                     contentType: "application/json",
                     data: param,
@@ -280,10 +349,34 @@
                     dataType: "json",
                     cache: false,
                     success: function (result, status) {
-                            location.href='/order/payment?orderId=' + result;
+                        if(result==0){
+                            alert("죄송합니다. 수량이 부족합니다.");
+                            return;
+                        }
+                        $.ajax({
+                            url: "/order",
+                            type: "POST",
+                            contentType: "application/json",
+                            data: param,
+                            beforeSend: function (xhr) {
+                                /* 데이터를 전송하기 전에 헤더에 csrf값을 설정 */
+                                xhr.setRequestHeader(header, token);
+                            },
+                            dataType: "json",
+                            cache: false,
+                            success: function (result, status) {
+                                    location.href='/order/payment?orderId=' + result;
+                            },
+                            error: function (jqXHR, status, error) {
+                                alert('로그인 후 이용해주세요');
+                                location.href = '/members/login';
+                            }
+                        });
+
                     },
                     error: function (jqXHR, status, error) {
                         alert('로그인 후 이용해주세요');
+                        console.log(jqXHR);
                         location.href = '/members/login';
                     }
                 });
@@ -313,18 +406,58 @@
                     dataType: "json",
                     cache: false,
                     success: function (result, status) {
+                        if(result==0){
+                            alert("죄송합니다. 수량이 부족합니다.");
+                            return;
+                        }
                         alert("상품을 장바구니에 담았습니다.");
-                        location.href = '/';
+                        cartCount();
+                        if(confirm("장바구니로 이동하시겠습니까?")){
+                            location.href="/cart";
+                        }
                     },
                     error: function (jqXHR, status, error) {
+                        alert('로그인 후 이용해주세요');
+                        console.log(jqXHR);
+                        location.href = '/members/login';
+                    }
+                });
+            }
 
-                        if (jqXHR.status == '401' || jqXHR.status == '200') {
-                            alert('로그인 후 이용해주세요');
-                            location.href = '/members/login';
-                        } else {
-                            alert(jqXHR.responseText);
-                        }
+            function addDibs() {
+                var token = $("meta[name='_csrf']").attr("content");
+                var header = $("meta[name='_csrf_header']").attr("content");
 
+                var url="/dibsAdd";
+                var type="POST";
+                var paramData = {
+                    itemId: $("#itemId").val()
+                };
+
+                if($("#wish-button").hasClass("active")){
+                    url="/dibsDelete";
+                    type="DELETE";
+                }
+
+                var param = JSON.stringify(paramData);
+                $.ajax({
+                    url: url,
+                    type: type,
+                    contentType: "application/json",
+                    data: param,
+                    beforeSend: function (xhr) {
+                        /* 데이터를 전송하기 전에 헤더에 csrf값을 설정 */
+                        xhr.setRequestHeader(header, token);
+                    },
+                    dataType: "json",
+                    cache: false,
+                    success: function (result) {
+                        dibsCount();
+                    },
+                    error: function (jqXHR, status, error) {
+                        alert('로그인 후 이용해주세요');
+                        console.log(jqXHR);
+                        location.href = '/members/login';
                     }
                 });
             }
@@ -375,8 +508,8 @@ function loadReviews(page, sort="regTime") {
             <div class="reviewgrade" data-grade2="${review.grade}"></div>
             <button type="button" class="btn btn-warning modalBtn"  data-reviewnum="${review.reviewnum}" data-mid="${review.email}">수정/삭제</button>
             <div class="recommend-section">
-                <span class="rCnt">${review.rcnt != null ? review.rcnt : 0}</span> 추천
-                <button class="btn btn-sm btn-outline-primary recommendBtn" data-reviewnum="${review.reviewnum}">추천</button>
+            <span class="rCnt">${review.rcnt != null ? review.rcnt : 0}</span> 추천
+            <button class="btn btn-sm btn-outline-primary recommendBtn" data-reviewnum="${review.reviewnum}"><i class="fas fa-thumbs-up"></i></button>
             </div>
         </div>
                 `;
@@ -393,6 +526,7 @@ function loadReviews(page, sort="regTime") {
     });
 }
 
+
 // 별점 표시 함수
 function renderStars() {
     $(".reviewgrade").each(function () {
@@ -403,21 +537,30 @@ function renderStars() {
     });
 }
 
- // 리뷰 추천 버튼 클릭 이벤트
+// 리뷰 추천 버튼 클릭 이벤트
 $(".reviewList").on("click", ".recommendBtn", function(e) {
     e.stopPropagation(); // 클릭 이벤트가 상위 요소로 전파되지 않도록 함
     const reviewnum = $(this).data("reviewnum");
-
-    $.ajax({
-        url: `/reviews/${reviewnum}/recommend`,
-        type: "POST",
-        success: function() {
-            loadReviews(currentPage, currentSort); // 추천 후 목록 다시 로드            
-        },
+    const email = $("#isLoginCheck").val(); // 현재 로그인한 사용자의 이메일 가져오기
+    
+    var isLoggedIn = $("#isLoggedIn").val();
+    if (isLoggedIn === "false") {
+        alert("로그인이 필요합니다. 로그인 페이지로 이동합니다.");
+        window.location.href = "/members/login";
+    } else {
+        $.ajax({
+            url: `/reviews/${reviewnum}/recommend`, // 추천 요청 URL
+            type: "POST",
+            data: { email: email },
+            success: function(response) {
+                alert(response); // 서버에서 받은 응답 ("추천 완료" 또는 "추천 취소")
+                loadReviews(currentPage, currentSort); // 추천 상태 변경 후 리뷰 목록 다시 로드
+            },
         error: function(xhr) {
             console.error("Error: " + xhr.responseText);
         }
     });
+}
 });
 
 
@@ -427,10 +570,21 @@ $(".sortByRating").click(function(){
     loadReviews(0, "rating");
 });
 
- // 별점 낮은 순 버튼 클릭 이벤트
- $(".sortByLowRating").click(function() {
-        loadReviews(0, "asc"); // 첫 페이지부터 별점 낮은 순 정렬
-    });
+// 별점 낮은 순 버튼 클릭 이벤트
+$(".sortByLowRating").click(function() {
+    loadReviews(0, "asc"); // 첫 페이지부터 별점 낮은 순 정렬
+});
+// 추천순 버튼 클릭 이벤트
+$(".sortByRecommendation").click(function () {
+        loadReviews(0, "recommendation"); // 추천순으로 첫 페이지부터 로드
+});
+//최신순
+$(".sortByLatest").click(function () {
+                    loadReviews(0, "latest");  // 최신순 정렬 호출
+});
+
+// 기존 로드
+loadReviews(0);
 
 // 첫 번째 페이지 로드
 loadReviews(0);

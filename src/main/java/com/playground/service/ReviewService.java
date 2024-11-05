@@ -25,7 +25,8 @@ public interface ReviewService {
     void remove(Long reviewnum);
 
      //리뷰 추천
-     void reviewRecommend(Long reviewnum); // 추천 증가 메서드
+    //  void reviewRecommend(Long reviewnum); // 추천 증가 메서드
+    String toggleRecommend(Long reviewnum, String email); 
 
     default Review dtoToEntity(ReviewDto itemReviewDto){
 
