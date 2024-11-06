@@ -148,6 +148,7 @@
             <p class="lead" th:text="${item.itemDetail}"></p>
         </div>
     </div>
+
     <!--   이미지캐러셀  -->
     <div id="carouselControls" class="carousel slide text-center" data-ride="carousel" >
 
@@ -174,12 +175,12 @@
             <li data-target="#carouselControls" data-slide-to="3"></li>
         </ul>
 
-            <a class="carousel-control-prev" href="#carouselControlso" data-slide="prev">
-                <i class="fa-solid fa-chevron-left"></i>
-            </a>
-            <a class="carousel-control-next" href="#carouselControls" data-slide="next">
-                <i class="fa-solid fa-chevron-right"></i>
-            </a>
+        <a class="carousel-control-prev" href="#carouselControlso" data-slide="prev">
+            <i class="fa-solid fa-chevron-left"></i>
+        </a>
+        <a class="carousel-control-next" href="#carouselControls" data-slide="next">
+            <i class="fa-solid fa-chevron-right"></i>
+        </a>
 
 
     </div>
@@ -190,48 +191,75 @@
     </div>
 
     <!-- 리뷰 등록 버튼 -->
-    <button type="button" class="btn btn-info addReviewBtn">Review Register</button>
+    <button type="button" class="btn btn-info addReviewBtn">게임 평가하기</button>
 
     <!-- 리뷰 별점 높은순 버튼 -->
-    <button class="sortByRating">별점 높은 순</button>
-
-    <!-- 리뷰 별점 낮은순 버튼 -->
-    <button class="sortByLowRating">별점 낮은 순</button>
-
-    <!-- 리뷰 추천순 버튼 -->
-    <button class="sortByRecommendation">추천순</button>
-
-    <!-- 리뷰 추천순 버튼 -->
-    <button class="sortByLatest">최신순</button>
+    <div class="dropdown" style="float: right; margin-right: 20px;">
+        <button class="btn btn-sm btn-link text-dark toggle" style="height: 20px;" type="button" id="sortDropdownButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span id="currentSortMethod">최신순</span> <!-- 초기 표시값 설정 -->
+            <i class="fa-solid fa-lines-leaning"></i>
+        </button>
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="sortDropdownButton">
+            <button class="dropdown-item sortByRating">별점 높은 순</button>
+            <button class="dropdown-item sortByLowRating">별점 낮은 순</button>
+            <button class="dropdown-item sortByRecommendation">추천순</button>
+            <button class="dropdown-item sortByLatest">최신순</button>
+        </div>
+    </div>
 
 
     <!-- 리뷰 목록 -->
     <div class="list-group reviewList"></div>
 
-   
      <!-- 리뷰 목록을 표시할 때 추천(따봉) 카운트와 버튼 추가 -->
-<div th:each="review : ${reviewList}" class="card-body" data-reviewnum="${review.reviewnum}" data-mid="${review.email}">
-    <h5 class="card-title" th:text="${review.text}"></h5>
-    <h6 class="card-subtitle mb-2 text-muted" th:text="${review.email}"></h6>
-    <p class="card-text" th:text="${#dates.format(review.regTime, 'yyyy-MM-dd HH:mm:ss')}"></p>
-    <div class="reviewgrade" data-grade="${review.grade}"></div>
+    <div th:each="review : ${reviewList}" class="review-item card card border-0 shadow-none p-3 mb-3" data-reviewnum="${review.reviewnum}" data-mid="${review.email}">
+        
+        <div class="d-flex align-items-center">
+        <!-- 프로필 아이콘 -->
+            <div class="profile-icon bg-secondary rounded-circle text-white d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                <span th:text="${review.email.substring(0, 1).toUpperCase()}"></span>
+            </div>
+            <div class="ml-3">
+                <h6 class="card-subtitle mb-1 text-muted" th:text="${review.email}"></h6>
+                <p class="card-text small" th:text="${#dates.format(review.regTime, 'yyyy-MM-dd HH:mm:ss')}"></p>
+            </div>
+        </div>
 
-    <!-- 수정모달창 버튼 -->
-    <button type="button" class="btn btn-warning modalBtn" data-reviewnum="${review.reviewnum}" data-mid="${review.email}">수정/삭제</button>
+        <!-- 옵션 버튼 -->
+        <div class="dropdown" >
+            <button class="btn btn-sm btn-link text-dark toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-ellipsis-v"></i>
+            </button>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                <button class="dropdown-item modalBtn" type="button">수정</button>
+                <button class="dropdown-item removeBtn" type="button">삭제</button>
+            </div>
+        </div>
+         
+    
+        <div class="mt-2">
+            <div class="reviewgrade" data-grade="${review.grade}"></div>
+            <h5 class="card-title mt-2" th:text="${review.text}"></h5>
+        </div>
 
-    <!-- 추천 수 표시 및 추천 버튼 -->
-    <div class="recommend-section">
-        <span class="rCnt">${review.rcnt != null ? review.rcnt : 0}</span> 추천
-        <button class="btn btn-sm btn-outline-primary recommendBtn" data-reviewnum="${review.reviewnum}"><i class="fas fa-thumbs-up"></i></button>
+        <!-- 추천 수 표시 및 추천 버튼 -->
+        <div class="recommend-section d-flex align-items-center mt-3">
+            <span class="rCnt mr-2">${review.rcnt != null ? review.rcnt : 0}</span>명이 유용하다고 답한 리뷰입니다.<br>
+        </div>
+        <div>
+            <span>리뷰가 도움이 되었나요?</span>
+            <button class="btn btn-sm ${review.recommended ? 'btn-primary' : 'btn-outline-primary'} recommendBtn" data-reviewnum="${review.reviewnum}">
+                <i class="${review.recommended ? 'fas fa-solid' : 'far fa-regular'} fa-thumbs-up"></i>
+            </button>
+        </div>
+
     </div>
-</div>
 
-
-      <!-- 페이지 네비게이션 -->
-      <div class="pagination">
-        <button class="prevPage">Previous</button>
-        <span class="pageIndicator"></span>
-        <button class="nextPage">Next</button>
+    <!-- 페이지 네비게이션 -->
+    <div class="pagination">
+        <button class="page-btn prevPage">&lt;</button> <!-- 이전 페이지 버튼 -->
+        <div id="pageNumbers" class="page-numbers"></div> <!-- 동적 페이지 버튼 -->
+        <button class="page-btn nextPage">&gt;</button> <!-- 다음 페이지 버튼 -->
     </div>
 
      <!-- 로그인 여부에 따라 hidden 필드에 값 설정 -->
@@ -243,7 +271,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Movie Review</h5>
+                    <h5 class="modal-title">Game Review</h5>
                     <button type="button" class="close closeBtn" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -259,12 +287,12 @@
                     </div>
                     <div class="form-group">
                         <label>Review Text</label>
-                        <input type="text" class="form-control" name="text" placeholder="Good Movie!">
+                        <input type="text" class="form-control" name="text" placeholder="여기에 게임을 평가해주세요!">
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary closeBtn" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary reviewSaveBtn">Save changes</button>
+                    <button type="button" class="btn btn-secondary closeBtn" data-dismiss="modal">닫기</button>
+                    <button type="button" class="btn btn-primary reviewSaveBtn">리뷰 등록</button>
                     <button type="button" class="btn btn-warning modifyBtn">Modify</button>
                     <button type="button" class="btn btn-danger removeBtn">Remove</button>
                 </div>
@@ -298,7 +326,7 @@
     <th:block layout:fragment="script">
         <script th:inline="javascript">
             $(document).ready(function () {
-
+                
                 calculateToalPrice();
 
                 $("#count").change(function () {
@@ -317,6 +345,320 @@
                 wishBtn.on("click", function() {
                     $(this).toggleClass("active");
                 });
+
+                var grade = 0;
+                var grade2 = 0; // grade2 변수 초기화
+                var id = [[${ item.id }]];
+                var reviewnum;
+
+                // 리뷰 모달 관련 변수 정의
+                var reviewModal = $(".reviewModal");
+                var inputMid = $('input[name="email"]');
+                var inputText = $('input[name="text"]');
+
+                //리뷰 정렬 변수 정의
+                let currentPage = 0;
+                let currentSort = "regTime";
+
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content')
+                    }
+                });
+
+                // 리뷰 목록 로드 함수
+                function loadReviews(page, sort="regTime") {
+                    currentSort = sort;
+                    const itemId = $("#itemId").val();
+                    const loggedInEmail = $('#isLoginCheck').val(); // 로그인한 사용자의 이메일
+
+                    $.ajax({
+                        url: `/reviews/${itemId}/all?page=${page}&sort=${sort}`,
+                        type: "GET",
+                        dataType: "json",
+                        success: function (data) {
+                            let reviewHtml = "";
+
+                            data.content.forEach(function (review) {
+                                let dropdownHtml = '';
+                                console.log(review.profileImg);
+                                if (review.email === loggedInEmail) {
+                                    dropdownHtml = `
+                                        <div class="dropdown">
+                                            <button class="btn btn-sm btn-link text-dark dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="fas fa-ellipsis-v"></i>
+                                            </button>
+                                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                                                <button class="dropdown-item modalBtn" type="button">수정</button>
+                                                <button class="dropdown-item removeBtn" type="button">삭제</button>
+                                            </div>
+                                        </div>`;
+                                }
+                                
+                                reviewHtml += `
+                                    <div class="review-item card p-3 mb-3" data-reviewnum="${review.reviewnum}" data-mid="${review.email}">
+                                        <div class="d-flex align-items-center">
+                                            <img src="/icon/icon_${review.profileImg}.svg" class="user-image" style="width: 60px; height: 60px;"/>    
+                                            <div class="ml-3">
+                                                <h6 class="card-subtitle mb-1 text-muted">${review.email}</h6>
+                                                <p class="card-text small">${new Date(review.regTime).toLocaleString()}</p>
+                                            </div>
+                                        </div>
+                                        ${dropdownHtml}
+                                        <div class="mt-2">
+                                            <div class="reviewgrade" data-grade2="${review.grade}"></div>
+                                            <h5 class="card-title mt-2">${review.text}</h5>
+                                        </div>
+                                        <div class="recommend-section d-flex align-items-center mt-3">
+                                            <span class="rCnt mr-2">${review.rcnt != null ? review.rcnt : 0}</span>명이 유용하다고 답한 리뷰입니다.<br>
+                                            </div>
+                                            <div>
+                                            <span>이 리뷰가 도움이 되었나요?</span>
+                                            <button class="btn btn-sm ${review.recommended ? 'btn-primary' : 'btn-outline-primary'} recommendBtn" data-reviewnum="${review.reviewnum}">
+                                                <i class="${review.recommended ? 'fas fa-solid' : 'far fa-regular'} fa-thumbs-up"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                `;
+                            });
+
+                            $(".reviewList").html(reviewHtml);
+                            renderStars(); // 리뷰별점 표시
+                            currentPage = data.number;
+                            totalPages = data.totalPages;
+                            updatePagination(); // 페이지네이션 업데이트
+                        },
+                        error: function (xhr) {
+                            console.error("Error: " + xhr.responseText);
+                        }
+                    });
+                }
+                
+                loadReviews(0);
+
+                // 별점 표시 함수
+                function renderStars() {
+                    $(".reviewgrade").each(function () {
+                        $(this).starrr({
+                            rating: $(this).data("grade2"),
+                            readOnly: true
+                        });
+                        // 채워진 별과 빈 별 스타일 적용
+                        $(this).find(".fa-star").css("color", "#FFD700");  // 채워진 별 노란색
+                        $(this).find(".fa-star-o").css("color", "#d3d3d3"); // 빈 별 회색
+                    });
+                }
+
+                // 페이지네이션 버튼 업데이트 함수
+                function updatePagination() {
+                    const pageNumbers = $("#pageNumbers");
+                    pageNumbers.empty(); // 기존 버튼 제거
+
+                    for (let i = 0; i < totalPages; i++) {
+                        const pageButton = $('<button class="page-btn page-number"></button>').text(i + 1);
+                        if (i === currentPage) {
+                            pageButton.addClass('active');
+                        }
+                        pageButton.click(function () {
+                            loadReviews(i, currentSort);
+                        });
+                        pageNumbers.append(pageButton);
+                    }
+                }
+
+                // 이전 페이지 버튼 클릭 이벤트
+                $(".prevPage").click(function () {
+                    if (currentPage > 0) {
+                        loadReviews(currentPage - 1, currentSort);
+                    }
+                });
+
+                // 다음 페이지 버튼 클릭 이벤트
+                $(".nextPage").click(function () {
+                    if (currentPage < totalPages - 1) {
+                        loadReviews(currentPage + 1, currentSort);
+                    }
+                });
+
+                // 추천 버튼 클릭 이벤트
+                $(".reviewList").on("click", ".recommendBtn", function(e) {
+                    e.stopPropagation();
+                    const reviewnum = $(this).data("reviewnum");
+                    const email = $("#isLoginCheck").val();
+                    
+                    if ($("#isLoggedIn").val() === "false") {
+                        alert("로그인이 필요합니다. 로그인 페이지로 이동합니다.");
+                        window.location.href = "/members/login";
+                    } else {
+                        $.ajax({
+                            url: `/reviews/${reviewnum}/recommend`,
+                            type: "POST",
+                            data: { email: email },
+                            success: function(response) {
+                                console.log(response+"!@#!@#");
+                                const icon = $(this).find('i');
+                                if (response=="추천 완료") {
+                                    icon.removeClass('far fa-regular').addClass('fas fa-solid');
+                                } else {
+                                    icon.removeClass('fas fa-solid').addClass('far fa-regular');
+                                }
+                                loadReviews(currentPage, currentSort); // 추천 상태 변경 후 리뷰 목록 다시 로드
+                            },
+                            error: function(xhr) {
+                                console.error("Error: " + xhr.responseText);
+                            }
+                        });
+                    }
+                });
+
+                // 정렬 버튼 클릭 시 이벤트
+                $('.dropdown-item').click(function() {
+                    var selectedSortMethod = $(this).text();
+                    $('#currentSortMethod').text(selectedSortMethod); // 선택된 정렬 방식 표시 업데이트
+                    const sortType = $(this).attr('class').split(' ')[1];
+                    loadReviews(0, sortType); // 첫 페이지부터 새로운 정렬 방식으로 로드
+                });
+
+                //별점 높은 순 버튼 클릭 이벤트
+                $(".sortByRating").click(function(){
+                    loadReviews(0, "rating");
+                });
+
+                // 별점 낮은 순 버튼 클릭 이벤트
+                $(".sortByLowRating").click(function() {
+                    loadReviews(0, "asc"); // 첫 페이지부터 별점 낮은 순 정렬
+                });
+                // 추천순 버튼 클릭 이벤트
+                $(".sortByRecommendation").click(function () {
+                    loadReviews(0, "recommendation"); // 추천순으로 첫 페이지부터 로드
+                });
+                //최신순
+                $(".sortByLatest").click(function () {
+                    loadReviews(0, "latest");  // 최신순 정렬 호출
+                });
+
+                //닫기버튼
+                $('.closeBtn').click(function () {
+                    $(this).closest('.modal').modal('hide');
+                });
+
+                // 리뷰 등록 버튼 클릭
+                $(".addReviewBtn").click(function () {
+                    var isLoggedIn = $("#isLoggedIn").val();
+                    if (isLoggedIn === "false") {
+                        alert("로그인이 필요합니다. 로그인 페이지로 이동합니다.");
+                        window.location.href = "/members/login";
+                    } else {
+                        grade = 0;
+                        inputText.val("");
+                        var star = $(".starrr").clone();
+                        $(".starrr").remove();
+                        $("#divGrade").append(star);
+                        $('.starrr').starrr({
+                            rating: grade,
+                            change: function (e, value) {
+                                if (value) grade = value;
+                            }
+                        });
+                        $(".removeBtn ,  .modifyBtn").hide();
+                        $(".reviewSaveBtn").show();
+                        reviewModal.modal('show');
+                    }
+                });
+
+                // 리뷰 저장 버튼
+                $('.reviewSaveBtn').click(function () {
+                    var data = { id: id, grade: grade, text: inputText.val(), email: inputMid.val() };
+                    $.ajax({
+                        url: '/reviews/' + id,
+                        type: "POST",
+                        data: JSON.stringify(data),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "text",
+                        success: function () {
+                            self.location.reload();
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("Error: " + xhr.responseText); // 오류 디버깅
+                        }
+                    });
+                    reviewModal.modal('hide');
+                });
+
+                $(".reviewList").on("click", ".modalBtn", function (e) {
+                    e.stopPropagation(); // 이벤트 전파 방지
+
+                    var isLoginCheck = $("#isLoginCheck").val();
+                    var targetReview = $(this).closest(".review-item");
+                    var reviewEmail = targetReview.data("mid");
+
+                    // 로그인 사용자와 리뷰 작성자 일치 여부 확인
+                    if (isLoginCheck === reviewEmail) {
+                        $(".reviewSaveBtn").hide();
+                        $(".removeBtn, .modifyBtn").show();
+                        reviewModal.modal('show');
+                    } else {
+                        alert("본인의 리뷰만 수정할 수 있습니다.");
+                        return;
+                    }
+
+                    // 선택한 리뷰의 데이터 불러오기
+                    reviewnum = targetReview.data("reviewnum");
+                    inputMid.val(targetReview.data("mid"));
+                    inputText.val(targetReview.find('.card-title').text().trim());
+                    grade2 = targetReview.find(".reviewgrade").data("grade2");
+
+                    // 별점 초기화
+                    var star = $(".starrr").clone();
+                    $(".starrr").remove();
+                    $("#divGrade").append(star);
+
+                    $(".starrr").starrr({
+                        rating: grade2,
+                        change: function (e, value) {
+                            if (value) grade2 = value;
+                        }
+                    });
+                });
+
+                // 리뷰 수정 버튼
+                $(".modifyBtn").on("click", function () {
+                    var data = { reviewnum: reviewnum, id: id, grade: grade2, text: inputText.val(), email: inputMid.val() };
+                    $.ajax({
+                        url: '/reviews/' + id + "/" + reviewnum,
+                        type: "PUT",
+                        data: JSON.stringify(data),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "text",
+                        success: function () {
+                            self.location.reload();
+                        }
+                    });
+                    reviewModal.modal('hide');
+                });
+
+                // 리뷰 삭제 버튼
+                $('.reviewList').on('click', '.removeBtn', function () {
+                    var targetReview = $(this).closest(".review-item");
+                    var reviewnum = targetReview.data("reviewnum");
+                    var id = $("#itemId").val(); // id 변수를 확실하게 설정
+
+                    $.ajax({
+                        url: '/reviews/' + id + "/" + reviewnum,
+                        type: "DELETE",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "text",
+                        success: function () {
+                            alert('리뷰가 삭제되었습니다.'); // 사용자에게 피드백 제공
+                            targetReview.remove(); // 페이지 리로드 없이 리뷰 항목 제거
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("Error: " + xhr.responseText); // 오류 디버깅 정보 표시
+                            alert('리뷰 삭제 실패: ' + xhr.responseText); // 사용자에게 오류 메시지 표시
+                        }
+                    });
+                });
+
             });
 
             function calculateToalPrice() {
@@ -461,304 +803,6 @@
                     }
                 });
             }
-
-        </script>
-    </th:block>
-    <th:block layout:fragment="script">
-        <script th:inline="javascript">
-        $(document).ready(function () {
-
-    var grade = 0;
-    var grade2 = 0; // grade2 변수 초기화
-    var id = [[${ item.id }]];
-    var reviewnum;
-
-    // 리뷰 모달 관련 변수 정의
-    var reviewModal = $(".reviewModal");
-    var inputMid = $('input[name="email"]');
-    var inputText = $('input[name="text"]');
-
-    //리뷰 정렬 변수 정의
-    let currentPage = 0;
-    let currentSort = "regTime";
-
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content')
-        }
-    });
-
-// 리뷰 목록 로드 함수
-function loadReviews(page, sort="regTime") {
-    currentSort = sort;
-    const itemId = $("#itemId").val();
-    $.ajax({
-        url: `/reviews/${itemId}/all?page=${page}&sort=${sort}`,
-        type: "GET",
-        dataType: "json",
-        success: function (data) {
-            let reviewHtml = "";
-            data.content.forEach(function (review) {
-            console.log(review);  // rCnt 값이 제대로 표시되는지 확인
-    reviewHtml += `
-        <div class="card-body" data-reviewnum="${review.reviewnum}" data-mid="${review.email}">
-            <h5 class="card-title">${review.text}</h5>
-            <h6 class="card-subtitle mb-2 text-muted">${review.email}</h6>
-            <p class="card-text">${new Date(review.regTime).toLocaleString()}</p>
-            <div class="reviewgrade" data-grade2="${review.grade}"></div>
-            <button type="button" class="btn btn-warning modalBtn"  data-reviewnum="${review.reviewnum}" data-mid="${review.email}">수정/삭제</button>
-            <div class="recommend-section">
-            <span class="rCnt">${review.rcnt != null ? review.rcnt : 0}</span> 추천
-            <button class="btn btn-sm btn-outline-primary recommendBtn" data-reviewnum="${review.reviewnum}"><i class="fas fa-thumbs-up"></i></button>
-            </div>
-        </div>
-                `;
-            });
-            $(".reviewList").html(reviewHtml);
-            renderStars(); // 리뷰별점 표시
-            currentPage = data.number;
-            totalPages = data.totalPages;
-            $(".pageIndicator").text(`Page ${currentPage + 1} of ${totalPages}`);
-        },
-        error: function (xhr) {
-            console.error("Error: " + xhr.responseText);
-        }
-    });
-}
-
-
-// 별점 표시 함수
-function renderStars() {
-    $(".reviewgrade").each(function () {
-        $(this).starrr({
-            rating: $(this).data("grade2"),
-            readOnly: true
-        });
-    });
-}
-
-// 리뷰 추천 버튼 클릭 이벤트
-$(".reviewList").on("click", ".recommendBtn", function(e) {
-    e.stopPropagation(); // 클릭 이벤트가 상위 요소로 전파되지 않도록 함
-    const reviewnum = $(this).data("reviewnum");
-    const email = $("#isLoginCheck").val(); // 현재 로그인한 사용자의 이메일 가져오기
-    
-    var isLoggedIn = $("#isLoggedIn").val();
-    if (isLoggedIn === "false") {
-        alert("로그인이 필요합니다. 로그인 페이지로 이동합니다.");
-        window.location.href = "/members/login";
-    } else {
-        $.ajax({
-            url: `/reviews/${reviewnum}/recommend`, // 추천 요청 URL
-            type: "POST",
-            data: { email: email },
-            success: function(response) {
-                alert(response); // 서버에서 받은 응답 ("추천 완료" 또는 "추천 취소")
-                loadReviews(currentPage, currentSort); // 추천 상태 변경 후 리뷰 목록 다시 로드
-            },
-        error: function(xhr) {
-            console.error("Error: " + xhr.responseText);
-        }
-    });
-}
-});
-
-
-
-//별점 높은 순 버튼 클릭 이벤트
-$(".sortByRating").click(function(){
-    loadReviews(0, "rating");
-});
-
-// 별점 낮은 순 버튼 클릭 이벤트
-$(".sortByLowRating").click(function() {
-    loadReviews(0, "asc"); // 첫 페이지부터 별점 낮은 순 정렬
-});
-// 추천순 버튼 클릭 이벤트
-$(".sortByRecommendation").click(function () {
-        loadReviews(0, "recommendation"); // 추천순으로 첫 페이지부터 로드
-});
-//최신순
-$(".sortByLatest").click(function () {
-                    loadReviews(0, "latest");  // 최신순 정렬 호출
-});
-
-// 기존 로드
-loadReviews(0);
-
-// 첫 번째 페이지 로드
-loadReviews(0);
-
-// 이전 페이지
-$(".prevPage").click(function () {
-    if (currentPage > 0) {
-        loadReviews(currentPage - 1, currentSort);
-    }
-});
-
-// 다음 페이지
-$(".nextPage").click(function () {
-    if (currentPage < totalPages - 1) {
-        loadReviews(currentPage + 1, currentSort);
-    }
-
-});
-
-
-  //닫기버튼
-  $('.closeBtn').click(function () {
-                $(this).closest('.modal').modal('hide');
-            });
-
-// 리뷰 등록 버튼 클릭
-$(".addReviewBtn").click(function () {
-    var isLoggedIn = $("#isLoggedIn").val();
-    if (isLoggedIn === "false") {
-        alert("로그인이 필요합니다. 로그인 페이지로 이동합니다.");
-        window.location.href = "/members/login";
-    } else {
-        grade = 0;
-        inputText.val("");
-        var star = $(".starrr").clone();
-        $(".starrr").remove();
-        $("#divGrade").append(star);
-        $('.starrr').starrr({
-            rating: grade,
-            change: function (e, value) {
-                if (value) grade = value;
-            }
-        });
-        $(".removeBtn ,  .modifyBtn").hide();
-        $(".reviewSaveBtn").show();
-        reviewModal.modal('show');
-    }
-});
-
-// 리뷰 저장 버튼
-$('.reviewSaveBtn').click(function () {
-    var data = { id: id, grade: grade, text: inputText.val(), email: inputMid.val() };
-    $.ajax({
-        url: '/reviews/' + id,
-        type: "POST",
-        data: JSON.stringify(data),
-        contentType: "application/json; charset=utf-8",
-        dataType: "text",
-        success: function () {
-            self.location.reload();
-        },
-        error: function (xhr, status, error) {
-            console.error("Error: " + xhr.responseText); // 오류 디버깅
-        }
-    });
-    reviewModal.modal('hide');
-});
-
-
-
-// 리뷰 수정 및 삭제
-// $(".reviewList").on("click", "modalBtn", function () {
-
-
-//     var isLoginCheck = $("#isLoginCheck").val(); 
-//     // var reviewEmail = $(this).data("mid");
-//     var reviewEmail = $(this).data("mid")
-//     if (isLoginCheck === reviewEmail) {
-//         $(".reviewSaveBtn").hide();
-//         $(".removeBtn , .modifyBtn").show();
-//         reviewModal.modal('show');
-//     } else {
-//         alert("본인의 리뷰만 수정할 수 있습니다.");
-//     }
-
-//     var targetReview = $(this);
-//     reviewnum = targetReview.data("reviewnum");
-//     inputMid.val(targetReview.data("mid"));
-//     inputText.val(targetReview.find('.card-title').text().trim());
-//     grade2 = targetReview.find(".reviewgrade").data("grade2"); // grade2 초기화
-
-//     // starrr 초기화
-//     var star = $(".starrr").clone();
-//     $(".starrr").remove();
-//     $("#divGrade").append(star);
-
-//     $(".starrr").starrr({
-//         rating: grade2,
-//         change: function (e, value) {
-//             if (value) grade2 = value;
-//         }
-//     });
-// });
-
-$(".reviewList").on("click", ".modalBtn", function (e) {
-        e.stopPropagation(); // 이벤트 전파 방지
-
-        var isLoginCheck = $("#isLoginCheck").val();
-        var targetReview = $(this).closest(".card-body");
-        var reviewEmail = targetReview.data("mid");
-
-        // 로그인 사용자와 리뷰 작성자 일치 여부 확인
-        if (isLoginCheck === reviewEmail) {
-            $(".reviewSaveBtn").hide();
-            $(".removeBtn, .modifyBtn").show();
-            reviewModal.modal('show');
-        } else {
-            alert("본인의 리뷰만 수정할 수 있습니다.");
-            return;
-        }
-
-        // 선택한 리뷰의 데이터 불러오기
-        reviewnum = targetReview.data("reviewnum");
-        inputMid.val(targetReview.data("mid"));
-        inputText.val(targetReview.find('.card-title').text().trim());
-        grade2 = targetReview.find(".reviewgrade").data("grade2");
-
-        // 별점 초기화
-        var star = $(".starrr").clone();
-        $(".starrr").remove();
-        $("#divGrade").append(star);
-
-        $(".starrr").starrr({
-            rating: grade2,
-            change: function (e, value) {
-                if (value) grade2 = value;
-            }
-        });
-    });
-
-
-
-// 리뷰 수정 버튼
-$(".modifyBtn").on("click", function () {
-    var data = { reviewnum: reviewnum, id: id, grade: grade2, text: inputText.val(), email: inputMid.val() };
-    $.ajax({
-        url: '/reviews/' + id + "/" + reviewnum,
-        type: "PUT",
-        data: JSON.stringify(data),
-        contentType: "application/json; charset=utf-8",
-        dataType: "text",
-        success: function () {
-            self.location.reload();
-        }
-    });
-    reviewModal.modal('hide');
-});
-
-// 리뷰 삭제 버튼
-$(".removeBtn").on("click", function () {
-    var data = { reviewnum: reviewnum };
-    $.ajax({
-        url: '/reviews/' + id + "/" + reviewnum,
-        type: "DELETE",
-        contentType: "application/json; charset=utf-8",
-        dataType: "text",
-        success: function () {
-            self.location.reload();
-        }
-    });
-    reviewModal.modal('hide');
-});
-});
-
         </script>
     </th:block>
 </div>
