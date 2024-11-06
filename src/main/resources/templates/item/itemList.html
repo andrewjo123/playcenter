@@ -1,68 +1,83 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layouts/layout1}" class="main">
+      layout:decorate="~{layouts/layout1}" class="itemList">
 <head>
-    <link th:href="@{/css/layout1.css}" rel="stylesheet">
-</head>
+    <!-- 리스트 css파일을 따로 생성했습니다
+     스스타일 태그안에 넣고 적용후 옮긴거라 모바일 버전도 그렇게 하시면 될것같아요 -->
+     <link th:href="@{/css/list.css}" rel="stylesheet">
+ </head>
 
-<div layout:fragment="content">
-     <form class="form-inline my-2 my-lg-0" action="/list" method="get" id="cateSearch">
-            <input name="searchQuery" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" id="search2" th:value="${itemSearchDto.searchQuery}">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form>
-    <!-- <div id="carouselControls" class="carousel slide margin" data-ride="carousel">
-        <ul class="carousel-indicators">
-            <li data-target="#carouselControls" data-slide-to="0" class="active"></li>
-            <li data-target="#carouselControls" data-slide-to="1"></li>
-            <li data-target="#carouselControls" data-slide-to="2"></li>
-        </ul>
-        <div class="carousel-inner">
-            <div class="carousel-item active item">
-                <img class="d-block w-100 banner" src="/img/ad1.png"
-                     alt="First slide">
+ <div layout:fragment="content">
+     <!-- 검색 -->
+    <div>
+        <div class="search-wrapper">
+
+            <!-- 데스크탑 검색 -->
+            <div class="desktop-search">
+                <form class="form-inline my-2 my-lg-0" action="/list" method="get" id="cateSearch"
+                      style="display: none;">
+                    <div>
+                        <input name="searchQuery" class="form-control mr-sm-2" type="search" placeholder="Search"
+                               aria-label="Search" id="search2" th:value="${itemSearchDto.searchQuery}">
+                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                    </div>
+                </form>
+                <i class="fa-solid fa-magnifying-glass" id="searchIcon"></i>
             </div>
 
+            <!-- 모바일 검색 -->
+            <div class="mobile-search">
+                <form class="form-inline my-2 my-lg-0" action="/list" method="get" id="mobileCateSearch"
+                      style="display: none;">
+                    <div style="display: block;">
+                        <input name="searchQuery" class="form-control mr-sm-2" type="search" placeholder="Search"
+                               aria-label="Search" id="mobileSearch" th:value="${itemSearchDto.searchQuery}">
+                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                    </div>
+                </form>
+                <i class="fa-solid fa-magnifying-glass" id="mobileSearchIcon"></i>
+                <!-- 모바일용 토글 버튼 -->
+                <button type="button" id="toggleTagSelectBtn" class="btn btn-primary" style="display:none;">
+                    장르 선택
+                </button>
+                <!-- 모바일용 토글 버튼 end -->
+            </div>
         </div>
-    </div> -->
+        <!-- 검색 -->
+        <div class="order-container">
+            <!-- 정렬select -->
+            <span th:text="${company}" id="getCompany" style="display:none;"></span>
+            <select class="form-control orderBy">
+                <option value="latest" th:selected="${itemSearchDto.orderBy == 'latest'}">최신순</option>
+                <option value="sales" th:selected="${itemSearchDto.orderBy == 'sales'}">판매량순</option>
+                <option value="price_high" th:selected="${itemSearchDto.orderBy == 'price_high'}">가격높은순</option>
+                <option value="price_low" th:selected="${itemSearchDto.orderBy == 'price_low'}">가격낮은순</option>
+            </select>
+            <!-- 정렬select end -->
+        </div>
+        <!-- 검색결과 -->
+    </div>
 
+
+    <div id="list-content">
     <input type="hidden" name="searchQuery" th:value="${itemSearchDto.searchQuery}">
     <div th:if="${not #strings.isEmpty(itemSearchDto.searchQuery)}" class="center">
         <p class="h3 font-weight-bold" th:text="${itemSearchDto.searchQuery} + '검색 결과'" id="resultText"></p>
     </div>
-<!-- 
-    <nav class="navbar navbar-expand-sm navbar-dark" style="background:black">
-        <div class="collapse navbar-collapse" id="navbarToggleDemo03">
-            <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-                <li class="nav-item">
-                    <button class="btn btn-secondary company" data-company="list">Total</button>
-                </li>
-                <li class="nav-item">
-                    <button class="btn btn-primary company" data-company="steam">Steam</button>
-                </li>
-                <li class="nav-item">
-                    <button class="btn btn-success company" data-company="ps">PS</button>
-                </li>
-                <li class="nav-item">
-                    <button class="btn btn-warning company" data-company="nintendo">Nintendo</button>
-                </li>
-            </ul>
-        </div>
-        <form class="form-inline my-2 my-lg-0" action="/list" method="get" id="cateSearch">
-            <input name="searchQuery" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" id="search2" th:value="${itemSearchDto.searchQuery}">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form>
-    </nav> -->
-
-    <h4><span th:text="${company}" id="getCompany"></span></h4>
+    <!-- 검색결과 -->
+    <!--  list-->
     <div class="row" id="lists">
         <th:block th:if="${items.getContent().size() > 0}">
             <th:block th:each="item, status: ${items.getContent()}">
                 <div class="col-md-4 margin">
                     <div class="card" style="position: relative;">
                         <a th:href="'/item/' +${item.id}" class="text-dark">
-                            <img th:src="${item.imgUrl}" class="card-img-top" th:alt="${item.itemNm}" height="400">
-                            <span th:if="${dibsList.contains(item.id)}" style="position: absolute; top: 10px; right: 10px; font-size: 24px;">💖</span>
+                            <img th:src="${item.imgUrl}" class="card-img-top" th:alt="${item.itemNm}"
+                                 th:classappend="${item.stockNumber <= 0} ? 'sold-out-filter'" height="400">
+                            <span th:if="${item.stockNumber <= 0}" class="sold-out-badge">Sold Out</span>
+                            <span th:if="${dibsList.contains(item.id)}"
+                                 class="heart-icon"><i class="fas fa-heart"></i> </span>
                             <div class="card-body">
                                 <h4 class="card-title">[[${item.itemNm}]]</h4>
                                 <th:block th:if="${item.stockNumber<=0}">
@@ -83,11 +98,13 @@
             </div>
         </th:block>
     </div>
-
-    <button id="loadMore" class="btn btn-primary center" style="display:none;">더보기</button>
-
-    <div id="absolute" style="border:1px solid blue; width:100px; min-height:90%; max-height:100%; ;position:absolute; left:20px; top:220px;" >
-        <div id="tagSelect" style="border:1px solid red; width:100px; position:sticky; left:0px; top:50px;">
+    <div id="loadMore" class="center" style="display:none;"><i class="fas fa-chevron-down"></i> </div>
+    <!--list end-->
+</div>
+    <!--Side bar-->
+    <div id="absolute">
+        <div id="tagSelect">
+            <h4>게임 장르</h4>
             <label>
                 <input type="checkbox" name="action" th:checked="${tag.action}"> 액션
             </label>
@@ -148,12 +165,23 @@
             <label>
                 <input type="checkbox" name="mmorpg" th:checked="${tag.mmorpg}"> MMORPG
             </label>
-            <button type="button" id="searchTagBtn" class="btn btn-info">장르 검색</button>
-            <button type="button" id="checkResetBtn" class="btn btn-warning">선택 취소</button>
+
+            <button type="button" id="searchTagBtn" >장르 검색</button>
+            <button type="button" id="checkResetBtn">선택 취소</button>
         </div>
     </div>
+    <!--Side bar. end-->
 
     <script inline="javascript">
+        <!--모바일 토글버튼 스크립트-->
+        document.getElementById("toggleTagSelectBtn").addEventListener("click", function () {
+            const tagSelect = document.getElementById("absolute");
+            if (tagSelect.style.display === "none" || tagSelect.style.display === "") {
+                tagSelect.style.display = "block";
+            } else {
+                tagSelect.style.display = "none";
+            }
+        });
         function appendPage(response){
             const items = response.items.content; // items 목록
             const dibsList=response.dibsList;
@@ -225,6 +253,12 @@
                     }));
                 });
 
+                form.append($('<input>', {
+                    type: 'hidden',
+                    name: 'orderBy',
+                    value: $(".orderBy").val()
+                }));
+
                 $('body').append(form);
                 form.submit();
             });
@@ -255,6 +289,12 @@
                     }));
                 });
 
+                form.append($('<input>', {
+                    type: 'hidden',
+                    name: 'orderBy',
+                    value: $(".orderBy").val()
+                }));
+
                 $('body').append(form);
                 form.submit();
 
@@ -277,7 +317,7 @@
                 $.ajax({
                     url: newUrl,
                     type: 'GET',
-                    data:{searchQuery:searchQuery, nthPage:currentPage, ...itemCategoryDto},
+                    data:{searchQuery:searchQuery, nthPage:currentPage, orderBy:$(".orderBy").val(), ...itemCategoryDto},
                     success: function(response) {
                         appendPage(response);
                         var maxPage = parseInt(response.maxPage);
@@ -326,6 +366,12 @@
                     }));
                 });
 
+                form.append($('<input>', {
+                    type: 'hidden',
+                    name: 'orderBy',
+                    value: $(".orderBy").val()
+                }));
+
                 $('body').append(form);
                 form.submit();
             });
@@ -339,6 +385,66 @@
                 location.href="/"+cate;
             });
 
+            $(".orderBy").on('change',function(){
+                $(".appendForm").remove();
+
+                const searchQuery = $("#search2").val();
+
+                var newUrl = '/'+$("#getCompany").text();
+                if($("#getCompany").text()=="all"){
+                    newUrl='/list';
+                }
+
+                const form = $('<form>', {
+                    class: 'appendForm',
+                    method: 'GET',
+                    action: newUrl
+                });
+
+                form.append($('<input>', {
+                    type: 'hidden',
+                    name: 'searchQuery',
+                    value: searchQuery
+                }));
+
+                $("input[type='checkbox']:checked").each(function() {
+                    var checkboxName = $(this).attr('name');
+                    var checked = $(this).is(':checked');
+                    form.append($('<input>', {
+                        type: 'hidden',
+                        name: checkboxName,
+                        value: checked
+                    }));
+                });
+
+                form.append($('<input>', {
+                    type: 'hidden',
+                    name: 'orderBy',
+                    value: $(".orderBy").val()
+                }));
+
+                $('body').append(form);
+                form.submit();
+            })
+              //검색버튼 토글
+            $("#searchIcon").click(function() {
+                if ($(window).width() > 767) { // 데스크탑 화면에서만
+                    $("#cateSearch").fadeToggle();
+                } else { // 모바일 화면에서만
+                    // 모바일 검색 폼 토글
+                    $("#mobileCateSearch").fadeToggle();
+                    // 모바일용 토글 버튼도 토글
+                    $("#toggleTagSelectBtn").fadeToggle();
+                }
+            });
+
+            // 모바일 화면에서 검색 아이콘 클릭 시, 모바일 검색 폼 토글
+            $("#mobileSearchIcon").click(function() {
+                // 모바일용 검색 폼을 토글
+                $("#mobileCateSearch").fadeToggle();
+                // 모바일용 토글 버튼도 같이 토글
+                $("#toggleTagSelectBtn").fadeToggle();
+            });
         })
 
     </script>

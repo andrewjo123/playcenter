@@ -1,0 +1,399 @@
+
+  /* itemList */
+  .itemList .carousel-inner > .item {
+    height: 350px;
+  }
+
+  .itemList .margin {
+    margin-bottom: 15px;
+  }
+
+  .itemList .banner {
+    height: 300px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .itemList .card-text {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  .itemList a {
+    text-decoration: none;
+  }
+
+  .itemList a:hover {
+    text-decoration: gray;
+  }
+
+  .itemList .center {
+    text-align: center;
+  }
+
+  .itemList .sold-out-filter {
+    filter: grayscale(100%);
+    opacity: 0.5;
+  }
+
+  .itemList .sold-out-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: rgba(255, 0, 0, 0.8);
+    color: white;
+    padding: 5px;
+    font-weight: bold;
+    border-radius: 5px;
+    font-size: 14px;
+  }
+
+  #toggleTagSelectBtn {
+    display: none;
+  }
+
+  .card:hover {
+    transform: scale(1.02);
+  }
+
+  .card {
+    position: relative;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    margin: 10px 0px;
+  }
+
+  .card-img-top {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+  }
+
+  .heart-icon {
+    position: absolute;
+    margin: 5px;
+    top: 82%;
+    right: 10px;
+    font-size: 20px;
+    color: #ff1744;
+    transition: transform 0.3s ease;
+    font-size: 48px;
+  }
+
+  /* -------------list css 보완------------- */
+  /* --------검색부분-------- */
+  /* 검색 영역 */
+  .itemList .desktop-search {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    position: absolute;
+    right: 70px;
+  }
+
+  .order-container {
+    display: flex;
+    justify-content: flex-end;
+    position: absolute;
+    top: 100px;
+    width: 160px;
+    padding-bottom: 20px;
+    right: 70px;
+  }
+
+  .itemList .company-items,
+  .orderBy {
+    width: 130px;
+    text-align: left;
+    position: absolute;
+    display: block;
+    top: 5px;
+  }
+
+  /* 검색 폼 */
+  .itemList .search-form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    display: none;
+  }
+
+  #toggleTagSelectBtn {
+    display: none;
+  }
+
+  .desktop-search {
+    display: flex;
+  }
+
+  /* 모바일 */
+  .mobile-search {
+    display: none;
+  }
+
+  #toggleTagSelectBtn {
+    display: none;
+    margin-top: 20px;
+    padding: 10px 0px;
+    width: 100%;
+  }
+
+  #searchIcon,
+  #mobileSearchIcon {
+    font-size: 24px;
+    cursor: pointer;
+    color: #333;
+    margin-left: 20px;
+  }
+
+  #searchIcon:hover,
+  #mobileSearchIcon:hover {
+    color: #3e7d3a;
+  }
+
+  /*-------------------------------*/
+  /* 데스크탑 검색 입력창 스타일 */
+  .desktop-search {
+    display: none;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+    height: 20px;
+  }
+
+  .desktop-search .form-control {
+    width: 300px; /* 입력창 너비 설정 */
+    padding: 8px 10px; /* 여백 */
+  }
+
+  .desktop-search .btn {
+    padding: 8px 15px; /* 버튼 크기 */
+    font-size: 16px; /* 버튼 글자 크기 */
+  }
+
+  /*-------------------------------*/
+  /* 모바일 검색 입력창 스타일 */
+  .mobile-search {
+    display: none; /* 기본적으로 모바일에서는 숨김 */
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+    height: 20px;
+  }
+
+  .mobile-search .form-control {
+    width: 200px;
+    padding: 8px 10px;
+  }
+
+  .mobile-search .btn {
+    padding: 8px 15px;
+    font-size: 16px;
+  }
+
+  .mobile-search #mobileSearchIcon {
+    font-size: 24px;
+    cursor: pointer;
+  }
+
+  #list-content {
+    position: relative;
+    display: block;
+    top: 100px;
+    width: 100%;
+    margin: auto;
+  }
+
+  #loadMore {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #5bbf4e; /* 밝은 초록색 */
+    color: white;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+    border-radius: 5px; /* 버튼 모서리를 둥글게 */
+    transition: all 0.3s ease;
+  }
+
+  /* hover 상태에서의 스타일 */
+  #loadMore:hover {
+    background-color: #3e7d3a;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .card:hover .card-title:not(.text-danger) {
+    color: #3e7d3a !important; /* hover 시 색상 변경 */
+  }
+
+  /* 사이드바 배경색 (연한 회색) */
+  #absolute {
+    width: 220px;
+    position: fixed;
+    top: 170px;
+    left: 20px;
+    background-color: #f4f6f7; /* 연한 회색 */
+    color: #2c3e50; /* 텍스트 색상 */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 2px 0 15px rgba(0, 0, 0, 0.1);
+    min-height: 80%;
+    transition: all 0.3s ease;
+    z-index: 10;
+  }
+
+  /* 체크박스 스타일 */
+  #tagSelect label {
+    display: block;
+    margin: 10px 0;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  /* 체크박스와 텍스트 사이 간격 */
+  #tagSelect input[type="checkbox"] {
+    margin-right: 10px;
+  }
+
+  #checkResetBtn {
+    background-color: transparent;
+    color: #5bbf4e;
+    border: 2px solid #5bbf4e;
+  }
+
+  /* 버튼 호버 효과 */
+  button:hover {
+    opacity: 0.8;
+    transform: translateY(-2px); /* 살짝 떠오르는 느낌 */
+  }
+
+  button {
+    padding: 15px 30px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  #searchTagBtn {
+    background-color: #5bbf4e;
+    color: #fff;
+    border: none;
+  }
+
+  /* 버튼 호버 효과 */
+  button:hover {
+    opacity: 0.8;
+    transform: translateY(-2px);
+  }
+
+  #tagSelect {
+    position: sticky;
+    top: 50px;
+  }
+
+  #searchTagBtn,
+  #checkResetBtn {
+    margin-top: 15px;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 14px;
+    text-align: center;
+  }
+
+  #searchTagBtn:hover,
+  #checkResetBtn:hover {
+    opacity: 0.9;
+  }
+
+  #list-content {
+    margin-left: 100px;
+    transition: margin-left 0.3s ease;
+  }
+
+  /* 모바일 화면 전용 스타일 */
+  @media (max-width: 768px) {
+    /* itemList 시작 */
+    .itemList .content {
+      padding: 10px;
+    }
+
+    .itemList .card img {
+      width: 100%;
+      height: auto;
+      max-height: 250px; /* 모바일 최적화된 높이 */
+    }
+
+    .itemList .company-items,
+    .orderBy {
+      width: 100%;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    /* nav-item을 숨김 처리 */
+    .itemList .navbar-nav .nav-item {
+      display: none;
+    }
+
+    /* 모바일 상태에서 검색 창과 장르 선택 버튼의 크기와 위치 조정 */
+    .itemList .form-inline {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .itemList .form-inline .form-control {
+      width: 80%;
+      margin-bottom: 5px;
+    }
+
+    .itemList .form-inline .btn-outline-success,
+    .itemList .form-inline #toggleTagSelectBtn {
+      width: 80%;
+      margin-bottom: 5px;
+    }
+
+    .desktop-search {
+      display: none; /* 데스크탑에서 모바일 검색을 숨깁니다 */
+    }
+
+    .mobile-search {
+      display: block;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 10px;
+      width: 100%;
+    }
+
+    #toggleTagSelectBtn {
+      display: block;
+      display: none;
+    }
+
+    .mobile-search button {
+      font-size: 12px;
+      display: block;
+      padding: 5px 10px;
+    }
+    /* itemList 끝 */
+  }
+
+  /* 데스크탑 화면에서만 보이도록 설정 */
+  @media (min-width: 768px) {
+    .desktop-search {
+      display: block; /* 데스크탑에서 데스크탑 검색을 보이게 설정 */
+    }
+
+    .mobile-search {
+      display: none; /* 데스크탑에서는 모바일 검색을 숨깁니다 */
+    }
+  }
+
