@@ -26,6 +26,9 @@ li,ul{
     margin-top:20px;
     top:10px;
 }
+.footer .link {
+    padding: 0 20px;
+}
 .footer a {
     font-size: 12px
 }
