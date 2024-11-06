@@ -12,7 +12,6 @@
     <!-- 검색 -->
     <div>
         <div class="search-wrapper">
-
             <!-- 데스크탑 검색 -->
             <div class="desktop-search">
                 <form class="form-inline my-2 my-lg-0" action="/list" method="get" id="cateSearch"
@@ -25,28 +24,8 @@
                 </form>
                 <i class="fa-solid fa-magnifying-glass" id="searchIcon"></i>
             </div>
-
-            <!-- 모바일 검색 -->
-            <div class="mobile-search">
-                <form class="form-inline my-2 my-lg-0" action="/list" method="get" id="mobileCateSearch"
-                      style="display: none;">
-                    <div style="display: block;">
-                        <input name="searchQuery" class="form-control mr-sm-2" type="search" placeholder="Search"
-                               aria-label="Search" id="mobileSearch" th:value="${itemSearchDto.searchQuery}">
-                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-                    </div>
-                </form>
-                <i class="fa-solid fa-magnifying-glass" id="mobileSearchIcon"></i>
-                <!-- 모바일용 토글 버튼 -->
-                <button type="button" id="toggleTagSelectBtn" class="btn btn-primary" style="display:none;">
-                    장르 선택
-                </button>
-                <!-- 모바일용 토글 버튼 end -->
-            </div>
         </div>
-        <!-- 검색 -->
         <div class="order-container">
-            <!-- 정렬select -->
             <span th:text="${company}" id="getCompany" style="display:none;"></span>
             <select class="form-control orderBy">
                 <option value="latest" th:selected="${itemSearchDto.orderBy == 'latest'}">최신순</option>
@@ -54,19 +33,15 @@
                 <option value="price_high" th:selected="${itemSearchDto.orderBy == 'price_high'}">가격높은순</option>
                 <option value="price_low" th:selected="${itemSearchDto.orderBy == 'price_low'}">가격낮은순</option>
             </select>
-            <!-- 정렬select end -->
         </div>
-        <!-- 검색결과 -->
     </div>
-
 
     <div id="list-content">
         <input type="hidden" name="searchQuery" th:value="${itemSearchDto.searchQuery}">
         <div th:if="${not #strings.isEmpty(itemSearchDto.searchQuery)}" class="center">
             <p class="h3 font-weight-bold" th:text="${itemSearchDto.searchQuery} + '검색 결과'" id="resultText"></p>
         </div>
-        <!-- 검색결과 -->
-        <!--  list-->
+
         <div class="row" id="lists">
             <th:block th:if="${items.getContent().size() > 0}">
                 <th:block th:each="item, status: ${items.getContent()}">
@@ -99,9 +74,8 @@
             </th:block>
         </div>
         <div id="loadMore" class="center" style="display:none;"><i class="fas fa-chevron-down"></i> </div>
-        <!--list end-->
     </div>
-    <!--Side bar-->
+
     <div id="absolute">
         <div id="tagSelect">
             <h4>게임 장르</h4>
@@ -165,23 +139,14 @@
             <label>
                 <input type="checkbox" name="mmorpg" th:checked="${tag.mmorpg}"> MMORPG
             </label>
-
-            <button type="button" id="searchTagBtn" >장르 검색</button>
+            <button type="button" id="searchTagBtn">장르 검색</button>
             <button type="button" id="checkResetBtn">선택 취소</button>
         </div>
     </div>
     <!--Side bar. end-->
 
     <script inline="javascript">
-        <!--모바일 토글버튼 스크립트-->
-        document.getElementById("toggleTagSelectBtn").addEventListener("click", function () {
-            const tagSelect = document.getElementById("absolute");
-            if (tagSelect.style.display === "none" || tagSelect.style.display === "") {
-                tagSelect.style.display = "block";
-            } else {
-                tagSelect.style.display = "none";
-            }
-        });
+
         function appendPage(response){
             const items = response.items.content; // items 목록
             const dibsList=response.dibsList;
@@ -428,22 +393,7 @@
             })
               //검색버튼 토글
             $("#searchIcon").click(function() {
-                if ($(window).width() > 767) { // 데스크탑 화면에서만
-                    $("#cateSearch").fadeToggle();
-                } else { // 모바일 화면에서만
-                    // 모바일 검색 폼 토글
-                    $("#mobileCateSearch").fadeToggle();
-                    // 모바일용 토글 버튼도 토글
-                    $("#toggleTagSelectBtn").fadeToggle();
-                }
-            });
-
-            // 모바일 화면에서 검색 아이콘 클릭 시, 모바일 검색 폼 토글
-            $("#mobileSearchIcon").click(function() {
-                // 모바일용 검색 폼을 토글
-                $("#mobileCateSearch").fadeToggle();
-                // 모바일용 토글 버튼도 같이 토글
-                $("#toggleTagSelectBtn").fadeToggle();
+                $("#cateSearch").fadeToggle();
             });
         })
 
