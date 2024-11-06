@@ -30,13 +30,11 @@ public class PlayUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        log.info("PlayUserDetailsService loadUserByUsername " + username);
         Member result = memberRepository.findByEmail(username);
 
 
         // result가 존재하는지 확인하는 로그 추가
         if (result==null) {
-            log.warn("No member found with email: " + username + " and fromSocial: false");
             throw new UsernameNotFoundException("Check User Email or from Social");
         }
 
@@ -51,16 +49,16 @@ public class PlayUserDetailsService implements UserDetailsService {
 
         // 단일 권한 생성
         SimpleGrantedAuthority authority = new SimpleGrantedAuthority(role);
-        log.info("Granted Authority: " + authority);
 
         PlayAuthMemberDTO playAuthMember = new PlayAuthMemberDTO(
                 result.getEmail(),
                 result.getPassword(),
                 false,
-                Set.of(authority)
+                Set.of(authority),
 //                playMember.getRoleSet().stream()
 //                        .map(role -> new SimpleGrantedAuthority("ROLE_"+role.name()))
 //                        .collect(Collectors.toSet())
+                result.getProfileImg()
         );
         playAuthMember.setName(result.getName());
 

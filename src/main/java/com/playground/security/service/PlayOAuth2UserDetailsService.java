@@ -34,20 +34,9 @@ public class PlayOAuth2UserDetailsService extends DefaultOAuth2UserService {
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest){
 
-        log.info("=====================================================");
-        log.info("userRequest: " + userRequest);
-
         String clientName = userRequest.getClientRegistration().getClientName();
 
-        log.info("clientName: " + clientName);
-        log.info(userRequest.getAdditionalParameters());
-
         OAuth2User oAuth2User =  super.loadUser(userRequest);
-
-        log.info("==============================");
-        oAuth2User.getAttributes().forEach((k,v) -> {
-            log.info(k +":" + v);
-        });
 
         String email = null;
         // 구글외 카카오톡이거나 네이버이면 코드 추가한다. else if
@@ -64,8 +53,6 @@ public class PlayOAuth2UserDetailsService extends DefaultOAuth2UserService {
                 email=(String) response.get("email");
             }
         }
-
-        log.info("EMAIL: " + email);
 
         Optional<Member> isResign=repository.findByEmailAndResign(email, true);
         if(isResign.isPresent()){
@@ -105,7 +92,6 @@ public class PlayOAuth2UserDetailsService extends DefaultOAuth2UserService {
 
         // 단일 권한 생성
         SimpleGrantedAuthority authority = new SimpleGrantedAuthority(role);
-        log.info("Granted Authority: " + authority);
 
         PlayAuthMemberDTO playAuthMember = new PlayAuthMemberDTO(
                 member.getEmail(),
@@ -115,7 +101,8 @@ public class PlayOAuth2UserDetailsService extends DefaultOAuth2UserService {
 //                member.getRoleSet().stream().map(
 //                                role -> new SimpleGrantedAuthority("ROLE_" + role.name()))
 //                        .collect(Collectors.toList()),
-                oAuth2User.getAttributes()
+                oAuth2User.getAttributes(),
+                member.getProfileImg()
         );
         playAuthMember.setName(member.getName());
 

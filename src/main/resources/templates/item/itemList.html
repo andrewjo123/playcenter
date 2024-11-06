@@ -228,9 +228,10 @@
                 form.submit();
             });
 
-            $(".company").on('click',function(){
-
+            $(".company").on('click',function(e){
+                e.preventDefault();
                 var company = $(this).data('company');
+                var searchQuery = $("#search2").val();
 
                 // Total을 reset???
                 if(company=="list"){
@@ -243,6 +244,12 @@
                     method: 'get',
                     action: '/'+company
                 });
+
+                 form.append($('<input>', {
+                    type: 'hidden',
+                    name: 'searchQuery',
+                    value: searchQuery
+                }));
 
                 $("input[type='checkbox']:checked").each(function() {
                     var checkboxName = $(this).attr('name');
@@ -311,6 +318,8 @@
 
                 $(".appendForm").remove();
                 var cate=$("#getCompany").text();
+                var searchQuery = $("#search2").val();
+
                 if(cate=="all"){
                     cate="list";
                 }
@@ -320,6 +329,12 @@
                     method: 'get',
                     action: '/'+cate
                 });
+
+                 form.append($('<input>', {
+                    type: 'hidden',
+                    name: 'searchQuery',
+                    value: searchQuery
+                }));
 
                 $("input[type='checkbox']:checked").each(function() {
                     var checkboxName = $(this).attr('name');
