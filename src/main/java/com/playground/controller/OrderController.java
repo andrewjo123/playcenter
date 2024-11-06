@@ -9,6 +9,7 @@ import com.siot.IamportRestClient.IamportClient;
 import com.siot.IamportRestClient.exception.IamportResponseException;
 import com.siot.IamportRestClient.response.IamportResponse;
 import com.siot.IamportRestClient.response.Payment;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,7 +101,7 @@ public class OrderController {
     // 결제창
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/order/payment")
-    public String goPayment(@RequestParam("orderId") Long orderId, @RequestParam Map<String, String> params, Principal principal, Model model){
+    public String goPayment(@RequestParam("orderId") Long orderId, @RequestParam Map<String, String> params, Principal principal, Model model, HttpServletRequest request){
         if(!orderService.validateOrder(orderId, principal.getName())){
             return "member/memberLoginForm";
         }
@@ -112,6 +113,10 @@ public class OrderController {
         model.addAttribute("email",principal.getName());
         model.addAttribute("cartId",params);
         System.out.println(params);
+        /*창 정보 가져오기*/
+        String userAgent = request.getHeader("User-Agent");
+        boolean isMobile = userAgent.toLowerCase().contains("mobile");
+        model.addAttribute("isMobile", isMobile);
         return "order/payment";
 
     }
