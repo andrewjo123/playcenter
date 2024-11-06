@@ -131,6 +131,12 @@
                 var left = screenWidth*0.25;
                 var top = screenHeight*0.25;
 
+                if(screenWidth<768){
+                    screenWidth = document.documentElement.clientWidth;
+                    width=screenWidth*0.9;
+                    left=screenWidth*0.05;
+                }
+
                 if(!emailRegex.test(email)){
                     window.open("/members/authEmail?email="+email+"&result=notRegex","_blank", "width=" + width + ",height=" + height + ",left=" + left + ",top=" + top);
                     return;

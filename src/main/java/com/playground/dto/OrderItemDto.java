@@ -8,12 +8,14 @@ import lombok.Setter;
 public class OrderItemDto {
 
     public OrderItemDto(OrderItem orderItem, String imgUrl){
+        this.itemId=orderItem.getItem().getId();
         this.itemNm = orderItem.getItem().getItemNm();
         this.count = orderItem.getCount();
         this.orderPrice = orderItem.getOrderPrice();
         this.imgUrl = imgUrl;
     }
 
+    private Long itemId;
     private String itemNm; //상품명
     private int count; //주문 수량
 

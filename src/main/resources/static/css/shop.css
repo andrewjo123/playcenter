@@ -711,36 +711,44 @@ width: auto;
 
 /* orderHist--------------------------------------------------------*/
 .orderHist .content-mg {
-margin-left: 30%;
-margin-right: 30%;
-margin-top: 2%;
-margin-bottom: 100px;
+    margin-top: 2%;
+    margin-bottom: 100px;
+    margin-left:10%;
+    margin-right:10%;
 }
 
 .orderHist .repImgDiv {
-margin-right: 15px;
-margin-left: 15px;
-height: auto;
+    margin-right: 15px;
+    margin-left: 15px;
+    height: auto;
 }
 
 .orderHist .repImg {
-height: 100px;
-width: 100px;
+    height: 100px;
+    width: 100px;
 }
 
 .orderHist .card {
-width: 750px;
-height: 100%;
-padding: 30px;
-margin-bottom: 20px;
+    width:100%;
+    height: 100%;
+    margin-bottom: 20px;
 }
 
 .orderHist .fs18 {
-font-size: 18px
+    font-size: 18px
 }
 
-.orderHist .fs24 {
-font-size: 24px
+.orderHist .highlightName{
+    font-size:1.5rem;
+    font-weight:600;
+}
+.orderHist .highlightPrice{
+    font-size:1.3rem;
+    font-weight:500;
+}
+.orderHist .orderComplete{
+    text-align:right;
+    color:#7FDA56;
 }
 
 /* 모바일 환경용 CSS */
@@ -1025,4 +1033,18 @@ font-size: 24px
         font-size: 0.9rem; /* 글자 크기 줄이기 */
     }
     /*결제페이지 끝-------------------*/
+
+    /* 주문내역 ------------------------------------------------------------------------------------------------------*/
+    .orderHist .content-mg {
+        margin-top: 2%;
+        margin-bottom: 100px;
+        margin-left:5%;
+        margin-right:5%;
+    }
+    .orderHist .highlightName{
+        font-size:1.4rem;
+    }
+    .orderHist .highlightPrice{
+        font-size:1.2rem;
+    }
 }

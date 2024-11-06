@@ -17,11 +17,13 @@ public class OrderHistDto {
         this.orderDate = order.getOrderDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
         this.orderStatus = order.getOrderStatus();
         this.sendCode=order.isSendCode();
+        this.totalPrice=order.getTotalPrice();
     }
 
     private Long orderId; //주문아이디
     private String orderDate; //주문날짜
     private OrderStatus orderStatus; //주문 상태
+    private int totalPrice;// 주문금액(아이템가격*아이템수);
 
     private List<OrderItemDto> orderItemDtoList = new ArrayList<>();
 

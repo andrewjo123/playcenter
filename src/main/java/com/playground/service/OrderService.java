@@ -11,7 +11,7 @@ import java.util.Map;
 public interface OrderService {
     Long order(OrderDto orderDto, String email);
 
-    Page<OrderHistDto> getOrderList(String email, Pageable pageable);
+    Page<OrderHistDto> getOrderList(String email, int date, Pageable pageable);
 
     boolean validateOrder(Long orderId, String email);
 
