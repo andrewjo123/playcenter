@@ -15,9 +15,7 @@ import com.playground.entity.Review;
 import com.playground.repository.MemberRepository;
 import com.playground.repository.ReviewRepository;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Log4j2
@@ -29,14 +27,15 @@ public class ReviewServiceImpl implements ReviewService {
 
     //add paging
     @Override
-    public Page<ReviewDto> getListOfItem(Long id, Pageable pageable) {
+    public Page<ReviewDto> getListOfItem(Long id, Pageable pageable, String currentUserEmail) {
         Item item = Item.builder().id(id).build();
         log.info("Fetching reviews for item: {}", id);
 
         // 페이징을 적용하여 리뷰 리스트를 반환
         Page<Review> result = reviewRepository.findByItem(item, pageable);
+
         // return result.stream().map(itemReview->entityToDto(itemReview)).collect(Collectors.toList());
-        return result.map(this::entityToDto);  // Stream 대신 Page의 map 메소드 사용
+        return result.map(review -> entityToDto(review, currentUserEmail));  // Stream 대신 Page의 map 메소드 사용
         
     }
 
@@ -69,29 +68,29 @@ public class ReviewServiceImpl implements ReviewService {
 
    // 추천 상태 토글 메서드
    @Override
-   public String toggleRecommend(Long reviewnum, String email) {
-       // 리뷰 조회
-    Review review = reviewRepository.findById(reviewnum)
-    .orElseThrow(() -> new IllegalArgumentException("Invalid review ID: " + reviewnum));
+    public String toggleRecommend(Long reviewnum, String email) {
+            // 리뷰 조회
+        Review review = reviewRepository.findById(reviewnum)
+        .orElseThrow(() -> new IllegalArgumentException("Invalid review ID: " + reviewnum));
 
-    // 이메일로 회원 조회
-    Member member = memberRepository.findByEmail(email);
-    if (member == null) {
-        throw new IllegalArgumentException("Invalid email: " + email);
-    }
+        // 이메일로 회원 조회
+        Member member = memberRepository.findByEmail(email);
+        if (member == null) {
+            throw new IllegalArgumentException("Invalid email: " + email);
+        }
 
-    // 추천 상태 토글
-    if (review.getRecommendedMembers().contains(member)) {
-        review.getRecommendedMembers().remove(member);
-        review.decrementRCnt(); // 추천 수 감소
-        reviewRepository.save(review);
-        return "추천 취소";
-    } else {
-        review.getRecommendedMembers().add(member);
-        review.incrementRCnt(); // 추천 수 증가
-        reviewRepository.save(review);
-        return "추천 완료";
-            }
+        boolean isRecommended = review.getRecommendedMembers().contains(member);
+        if (isRecommended) {
+            review.getRecommendedMembers().remove(member);
+            review.decrementRCnt();
+            reviewRepository.save(review);
+            return "추천 취소";
+        } else {
+            review.getRecommendedMembers().add(member);
+            review.incrementRCnt();
+            reviewRepository.save(review);
+            return "추천 완료";
+        }
     }
 }
 

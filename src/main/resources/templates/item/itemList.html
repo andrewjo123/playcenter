@@ -3,107 +3,84 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/layout1}" class="itemList">
 <head>
-    <link th:href="@{/css/layout1.css}" rel="stylesheet">
+    <!-- 리스트 css파일을 따로 생성했습니다
+     스스타일 태그안에 넣고 적용후 옮긴거라 모바일 버전도 그렇게 하시면 될것같아요 -->
+    <link th:href="@{/css/list.css}" rel="stylesheet">
 </head>
 
 <div layout:fragment="content">
-
-    <div id="carouselControls" class="carousel slide margin" data-ride="carousel">
-        <ul class="carousel-indicators">
-            <li data-target="#carouselControls" data-slide-to="0" class="active"></li>
-            <li data-target="#carouselControls" data-slide-to="1"></li>
-            <li data-target="#carouselControls" data-slide-to="2"></li>
-        </ul>
-        <div class="carousel-inner">
-            <div class="carousel-item active item">
-                <img class="d-block w-100 banner" src="/img/ad1.png"
-                     alt="First slide">
-            </div>
-            <div class="carousel-item item">
-                <img class="d-block w-100 banner" src="/img/ad3.png"
-                     alt="First slide">
-            </div>
-            <div class="carousel-item item">
-                <img class="d-block w-100 banner" src="/img/temp_ad3.png"
-                     alt="First slide">
-            </div>
-        </div>
-    </div>
-
-
-    <input type="hidden" name="searchQuery" th:value="${itemSearchDto.searchQuery}">
-    <div th:if="${not #strings.isEmpty(itemSearchDto.searchQuery)}" class="center">
-        <p class="h3 font-weight-bold" th:text="${itemSearchDto.searchQuery} + '검색 결과'" id="resultText"></p>
-    </div>
-
-    <nav class="navbar navbar-expand-sm navbar-dark" style="background:black">
-        <div class="collapse navbar-collapse" id="navbarToggleDemo03">
-            <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-                <li class="nav-item">
-                    <button class="btn btn-secondary company" data-company="list">Total</button>
-                </li>
-                <li class="nav-item">
-                    <button class="btn btn-primary company" data-company="steam">Steam</button>
-                </li>
-                <li class="nav-item">
-                    <button class="btn btn-success company" data-company="ps">PS</button>
-                </li>
-                <li class="nav-item">
-                    <button class="btn btn-warning company" data-company="nintendo">Nintendo</button>
-                </li>
-            </ul>
-        </div>
-        <form class="form-inline my-2 my-lg-0" action="/list" method="get" id="cateSearch">
-            <input name="searchQuery" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" id="search2" th:value="${itemSearchDto.searchQuery}">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-            <!-- 모바일용 토글 버튼 -->
-            <button type="button" id="toggleTagSelectBtn" class="btn btn-primary">
-                장르 선택
-            </button>
-        </form>
-    </nav>
-
-    <span th:text="${company}" id="getCompany" style="display:none;"></span>
-    <select class="form-control orderBy">
-        <option value="latest" th:selected="${itemSearchDto.orderBy == 'latest'}">최신순</option>
-        <option value="sales" th:selected="${itemSearchDto.orderBy == 'sales'}">판매량순</option>
-        <option value="price_high" th:selected="${itemSearchDto.orderBy == 'price_high'}">가격높은순</option>
-        <option value="price_low" th:selected="${itemSearchDto.orderBy == 'price_low'}">가격낮은순</option>
-    </select>
-    <div class="row" id="lists">
-        <th:block th:if="${items.getContent().size() > 0}">
-            <th:block th:each="item, status: ${items.getContent()}">
-                <div class="col-md-4 margin">
-                    <div class="card" style="position: relative;">
-                        <a th:href="'/item/' +${item.id}" class="text-dark">
-                            <img th:src="${item.imgUrl}" class="card-img-top" th:alt="${item.itemNm}"
-                                 th:classappend="${item.stockNumber <= 0} ? 'sold-out-filter'"height="400">
-                            <span th:if="${item.stockNumber <= 0}" class="sold-out-badge">Sold Out</span>
-                            <span th:if="${dibsList.contains(item.id)}" style="position: absolute; top: 10px; right: 10px; font-size: 24px;">💖</span>
-                            <div class="card-body">
-                                <h4 class="card-title">[[${item.itemNm}]]</h4>
-                                <th:block th:if="${item.stockNumber<=0}">
-                                    <h3 class="card-title text-danger">품절</h3>
-                                </th:block>
-                                <th:block th:unless="${item.stockNumber<=0}">
-                                    <h3 class="card-title text-danger">[[${item.price}]]원</h3>
-                                </th:block>
-                            </div>
-                        </a>
+    <!-- 검색 -->
+    <div class="search-container">
+        <div class="search-wrapper">
+            <!-- 데스크탑 검색 -->
+            <div class="desktop-search">
+                <form class="form-inline my-2 my-lg-0" action="/list" method="get" id="cateSearch">
+                    <div class="search-set-item">
+                        <input name="searchQuery" class="form-control mr-sm-2" type="search" placeholder="Search"
+                               aria-label="Search" id="search2" th:value="${itemSearchDto.searchQuery}">
+                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
                     </div>
+                </form>
+                <i class="fa-solid fa-magnifying-glass" id="searchIcon"></i>
+            </div>
+
+        </div>
+        <div class="order-container">
+            <!-- 사이드바 토글 버튼 (모바일에서만 표시) -->
+            <button id="toggleSidebarBtn" class="sidebar-toggle-btn">장르선택</button>
+            <span th:text="${company}" id="getCompany" style="display:none;"></span>
+            <select class="form-control orderBy">
+                <option value="latest" th:selected="${itemSearchDto.orderBy == 'latest'}">최신순</option>
+                <option value="sales" th:selected="${itemSearchDto.orderBy == 'sales'}">판매량순</option>
+                <option value="price_high" th:selected="${itemSearchDto.orderBy == 'price_high'}">가격높은순</option>
+                <option value="price_low" th:selected="${itemSearchDto.orderBy == 'price_low'}">가격낮은순</option>
+            </select>
+        </div>
+    </div>
+
+    <div id="list-content">
+        <input type="hidden" name="searchQuery" th:value="${itemSearchDto.searchQuery}">
+        <div th:if="${not #strings.isEmpty(itemSearchDto.searchQuery)}" class="center">
+            <p class="h3 font-weight-bold" th:text="${itemSearchDto.searchQuery} + '검색 결과'" id="resultText"></p>
+        </div>
+
+        <div class="row" id="lists">
+            <th:block th:if="${items.getContent().size() > 0}">
+                <th:block th:each="item, status: ${items.getContent()}">
+                    <div class="col-md-4 margin">
+                        <div class="card" style="position: relative;">
+                            <a th:href="'/item/' +${item.id}" class="text-dark">
+                                <img th:src="${item.imgUrl}" class="card-img-top" th:alt="${item.itemNm}"
+                                     th:classappend="${item.stockNumber <= 0} ? 'sold-out-filter'" height="400">
+                                <span th:if="${item.stockNumber <= 0}" class="sold-out-badge">Sold Out</span>
+                                <span th:if="${dibsList.contains(item.id)}"
+                                      class="heart-icon"><i class="fas fa-heart"></i> </span>
+                                <div class="card-body">
+                                    <h4 class="card-title">[[${item.itemNm}]]</h4>
+                                    <th:block th:if="${item.stockNumber<=0}">
+                                        <h3 class="card-title text-danger">품절</h3>
+                                    </th:block>
+                                    <th:block th:unless="${item.stockNumber<=0}">
+                                        <h3 class="card-title text-danger">[[${item.price}]]원</h3>
+                                    </th:block>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </th:block>
+            </th:block>
+            <th:block th:if="${items.getContent().size() == 0}">
+                <div class="col-md-12 text-center">
+                    <h4>결과 없음</h4>
                 </div>
             </th:block>
-        </th:block>
-        <th:block th:if="${items.getContent().size() == 0}">
-            <div class="col-md-12 text-center">
-                <h4>결과 없음</h4>
-            </div>
-        </th:block>
+        </div>
+        <div id="loadMore" class="center" style="display:none;"><i class="fas fa-chevron-down"></i></div>
     </div>
-    <button id="loadMore" class="btn btn-primary center" style="display:none;">더보기</button>
 
-    <div id="absolute" style="border:1px solid blue; width:100px; min-height:90%; max-height:100%; ;position:absolute; left:20px; top:220px;" >
-        <div id="tagSelect" style="border:1px solid red; width:100px; position:sticky; left:0px; top:50px;">
+    <div id="absolute">
+        <div id="tagSelect">
+            <h4>게임 장르</h4>
             <label>
                 <input type="checkbox" name="action" th:checked="${tag.action}"> 액션
             </label>
@@ -164,21 +141,14 @@
             <label>
                 <input type="checkbox" name="mmorpg" th:checked="${tag.mmorpg}"> MMORPG
             </label>
-            <button type="button" id="searchTagBtn" class="btn btn-info">장르 검색</button>
-            <button type="button" id="checkResetBtn" class="btn btn-warning">선택 취소</button>
+            <button type="button" id="searchTagBtn">장르 검색</button>
+            <button type="button" id="checkResetBtn">선택 취소</button>
         </div>
     </div>
+    <!--Side bar. end-->
 
     <script inline="javascript">
-        <!--모바일 토글버튼 스크립트-->
-        document.getElementById("toggleTagSelectBtn").addEventListener("click", function () {
-            const tagSelect = document.getElementById("absolute");
-            if (tagSelect.style.display === "none" || tagSelect.style.display === "") {
-                tagSelect.style.display = "block";
-            } else {
-                tagSelect.style.display = "none";
-            }
-        });
+
         function appendPage(response){
             const items = response.items.content; // items 목록
             const dibsList=response.dibsList;
@@ -260,9 +230,10 @@
                 form.submit();
             });
 
-            $(".company").on('click',function(){
-
+            $(".company").on('click',function(e){
+                e.preventDefault();
                 var company = $(this).data('company');
+                var searchQuery = $("#search2").val();
 
                 // Total을 reset???
                 if(company=="list"){
@@ -275,6 +246,12 @@
                     method: 'get',
                     action: '/'+company
                 });
+
+                 form.append($('<input>', {
+                    type: 'hidden',
+                    name: 'searchQuery',
+                    value: searchQuery
+                }));
 
                 $("input[type='checkbox']:checked").each(function() {
                     var checkboxName = $(this).attr('name');
@@ -343,6 +320,8 @@
 
                 $(".appendForm").remove();
                 var cate=$("#getCompany").text();
+                var searchQuery = $("#search2").val();
+
                 if(cate=="all"){
                     cate="list";
                 }
@@ -352,6 +331,12 @@
                     method: 'get',
                     action: '/'+cate
                 });
+
+                 form.append($('<input>', {
+                    type: 'hidden',
+                    name: 'searchQuery',
+                    value: searchQuery
+                }));
 
                 $("input[type='checkbox']:checked").each(function() {
                     var checkboxName = $(this).attr('name');
@@ -423,8 +408,21 @@
                 $('body').append(form);
                 form.submit();
             })
-
+              //검색버튼 토글
+            $("#searchIcon").click(function() {
+                $("#cateSearch").fadeToggle();
+            });
         })
+
+        // 사이드바 토글 기능
+        document.getElementById('toggleSidebarBtn').addEventListener('click', function() {
+            var sidebar = document.getElementById('absolute');
+            if (sidebar.style.display === 'none' || sidebar.style.display === '') {
+                sidebar.style.display = 'block';
+            } else {
+                sidebar.style.display = 'none';
+            }
+        });
 
     </script>
 

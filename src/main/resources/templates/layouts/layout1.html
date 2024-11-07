@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-
+    <link rel="icon" type="image/svg+xml" th:href="@{/icon/icon_playGround.svg}">
     <!-- CSS only -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -72,16 +72,58 @@
 
                 // 현재 URL이 링크 URL로 시작하는지 확인
                 if (currentUrl === linkUrl || currentUrl.startsWith(linkUrl)) {
-                 link.classList.add('active');
-                 console.log(`Active class added to: ${linkUrl}`);
+                    link.classList.add('active');
                 }
             });
+
+            $(window).scroll(function() {
+                var scrollPosition = $(window).scrollTop();
+                if (scrollPosition >= 1200) {
+                    $('#pageIndicators').fadeIn();
+                } else {
+                    $('#pageIndicators').fadeOut();
+                }
+            });
+
+            $("#pageIndicators #indicatorBtn").on('click',function(){
+                // 회전 애니메이션
+                var rotationAmount = $(this).data("clockwise");
+                $(this).animate({
+                    deg: rotationAmount
+                }, {
+                    duration: 300, // 회전 애니메이션의 지속 시간 (ms)
+                    step: function (now) {
+                        $(this).css({
+                            transform: 'rotate(' + now + 'deg)'
+                        });
+                    },
+                    complete: function() {
+                        $(this).data("clockwise", rotationAmount==45?0:45);
+                    }
+                });
+                $("#goBottom").stop(true, true).fadeToggle(300);
+                $("#goTop").stop(true, true).fadeToggle(300);
+            });
+
+            $("#pageIndicators #goTop").on('click',function(){
+                $('html, body').animate({
+                    scrollTop: $(".hd1").offset().top
+                }, 500);
+            });
+
+            $("#pageIndicators #goBottom").on('click',function(){
+                $('html, body').animate({
+                    scrollTop: $(".footer").offset().top
+                }, 500);
+            });
+
+            $(".company").on('click', function() {
+                var company = $(this).data('company');
+            });
+
         });
 
-        $(".company").on('click', function() {
-        var company = $(this).data('company');
-        
-    });
+
     </script>
 
     <th:block layout:fragment="script"></th:block>
@@ -96,21 +138,25 @@
 
 
 <div class="container-fluid">
-    <div class="row">
+    <div class="row layout-row">
         <div class="col-12 col-md-11">
             <div layout:fragment="content" class="content"></div>
         </div>
-
         <div class="col-12 col-md-1">
-            <div th:replace="~{fragments/sidebar::sidebar}"></div>
         </div>
     </div>
 </div>
 
-
+<div id="pageIndicators">
+    <div id="goTop"><i class="fa-solid fa-chevron-up"></i></div>
+    <div id="goBottom"><i class="fa-solid fa-chevron-down"></i></div>
+    <div id="indicatorBtn" data-clockwise="45">
+        <div id="horizonLine"></div>
+        <div id="verticalLine"></div>
+    </div>
+</div>
 
 <div th:replace="~{fragments/footer::footer}"></div>
-<div><p><a href="/support">지원 페이지로 가기</a></p></div>
 </body>
 
 </html>

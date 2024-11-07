@@ -3,6 +3,8 @@ package com.playground.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
+import java.security.Principal;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -29,9 +31,12 @@ public class ReviewController {
           @PathVariable("id") Long id,
           @RequestParam(defaultValue = "0") int page,
           @RequestParam(defaultValue = "5") int size,
-          @RequestParam(defaultValue = "regTime") String sort) {
+          @RequestParam(defaultValue = "regTime") String sort,
+          Principal principal) {
       
       log.info("리뷰 리스트 요청 - id: {}, page: {}, size: {}", id, page, size, sort);
+
+      String currentUserEmail = (principal != null) ? principal.getName() : null; //로그인 안한 사용자는 댓글 볼 수 있음
       
       // 페이지 요청 객체 생성
       Pageable pageable = PageRequest.of(page, size,
@@ -41,8 +46,9 @@ public class ReviewController {
       Sort.by(Sort.Direction.DESC, "regTime"));
       
       // 리뷰 목록을 서비스에서 받아옴
-      Page<ReviewDto> reviewDTOPage = reviewService.getListOfItem(id, pageable);
-      
+      Page<ReviewDto> reviewDTOPage = reviewService.getListOfItem(id, pageable, currentUserEmail);
+            System.out.println(reviewDTOPage.getContent().get(0).isRecommended()+"[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]");
+    //   return new ResponseEntity<>(reviewDTOPage, HttpStatus.OK);
       return new ResponseEntity<>(reviewDTOPage, HttpStatus.OK);
     }
 

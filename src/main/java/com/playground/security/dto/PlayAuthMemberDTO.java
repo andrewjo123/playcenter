@@ -29,18 +29,20 @@ public class PlayAuthMemberDTO extends User implements OAuth2User {
 
     private Map<String, Object> attr;
 
+    private String profileImg;
+
     public PlayAuthMemberDTO(String username, String password, boolean fromSocial,
-                             Collection<? extends GrantedAuthority> authorities, Map<String, Object> attr) {
-        this(username,password, fromSocial, authorities);
+                             Collection<? extends GrantedAuthority> authorities, Map<String, Object> attr, String profileImg) {
+        this(username,password, fromSocial, authorities, profileImg);
         this.attr = attr;
     }
 
-    public PlayAuthMemberDTO(String username, String password, boolean fromSocial, Collection<? extends GrantedAuthority> authorities) {
+    public PlayAuthMemberDTO(String username, String password, boolean fromSocial, Collection<? extends GrantedAuthority> authorities, String profileImg) {
         super(username, password, authorities);
         this.email = username;
         this.password = password;
         this.fromSocial = fromSocial;
-
+        this.profileImg = profileImg;
     }
 
     @Override

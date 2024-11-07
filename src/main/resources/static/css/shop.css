@@ -1,29 +1,88 @@
-/* cartList--------------------------------------------------------*/
+/* dibsList-------------------------------------------------------- */
+.dibsList .itnm {
+    color: #5bbf4e;
+}
+.dibsList .itnm:hover {
+    color: #3e7d3a;
+}
+.dibsList .dibsItem {
+    padding: 10px 20px;
+    background-color: #d9d9d9;
+}
+.dibsList .box {
+    padding: 10px 0;
+    text-align:right;
+}
+.dibsList .content-mg {
+    margin-left: 15%;
+    margin-right: 15%;
+    margin-top: 2%;
+}
+.dibsList .repImgDiv {
+    margin-right: 15px;
+    margin-left: 15px;
+    height: auto;
+}
+.dibsList .repImg {
+    width: 100%;
+    height: auto;
+    max-width: 200px;
+}
+.dibsList .fs24 {
+    font-size: clamp(18px, 2vw, 24px);
+}
+/* cartList-------------------------------------------------------- */
 .cartList .content-mg {
-margin-left: 25%;
-margin-right: 25%;
-margin-top: 2%;
-margin-bottom: 100px;
+    margin-left: 15%;
+    margin-right: 15%;
+    margin-top: 2%;
 }
 
 .cartList .repImgDiv {
-margin-right: 15px;
-margin-left: 15px;
-height: auto;
+    margin-right: 15px;
+    margin-left: 15px;
+    height: auto;
 }
 
 .cartList .repImg {
-height: 100px;
-width: 100px;
+    width: 100%;
+    height: auto;
+    max-width: 200px;
 }
 
 .cartList .fs18 {
-font-size: 18px
+    font-size: clamp(14px, 2vw, 18px);
 }
 
 .cartList .fs24 {
-font-size: 24px
+    font-size: clamp(18px, 2vw, 24px);
 }
+
+.cartList .cartItem {
+    margin: 0;
+    background-color: #d9d9d9;
+}
+
+.cartList .table {
+    width: 100%;
+    table-layout:fixed;
+}
+
+.cartList .btn {
+    padding: 8px 16px;
+    font-size: 14px;
+    background-color: #5bbf4e;
+}
+
+.cartList .btn:hover {
+    background-color: #3e7d3a;
+    color: #f0f0f0;
+}
+
+.cartList .custom-margin {
+    min-width: 48px;
+}
+
 
 /* itemDtl--------------------------------------------------------*/
 
@@ -173,30 +232,223 @@ margin: auto;
     background-color: #ff1744;
 }
 
+/* review List 수정 - 신영 *************************************/
+.itemDtl .custom-dropdown-menu {
+    position: absolute;
+    top: 100px; /* 상단에서 100px의 위치 */
+    right: 50px; /* 오른쪽에서 50px의 위치 */
+}
+
+.itemDtl #currentSortMethod{
+    font-size: 15px;
+    height: 20px;
+    margin-bottom: 10px;
+    bottom: 10px;
+}
+/* 리스트 테두리제거 - 신영 */
+.itemDtl .review-item {
+    border: none; /* 테두리 제거 */
+    border-bottom: 0.2px solid #a1a3a5; /* 아래쪽 테두리만 추가 */
+}
+/* 페이지네이션 -신영*/
+.itemDtl .pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px; /* 버튼 사이 간격 */
+    margin-top: 20px;
+}
+
+.itemDtl 
+.pagination button,
+.pagination .page-number {
+    background-color: #f1f1f1; /* 버튼 배경색 */
+    border: 1px solid #ddd; /* 버튼 테두리 */
+    color: #333; /* 텍스트 색상 */
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    min-width: 32px; /* 버튼 크기 균일하게 설정 */
+    text-align: center;
+}
+
+.itemDtl
+.pagination button:hover,
+.pagination .page-number:hover {
+    background-color: #e0e0e0; /* 호버 시 배경색 */
+}
+
+.itemDtl
+.pagination .page-number.active {
+    background-color: #d3d3d3; /* 현재 페이지 색상 */
+    font-weight: bold;
+    color: #000; /* 현재 페이지 텍스트 색상 */
+    pointer-events: none; /* 클릭 불가 */
+}
+/* 별 색 바꾸기 */
+/* 채워진 별 */
+.itemDtl
+.starrr .fa-star {
+    color: #FFD700; /* 채워진 별 색상 (노란색) */
+}
+
+/* 빈 별 */
+.itemDtl
+.starrr .fa-star-o {
+    color: #d3d3d3; /* 빈 별 색상 (회색) */
+}
+
+/* 추천아이콘 */
+.itemDtl
+.btn-outline-primary {
+    background-color: transparent;
+    border-color: transparent;
+    color: #808080; /* 글자 색상을 #808080으로 설정 */
+    font-size: 18px;
+}
+
+.itemDtl
+.btn-outline-primary:hover,
+.btn-outline-primary:focus,
+.btn-outline-primary:active {
+    background-color: #808080; /* 마우스 오버, 포커스, 활성 상태에서 배경 색상을 #808080으로 설정 */
+    color: white; /* 마우스 오버, 포커스, 활성 상태에서 글자 색상을 흰색으로 설정 */
+    border-color: #808080; /* 마우스 오버, 포커스, 활성 상태에서 테두리 색상을 #808080으로 설정 */
+}
+
+/* 추천된 버튼 스타일 */
+.itemDtl
+.btn-primary {
+    background-color: transparent;
+    border-color: transparent;
+    color: #808080; /* 글자 색상을 흰색으로 설정 */
+    font-size: 18px;
+    
+}
+
+.itemDtl
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active {
+    background-color: #666666; /* 마우스 오버, 포커스, 활성 상태에서 조금 더 어두운 회색으로 변경 */
+    color: white;
+    border-color: #666666; /* 마우스 오버, 포커스, 활성 상태에서 테두리 색상을 조금 더 어두운 회색으로 변경 */
+}
+
+/* 등록버튼 -신영 */
+/* 게임 평가하기 버튼의 기본 스타일 */
+.itemDtl
+.addReviewBtn {
+    background-color: white; /* 배경색을 하얀색으로 설정 */
+    color: black; /* 글자색을 검정색으로 설정 */
+    border: 1px solid black; /* 테두리를 검정색으로 설정 */
+}
+
+/* 게임 평가하기 버튼의 hover 상태 스타일 */
+.itemDtl
+.addReviewBtn:hover {
+    background-color: #808080; /* 마우스 오버 시 배경색을 #808080(회색)으로 변경 */
+    color: white; /* 마우스 오버 시 글자색을 흰색으로 변경 */
+    border-color: #808080; /* 마우스 오버 시 테두리 색상을 #808080로 변경 */
+}
+
+/* 리뷰 부분 끝 */
+
 
 
 /* itemForm--------------------------------------------------------*/
 
+/* 입력 그룹 스타일 */
 .itemForm .input-group {
-margin-bottom: 15px
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
 }
-
-.itemForm .img-div {
-margin-bottom: 10px
+.itemForm .input-group-prepend {
+    background-color: #e9ecef;
+    border: 1px solid #ddd;
+    border-radius: 4px 0 0 4px;
 }
-
-.itemForm .fieldError {
-color: #bd2130;
+.itemForm .input-group .input-group-text,
+.itemForm .form-control,
+.itemForm .custom-select {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px; /* 동일한 패딩 적용 */
+    height: 100%; /* 높이 일치 */
+    border: 1px solid #ddd; /* 동일한 테두리 */
+    font-size: 16px; /* 동일한 폰트 크기 */
+    box-sizing: border-box;
 }
-
+.itemForm .input-group .input-group-text {
+    font-weight: bold;
+    border-radius: 4px 0 0 4px;
+}
+.itemForm .form-control,
+.itemForm .custom-select {
+    border-radius: 0 4px 4px 0;
+}
+/* 체크박스 그룹 스타일 */
 .itemForm .label {
-padding-top: 5px;
-padding-left: 10px;
-
+    padding-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
 }
-
+.itemForm .label label {
+    display: flex;
+    align-items: center;
+    background-color: #f0f2f5;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.itemForm .label label:hover {
+    background-color: #e4e6ea;
+}
+.itemForm .label input[type="checkbox"] {
+    margin-right: 5px;
+    transform: scale(1.1);
+}
+/* 에러 메시지 스타일 */
+.itemForm .fieldError {
+    color: #bd2130;
+    font-size: 12px;
+    margin-top: 5px;
+    display: block;
+    font-weight: bold;
+}
+/* 이미지 파일 입력 스타일 */
+.itemForm .img-div {
+    margin-bottom: 10px;
+}
+.itemForm .custom-file-label {
+    cursor: pointer;
+    color: #555;
+}
+.itemForm .custom-file-input:hover {
+    background-color: #f1f3f5;
+}
+/* 버튼 스타일 */
 .itemForm .itemformbtn {
-text-align: center;
+    text-align: center;
+    margin-top: 20px;
+}
+.itemForm .btn {
+    padding: 10px 20px;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    border-radius: 6px;
+    transition: background-color 0.3s, transform 0.2s;
+    background-color: #7FDA56;
+    color: #ffffff;
+}
+.itemForm .btn:hover {
+    background-color: #6bbf49;
+    transform: scale(1.05);
 }
 
 /* itemMng--------------------------------------------------------*/
@@ -204,43 +456,448 @@ text-align: center;
 margin-right: 10px;
 width: auto;
 }
+.itemMng .table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+    background-color: #f9f9f9; /* 테이블 배경을 밝은 회색으로 */
+    color: #333;
+}
 
-.itemMng .cartsrc {
-margin: 20px;
+.itemMng .table th,
+.itemMng .table td {
+    padding: 12px 15px; /* 셀 내부 여백 */
+    text-align: center;
+    border: 1px solid #ddd; /* 셀 테두리 색상 */
+}
+
+.itemMng .table th {
+    background-color: #7FDA56; /* 트레이드 마크 색상으로 헤더 배경 */
+    color: #ffffff; /* 헤더 글씨를 흰색으로 */
+    font-weight: bold;
+}
+
+.itemMng .table tbody tr:nth-child(even) {
+    background-color: #ffffff; /* 짝수 행에 흰색 배경 */
+}
+
+.itemMng .form-inline {
+    margin: 20px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.itemMng .form-control {
+    width: auto;
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    background-color: #ffffff; /* 입력 필드 흰색 배경 */
+    color: #333;
+}
+
+.itemMng .form-control::placeholder {
+    color: #666; /* 플레이스홀더 색상 */
+}
+
+.itemMng .btn-primary {
+    padding: 6px 12px; /* 버튼 크기를 약간 줄임 */
+    color: #fff;
+    background-color: #7FDA56; /* 트레이드 마크 색상 */
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.itemMng .btn-primary:hover {
+    background-color: #6bbf49; /* 호버 시 색상 */
+    transform: scale(1.05);
+}
+
+.itemMng .pagination {
+    display: flex;
+    justify-content: center;
+    padding: 10px 0;
+    list-style: none;
+}
+
+.itemMng .pagination .page-item {
+    margin: 0 5px;
+}
+
+.itemMng .pagination .page-link {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    color: #7FDA56; /* 트레이드 마크 색상 */
+    background-color: #f9f9f9;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.itemMng .pagination .page-link:hover {
+    background-color: #7FDA56;
+    color: #ffffff;
+}
+
+.itemMng .pagination .active .page-link {
+    background-color: #7FDA56;
+    color: #ffffff;
+    border: 1px solid #7FDA56;
+}
+
+.itemMng .page-item.disabled .page-link {
+    color: #bbb;
+}
+.itemMng .code-link {
+    display: inline-block; /* 링크를 블록 요소로 변경하여 버튼 스타일 적용 */
+    padding: 6px 12px; /* 내부 여백 추가 */
+    background-color: #7FDA56;
+    color: #ffffff; /* 텍스트 색상 */
+    border-radius: 4px; /* 모서리를 둥글게 */
+    font-weight: bold;
+    text-decoration: none; /* 밑줄 제거 */
+    transition: background-color 0.3s, transform 0.2s;
+}
+.itemMng .code-link:hover {
+    background-color: #6bbf49; /* 호버 시 색상 변경 */
+    transform: scale(1.05); /* 호버 시 약간 확대 */
+}
+
+/*insertCode 코드입력창 시작*/
+/* 기본 스타일 */
+.insertCode {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f4f6f9;
+    padding: 20px;
+}
+
+/* 제목 스타일 */
+.insertCode h2 {
+    font-size: 24px;
+    color: #7FDA56;
+    font-weight: bold;
+}
+
+/* 게임 정보 */
+.insertCode .game-info p {
+    font-size: 18px;
+    color: #333;
+}
+
+/* 코드 입력 섹션 */
+.insertCode #inputDiv {
+    margin: 10px 0;
+    text-align: left;
+}
+
+/* 입력 레이블 스타일 */
+.insertCode .code {
+    display: block;
+    margin: 8px 0;
+}
+
+/* 에러 메시지 스타일 */
+.insertCode .error {
+    color: red;
+    font-size: 12px;
+    display: none;
+}
+
+/* 버튼 스타일 */
+.insertCode .btn {
+    padding: 8px 15px;
+    margin: 8px 5px;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #fff;
+    transition: background-color 0.3s;
+}
+
+.insertCode .btn-info {
+    background-color: #5bc0de;
+}
+
+.insertCode .btn-info:hover {
+    background-color: #46b8da;
+}
+
+.insertCode .btn-success {
+    background-color: #7FDA56;
+}
+
+.insertCode .btn-success:hover {
+    background-color: #6bbf49;
+}
+
+.insertCode .btn-warning {
+    background-color: #f0ad4e;
+}
+
+.insertCode .btn-warning:hover {
+    background-color: #eea236;
+}
+
+/* 아이콘 스타일 */
+.insertCode .emoji {
+    font-size: 30px;
+    margin-right: 5px;
+}
+
+/* payment 결제창 -------------------------------------------------------- */
+.payment body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+}
+
+.payment h1 {
+    color: #333;
+    text-align: center;
+    font-size: 2rem;
+    margin-top: 30px;
+    margin-bottom: 20px;
+}
+
+.payment .table {
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 30px;
+}
+
+.payment .table th,
+.payment .table td {
+    padding: 15px;
+    text-align: center;
+    vertical-align: middle;
+    color: #333; /* 검정색 텍스트 */
+}
+
+.payment .text-center {
+    color: #333; /* 검정색 텍스트 */
+}
+
+/* 버튼 스타일 */
+.payment .btn {
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 20px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.payment .payBtn {
+    background-color: #7FDA56;
+    border: none;
+    color: white;
+    margin: 10px;
+}
+
+.payment .payBtn:hover {
+    background-color: #6bbf49;
+}
+
+.payment .btn-warning, .btn-secondary {
+    border-radius: 20px;
+    color: white;
+}
+
+/* 포인트 관련 버튼 스타일 */
+#use, #useAll, #useNot {
+    margin: 5px;
+    border-radius: 20px;
+    background-color: #f1f1f1;
+    color: #333;
+}
+
+#use:hover, #useAll:hover, #useNot:hover {
+    background-color: #e2e2e2;
+}
+
+/* 약관 텍스트 */
+#agreeDetail {
+    color: #7FDA56;
+    text-decoration: underline;
+}
+
+#agreeDetail:hover {
+    color: #6bbf49;
+    cursor: pointer;
+}
+
+/* 모달 스타일 */
+.payment .modal-content {
+    border-radius: 10px;
+    padding: 20px;
+}
+
+.payment .modal-header {
+    background-color: #7FDA56;
+    color: white;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    font-weight: bold;
+}
+
+.payment .modal-footer .btn-primary {
+    background-color: #7FDA56;
+    border: none;
+}
+
+.payment .modal-footer .btn-primary:hover {
+    background-color: #6bbf49;
+}
+
+/* 테이블 내 이미지 스타일 */
+.payment .repImg {
+    border-radius: 10px;
+    margin-right: 15px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* 결제 및 취소 버튼 컨테이너 스타일 */
+.payment .button-group {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+/* 결제 및 취소 버튼 스타일 */
+.payment .payBtn, .payment .cancel-btn {
+    padding: 12px 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 8px;
+    width: 150px; /* 모든 버튼의 동일한 너비 설정 */
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 카카오 결제 버튼 스타일 */
+.payment .kakao-btn {
+    background-color: #FEE500;
+    color: #3C1E1E;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+}
+
+.payment .kakao-btn:hover {
+    background-color: #ffd900;
+}
+
+.payment .kakao-btn i {
+    font-size: 1.5rem;
+    margin-right: 8px;
+}
+
+/* 이니시스 버튼 스타일 */
+.payment .btn-danger.payBtn {
+    background-color: #591DC8; /* 설정된 이니시스 색상 */
+    border: none;
+    color: white;
+    transition: background-color 0.3s ease;
+}
+
+.payment .btn-danger.payBtn:hover {
+    background-color: #4b1aa8; /* 호버 시 더 어두운 색상 */
+}
+
+/* 회색 취소 버튼 스타일 */
+.payment .cancel-btn {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    transition: background-color 0.3s ease;
+    width: 150px; /* 카카오, 이니시스 버튼과 같은 너비 설정 */
+}
+
+.payment .cancel-btn:hover {
+    background-color: #5a6268; /* 호버 시 더 어두운 회색 */
+}
+.payment .button-group .cancel-btn {
+    padding: 12px 20px; /* 버튼 내부 여백 */
+    margin: 10px;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+/* 취소 버튼이 다른 버튼들과 정렬되도록 설정 */
+#cancelForm {
+    display: inline-block; /* 인라인 블록으로 설정하여 일렬 정렬 */
+    margin: 0; /* 기본 마진 제거 */
+}
+
+/* 기본적으로 테이블은 보이고 카드형은 숨김 */
+.payment .table { display: table; }
+.payment .mobile-card { display: none; }
+
+/*모달창 관련*/
+.payment .modal-footer {
+    display: flex;
+    justify-content: center;
 }
 
 /* orderHist--------------------------------------------------------*/
 .orderHist .content-mg {
-margin-left: 30%;
-margin-right: 30%;
-margin-top: 2%;
-margin-bottom: 100px;
+    margin-top: 2%;
+    margin-bottom: 100px;
+    margin-left:10%;
+    margin-right:10%;
 }
 
 .orderHist .repImgDiv {
-margin-right: 15px;
-margin-left: 15px;
-height: auto;
+    margin-right: 15px;
+    margin-left: 15px;
+    height: auto;
 }
 
 .orderHist .repImg {
-height: 100px;
-width: 100px;
+    height: 100px;
+    width: 100px;
 }
 
 .orderHist .card {
-width: 750px;
-height: 100%;
-padding: 30px;
-margin-bottom: 20px;
+    width:100%;
+    height: 100%;
+    margin-bottom: 20px;
 }
 
 .orderHist .fs18 {
-font-size: 18px
+    font-size: 18px
 }
 
-.orderHist .fs24 {
-font-size: 24px
+.orderHist .highlightName{
+    font-size:1.5rem;
+    font-weight:600;
+}
+.orderHist .highlightPrice{
+    font-size:1.3rem;
+    font-weight:500;
+}
+.orderHist .orderComplete{
+    text-align:right;
+    color:#7FDA56;
 }
 
 /* 모바일 환경용 CSS */
@@ -350,5 +1007,193 @@ font-size: 24px
     }
     .itemdtl .reviewModal .modal-body .form-group, .itemdtl .imageModal .modal-body {
         font-size: 0.9rem;
+    }
+
+    /*cartlist 반응형 시작*/
+
+    .cartList .content-mg {
+    margin-left: 15%;
+    margin-right: 15%;
+    margin-top: 2%;
+    margin-bottom: 100px;
+    }
+
+    .cartList .repImgDiv {
+    margin-right: 10px;
+    margin-left: 10px;
+    height: auto;
+    width: auto;
+    }
+
+    .cartList .repImg {
+    min-width: 80px;
+    }
+
+    .cartList .fs18 {
+    font-size: clamp(10px, 2vw, 14px);
+    }
+
+    .cartList .fs24 {
+    font-size: clamp(14px, 2vw, 18px);
+    }
+
+    .cartList .cartItem {
+    margin: 5px 0;
+    background-color: #d9d9d9;
+    }
+
+    .cartList .table {
+    width: 100%;
+    table-layout:fixed;
+    }
+
+    .cartList .custom-margin {
+    min-width: 8px;
+    }
+
+    .cartList .mb4 {
+    font-size: 24px
+    }
+
+    .cartList .btn {
+    padding: 10px 20px;
+    font-size: 16px;
+    }
+    /*cartList 반응형 끝*/
+    /*itemMng 아이템관리페이지 시작*/
+    .itemMng .pc-table {
+        display: none !important; /* 모바일 화면에서 테이블 숨기기 */
+    }
+    .itemMng .table {
+        display: block;
+        width: 100%;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    .itemMng .table th, .table td {
+        font-size: 0.9em; /* 글씨 크기 조정 */
+        padding: 8px;
+    }
+    /* 아이템 관리페이지 끝 */
+
+    /*아이템 코드 입력 페이지 시작*/
+    .insertCode {
+        padding: 10px;
+    }
+    /* 제목 스타일 조정 */
+    .insertCode h2 {
+        font-size: 20px;
+        text-align: center;
+        margin-bottom: 15px;
+    }
+    .insertCode .game-info {
+        text-align: center;
+        margin: 15px 0;
+    }
+    /* 게임 정보 */
+    .insertCode .game-info p {
+        margin: 8px 0;
+        font-size: 16px;
+    }
+    /* 코드 입력 방식 중앙 정렬 */
+    .insertCode .how-input {
+        text-align: center;
+        margin: 10px 0;
+        font-size: 16px;
+    }
+    /* 코드 입력 필드 */
+    .insertCode #inputDiv {
+        text-align: center; /* 모바일에서는 가운데 정렬 */
+    }
+    /* 입력 필드 내부 텍스트 중앙 정렬 */
+    .insertCode .insert {
+        text-align: center; /* 입력 필드 내부 텍스트 중앙 정렬 */
+    }
+    /* 입력 레이블 스타일 */
+    .insertCode .code {
+        margin: 5px 0;
+        text-align: center;
+    }
+    /* 에러 메시지 스타일 */
+    .insertCode .error {
+        font-size: 10px;
+    }
+    /* 버튼 스타일 조정 */
+    .insertCode .btn {
+        font-size: 0.9em;
+        padding: 6px 10px;
+        margin: 5px 3px;
+    }
+    /*아이템 코드 입력 페이지 끝*/
+
+    /*결제페이지 시작-------------------*/
+    .payment .table { display: none; }
+    .payment .mobile-card { display: block; }
+
+    /* 카드형 레이아웃 */
+    .payment .card-item {
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        margin-bottom: 10px;
+        padding: 10px;
+        background-color: #f9f9f9;
+    }
+    .payment .card-item img {
+        width: 100px;
+        height: 100px;
+    }
+    .payment .card-item .item-info {
+        margin-left: 10px;
+    }
+    .payment .point-button-container {
+        display: flex;
+        justify-content: center; /* 중앙 정렬 */
+        gap: 10px; /* 버튼 간의 간격 */
+        margin-top: 10px; /* 버튼과 입력 필드 간격 */
+    }
+     /* 버튼 내부 글자 크기 조정 */
+    .payment .payBtn, .payment .button-group .cancel-btn, .payment .kakao-btn {
+        font-size: 1.5rem; /* 글자 크기 줄이기 */
+        padding: 4px 8px; /* 버튼 내부 여백 조정 */
+        width: auto; /* 버튼 너비를 자동으로 설정 */
+        flex: 1; /* 각 버튼이 동일한 너비를 차지하도록 설정 */
+        margin: 0 5px; /* 버튼 간격 조정 */
+    }
+    /* 카카오 버튼 아이콘 크기 조정 */
+    .payment .kakao-btn i {
+        font-size: 1.2rem; /* 아이콘 크기 축소 */
+        margin-right: 4px; /* 아이콘과 텍스트 간격 조정 */
+    }
+    /* 버튼 그룹이 일렬로 나타나도록 설정 */
+    .payment .button-group {
+        flex-direction: flex; /* 가로 정렬로 변환 */
+        flex-wrap: nowrap; /* 줄바꿈 방지 */
+        gap: 1px; /* 버튼 간격 조정 */
+        justify-content: center; /* 중앙 정렬 */
+    }
+    /* 결제 약관 확인, 포인트 사용 및 관련 요소들 간격 조정 */
+    #use, #useAll, #useNot {
+        padding: 6px 12px;
+        font-size: 0.85rem;
+    }
+    /* 결제 약관 체크박스 및 텍스트 간격 조정 */
+    #agreeDetail {
+        font-size: 0.9rem; /* 글자 크기 줄이기 */
+    }
+    /*결제페이지 끝-------------------*/
+
+    /* 주문내역 ------------------------------------------------------------------------------------------------------*/
+    .orderHist .content-mg {
+        margin-top: 2%;
+        margin-bottom: 100px;
+        margin-left:5%;
+        margin-right:5%;
+    }
+    .orderHist .highlightName{
+        font-size:1.4rem;
+    }
+    .orderHist .highlightPrice{
+        font-size:1.2rem;
     }
 }

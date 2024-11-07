@@ -24,11 +24,6 @@
             </div>
             <div class="collapse navbar-collapse" id="mobileMenu">
                 <ul class="nav flex-column">
-                    <!-- 회원 관리 메뉴 (관리자 권한) -->
-                    <li class="nav-item" sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
-                        <a class="nav-link" href="/members/manageMember">회원 관리</a>
-                    </li>
-
                     <!-- 사용자 메뉴 (로그인된 사용자) -->
                     <li class="nav-item" sec:authorize="isAuthenticated()">
                         <a class="nav-link" href="/mypage">마이페이지</a>
@@ -50,15 +45,15 @@
                     <li class="nav-item" sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
                         <a class="nav-link" href="/admin/items">등록된 상품</a>
                     </li>
-
-                    <!-- 로그아웃 (로그인된 사용자) -->
-                    <li class="nav-item" sec:authorize="isAuthenticated()">
-                        <a class="nav-link" href="/members/logout">로그아웃</a>
+                    <!-- 회원 관리 메뉴 (관리자 권한) -->
+                    <li class="nav-item" sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
+                        <a class="nav-link" href="/members/manageMember">회원 관리</a>
                     </li>
-
-                    <!-- 로그인 (비로그인 사용자) -->
-                    <li class="nav-item" sec:authorize="isAnonymous()">
-                        <a class="nav-link" href="/members/login">로그인</a>
+                    <li class="nav-item login-logout">
+                        <!-- 로그아웃 (로그인된 사용자) -->
+                        <a class="nav-link" href="/members/logout" sec:authorize="isAuthenticated()">로그아웃</a>
+                        <!-- 로그인 (비로그인 사용자) -->
+                        <a class="nav-link" href="/members/login" sec:authorize="isAnonymous()">로그인</a>
                     </li>
                 </ul>
             </div>
@@ -73,6 +68,7 @@
                 <img th:src="@{/img/logo_w.png}" class="desktop-logo" />
             </a>
             <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+                <!-- 좌측 메뉴 항목들 -->
                 <ul class="nav nav-pills">
                     <li class="nav-item">
                         <a class="nav-link company" data-company="list" href="/list">Total</a>
@@ -86,43 +82,21 @@
                     <li class="nav-item">
                         <a class="nav-link company" data-company="nintendo" href="/nintendo">Nintendo</a>
                     </li>
-                    <!-- <li class="nav-item" sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
-                    <a class="nav-link" href="/admin/item/new">상품 등록</a>
-                </li>
-                <li class="nav-item" sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
-                    <a class="nav-link" href="/admin/items">상품 관리</a>
-                </li> -->
-<!-- 
-                    <li class="nav-item">
-                        <a class="nav-link" href="/list">리스트</a>
-                    </li> 
-                    <li class="nav-item" sec:authorize="isAuthenticated()">
-                        <a class="nav-link" href="/cart">장바구니
-                          <span id="getCount" style="display:none"></span>
-                        </a>
+                </ul>
+                <!-- 우측 메뉴 항목들 -->
+                <ul class="nav nav-pills ml-auto">
+                    <li class="nav-item" sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
+                        <a class="nav-link" href="/admin/item/new">상품 등록</a>
                     </li>
-                    <li class="nav-item" sec:authorize="isAuthenticated()">
-                        <a class="nav-link" href="/dibs">찜목록
-                            <span id="getCountDibs" style="display:none"></span> 
-                        </a>
+                    <li class="nav-item" sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
+                        <a class="nav-link" href="/admin/items">상품 관리</a>
                     </li>
-                    <li class="nav-item" sec:authorize="isAuthenticated()">
-                        <a class="nav-link" href="/orders">구매이력</a>
-                    </li>
-                    
-                    <li class="nav-item" sec:authorize="isAuthenticated()">
-                        <a class="nav-link" href="/members/modify">회원정보수정</a>
-                    </li>
-                    -->
                     <li class="nav-item" sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
                         <a class="nav-link" href="/members/manageMember">회원 관리</a>
                     </li>
-                    <!-- <li class="nav-item" sec:authorize="isAuthenticated()">
+                    <li class="nav-item" sec:authorize="isAuthenticated()">
                         <a class="nav-link" href="/members/logout">로그아웃</a>
                     </li>
-                    <li class="nav-item" sec:authorize="isAuthenticated()">
-                        <a class="nav-link" href="/mypage">마이페이지</a>
-                    </li> -->
                 </ul>
             </div>
 
@@ -134,7 +108,7 @@
                     <button class="dropbtn"><i class="fa-solid fa-bars"></i></button>
                     <div class="dropdown-content">
                         <div class="dropdown-header user-info">
-                            <img th:src="@{/img/user_origin.png}" class="user-image" style="width: 60px; height: 60px;"/>
+                            <img sec:authorize="isAuthenticated()" th:src="@{'icon/icon_'+${#authentication.principal.profileImg}+'.svg'}" class="user-image" style="width: 60px; height: 60px;"/>
                             <div style="margin-left: 10px; margin-top: 25px;">
                                 <b sec:authorize="isAuthenticated()" sec:authentication="principal.name">님</b>
                                 <p sec:authorize="isAuthenticated()" sec:authentication="principal.email"></p>

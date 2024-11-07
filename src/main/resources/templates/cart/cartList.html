@@ -13,28 +13,28 @@
 <div layout:fragment="content" class="content-mg">
 
     <h2 class="mb-4">
-        장바구니 목록
+        장바구니
     </h2>
 
     <div>
 
         <table class="table">
             <colgroup>
-                <col width="15%"/>
-                <col width="70%"/>
-                <col width="15%"/>
+                <col width="10%"/>
+                <col width="60%"/>
+                <col width="30%"/>
             </colgroup>
             <thead>
             <tr class="text-center">
                 <td>
-                    <input type="checkbox" id="checkall" onclick="checkAll()"> 전체선택
+                    <input type="checkbox" id="checkall" onclick="checkAll()">
                 </td>
                 <td>상품정보</td>
-                <td>상품금액</td>
+                <td>금액</td>
             </tr>
             </thead>
             <tbody>
-            <tr th:each="cartItem : ${cartItems}">
+            <tr th:each="cartItem : ${cartItems}" class="cartItem">
                 <td class="text-center align-middle">
                     <input type="checkbox" name="cartChkBox" th:value="${cartItem.cartItemId}">
                 </td>
@@ -52,7 +52,7 @@
                                 </span>
                                 <input type="number" name="count" th:id="'count_' + ${cartItem.cartItemId}"
                                        th:value="${cartItem.count}" min="1"
-                                       onchange="changeCount(this)" class="form-control mr-2" >
+                                       onchange="changeCount(this)" class="form-control custom-margin mr-2" >
                                 <button type="button" class="close" aria-label="Close">
                                     <span aria-hidden="true" th:data-id="${cartItem.cartItemId}" onclick="deleteCartItem(this)">&times;</span>
                                 </button>
@@ -69,12 +69,12 @@
             </tbody>
         </table>
 
-        <h2 class="text-center">
+        <h4 class="text-center">
             총 주문 금액 : <span id="orderTotalPrice" class="text-danger">0원</span>
-        </h2>
+        </h4>
 
         <div class="text-center mt-3">
-            <button type="button" class="btn btn-primary btn-lg" onclick="orders()">주문하기</button>
+            <button type="button" class="btn" onclick="orders()">주문하기</button>
         </div>
 
     </div>

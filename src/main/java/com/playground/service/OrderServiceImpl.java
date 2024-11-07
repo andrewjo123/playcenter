@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.util.StringUtils;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -53,9 +54,11 @@ public class OrderServiceImpl implements OrderService {
 
     @Transactional(readOnly = true)
     @Override
-    public Page<OrderHistDto> getOrderList(String email, Pageable pageable) {
-        List<Order> orders = orderRepository.findOrders(email, pageable);
-        Long totalCount = orderRepository.countOrder(email);
+    public Page<OrderHistDto> getOrderList(String email, int date, Pageable pageable) {
+        LocalDateTime startDate=LocalDateTime.now().minusMonths(date-1).withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0).withNano(0);
+
+        List<Order> orders = orderRepository.findOrders(email, startDate, pageable);
+        Long totalCount = orderRepository.countOrder(email, startDate);
 
         List<OrderHistDto> orderHistDtos = new ArrayList<>();
         for (Order order : orders) {
