@@ -130,7 +130,7 @@
                         <p th:if="${challenge.countForSteam < 10}" class="text-warning">스팀 게임을 10개 이상 구매하세요</p>
                         <p th:if="${challenge.countForSteam >= 10 && challenge.achievementForSteam == 0}">
                             보상을 받을 수 있습니다!
-                            <button class="btn btn-primary chal" data-challenge="steam">3000P + 프로필 아이콘 받기</button>
+                            <button class="btn btn-primary chal" data-challenge="steam">2000P + 프로필 아이콘 받기</button>
                         </p>
                         <p th:if="${challenge.achievementForSteam == 1}" class="text-success">✅ 스팀 게임 10개 이상 구매 및 보상 받기 완료!</p>
                     </div>
@@ -170,7 +170,7 @@
                         <p th:if="${challenge.countForPs < 10}" class="text-warning">플레이스테이션 게임을 10개 이상 구매하세요</p>
                         <p th:if="${challenge.countForPs >= 10 && challenge.achievementForPs == 0}">
                             보상을 받을 수 있습니다!
-                            <button class="btn btn-primary chal" data-challenge="ps">3000P + 프로필 아이콘 받기</button>
+                            <button class="btn btn-primary chal" data-challenge="ps">2000P + 프로필 아이콘 받기</button>
                         </p>
                         <p th:if="${challenge.achievementForPs == 1}" class="text-success">✅ 플레이스테이션 게임 10개 이상 구매 및 보상 받기 완료!</p>
                     </div>

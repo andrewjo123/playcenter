@@ -108,7 +108,7 @@
                     <button class="dropbtn"><i class="fa-solid fa-bars"></i></button>
                     <div class="dropdown-content">
                         <div class="dropdown-header user-info">
-                            <img sec:authorize="isAuthenticated()" th:src="@{'icon/icon_'+${#authentication.principal.profileImg}+'.svg'}" class="user-image" style="width: 60px; height: 60px;"/>
+                            <img sec:authorize="isAuthenticated()" th:src="@{'/icon/icon_'+${#authentication.principal.profileImg}+'.svg'}" class="user-image" style="width: 60px; height: 60px;"/>
                             <div style="margin-left: 10px; margin-top: 25px;">
                                 <b sec:authorize="isAuthenticated()" sec:authentication="principal.name">님</b>
                                 <p sec:authorize="isAuthenticated()" sec:authentication="principal.email"></p>

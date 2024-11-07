@@ -27,4 +27,14 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             "where o.id = :orderId "
     )
     List<Order> payOrder(@Param("orderId") Long orderId);
+
+    @Query("select o from Order o " +
+            "where o.isPayed=false and o.orderDate <= :baseDate "
+    )
+    List<Order> getNotPayedOrder(@Param("baseDate") LocalDateTime baseDate);
+
+    @Query("select o from Order o " +
+            "where o.orderStatus='ORDER' and o.sendCode=false and o.orderDate <= :baseDate "
+    )
+    List<Order> getNotConfirmLongTime(@Param("baseDate") LocalDateTime baseDate);
 }

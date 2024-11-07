@@ -24,91 +24,98 @@
         </select>
     </div>
 
-    <div th:each="order : ${orders.getContent()}">
-        <h4 th:text="${order.orderDate}"></h4>
-        <div class="card d-flex p-3">
-            <h6 class="mt-0 align-self-end">주문번호: <span th:text="${order.orderId}"></span></h6>
-            <div th:each="orderItem : ${order.orderItemDtoList}" class="d-flex mb-3">
-                <div class="repImgDiv">
-                    <a th:href="'/item/' +${orderItem.itemId}" class="text-dark">
-                        <img th:src="${orderItem.imgUrl}" class="rounded repImg" th:alt="${orderItem.itemNm}">
-                    </a>
-                </div>
-                <div class="align-self-center w-75">
-                    <a th:href="'/item/' +${orderItem.itemId}" class="text-dark">
-                        <span class="highlightName" th:text="${orderItem.itemNm}"></span>
-                    </a>
-                    <div class="fs18 font-weight-light">
-                        <strong class="highlightPrice"><span th:text="${orderItem.orderPrice}"></span></strong>원 /
-                        <span th:text="${orderItem.count} +'개'"></span><br>
-                    </div>
-                </div>
-            </div>
-
-            <div class="d-flex justify-content-between ml-3">
-                <div>
-                    <th:block th:if="${order.orderStatus == T(com.playground.constant.OrderStatus).ORDER}">
-                        <span>사용 포인트: [[${-order.pointDto.usedPoint}]] pt</span><br>
-                        <th:block th:if="${order.sendCode==true}">
-                            <span style="color:blue;">적립 포인트: <span th:unless="${order.pointDto.stackPoint==0}">+</span>[[${order.pointDto.stackPoint}]] pt</span>
-                        </th:block>
-                        <th:block th:unless="${order.sendCode==true}">
-                            <span style="color:blue;">적립예정 포인트: <span th:unless="${order.pointDto.stackPoint==0}">+</span>[[${order.pointDto.stackPoint}]] pt</span>
-                        </th:block>
-                    </th:block>
-                    <th:block th:unless="${order.orderStatus == T(com.playground.constant.OrderStatus).ORDER}">
-                        <span style="color:red;">환불 포인트: [[${order.pointDto.usedPoint}]] pt</span>
-                    </th:block>
-                </div>
-
-                <div class="d-flex">
-                    <div class="ml-3">
-                        <th:block th:if="${order.sendCode==true}">
-                            <h6 style="text-align:right;">총 주문금액: <span class="highlightPrice" th:text="${#numbers.formatInteger(order.totalPrice - T(java.lang.Math).abs(order.pointDto.usedPoint), 1,'COMMA')}"></span>원</h6>
-                            <h5 class="orderComplete">코드 발송 완료</h5>
-                        </th:block>
-                        <th:block th:unless="${order.sendCode==true}">
-                            <th:block th:if="${order.orderStatus == T(com.playground.constant.OrderStatus).ORDER}">
-                                <button type="button" class="btn btn-outline-info p-2" th:value="${order.orderId}"
-                                        onclick="sendCode(this.value)">코드발송</button>
-                                <button type="button" class="btn btn-outline-warning p-2" th:value="${order.orderId}"
-                                        onclick="cancelOrder(this.value)">주문취소</button>
-                            </th:block>
-                            <th:block th:unless="${order.orderStatus == T(com.playground.constant.OrderStatus).ORDER}">
-                                <h6 style="text-align:right;">환불 금액: <span class="highlightPrice" th:text="${#numbers.formatInteger(order.totalPrice - T(java.lang.Math).abs(order.pointDto.usedPoint), 1,'COMMA')}"></span>원</h6>
-                                <h5 class="orderComplete" style="color:#E43B3B;">취소 완료</h5>
-                            </th:block>
-                        </th:block>
-                    </div>
-                </div>
-            </div>
-
+    <th:block th:if="${orders.getContent().size()==0}">
+        <div>
+            주문 내역이 없습니다
         </div>
-    </div>
+    </th:block>
 
-    <div th:with="start=${(orders.number/maxPage)*maxPage + 1}, end=(${(orders.totalPages == 0) ? 1 : (start + (maxPage - 1) < orders.totalPages ? start + (maxPage - 1) : orders.totalPages)})">
-        <ul class="pagination justify-content-center">
+    <th:block th:unless="${orders.getContent().size()==0}">
+        <div th:each="order : ${orders.getContent()}">
+            <h4 th:text="${order.orderDate}"></h4>
+            <div class="card d-flex p-3">
+                <h6 class="mt-0 align-self-end">주문번호: <span th:text="${order.orderId}"></span></h6>
+                <div th:each="orderItem : ${order.orderItemDtoList}" class="d-flex mb-3">
+                    <div class="repImgDiv">
+                        <a th:href="'/item/' +${orderItem.itemId}" class="text-dark">
+                            <img th:src="${orderItem.imgUrl}" class="rounded repImg" th:alt="${orderItem.itemNm}">
+                        </a>
+                    </div>
+                    <div class="align-self-center w-75">
+                        <a th:href="'/item/' +${orderItem.itemId}" class="text-dark">
+                            <span class="highlightName" th:text="${orderItem.itemNm}"></span>
+                        </a>
+                        <div class="fs18 font-weight-light">
+                            <strong class="highlightPrice"><span th:text="${orderItem.orderPrice}"></span></strong>원 /
+                            <span th:text="${orderItem.count} +'개'"></span><br>
+                        </div>
+                    </div>
+                </div>
 
-            <li class="page-item" th:classappend="${orders.number eq 0}?'disabled':''">
-                <a th:href="@{'/orders/' + ${orders.number-1}}" aria-label='Previous' class="page-link">
-                    <span aria-hidden='true'>Previous</span>
-                </a>
-            </li>
+                <div class="d-flex justify-content-between ml-3">
+                    <div>
+                        <th:block th:if="${order.orderStatus == T(com.playground.constant.OrderStatus).ORDER}">
+                            <span>사용 포인트: [[${-order.pointDto.usedPoint}]] pt</span><br>
+                            <th:block th:if="${order.sendCode==true}">
+                                <span style="color:blue;">적립 포인트: <span th:unless="${order.pointDto.stackPoint==0}">+</span>[[${order.pointDto.stackPoint}]] pt</span>
+                            </th:block>
+                            <th:block th:unless="${order.sendCode==true}">
+                                <span style="color:blue;">적립예정 포인트: <span th:unless="${order.pointDto.stackPoint==0}">+</span>[[${order.pointDto.stackPoint}]] pt</span>
+                            </th:block>
+                        </th:block>
+                        <th:block th:unless="${order.orderStatus == T(com.playground.constant.OrderStatus).ORDER}">
+                            <span style="color:red;">환불 포인트: [[${order.pointDto.usedPoint}]] pt</span>
+                        </th:block>
+                    </div>
 
-            <li class="page-item" th:each="page: ${#numbers.sequence(start, end)}"
-                th:classappend="${orders.number eq page-1}?'active':''">
-                <a th:href="@{'/orders/' + ${page-1}}" th:inline="text" class="page-link">[[${page}]]</a>
-            </li>
+                    <div class="d-flex">
+                        <div class="ml-3">
+                            <th:block th:if="${order.sendCode==true}">
+                                <h6 style="text-align:right;">총 주문금액: <span class="highlightPrice" th:text="${#numbers.formatInteger(order.totalPrice - T(java.lang.Math).abs(order.pointDto.usedPoint), 1,'COMMA')}"></span>원</h6>
+                                <h5 class="orderComplete">코드 발송 완료</h5>
+                            </th:block>
+                            <th:block th:unless="${order.sendCode==true}">
+                                <th:block th:if="${order.orderStatus == T(com.playground.constant.OrderStatus).ORDER}">
+                                    <button type="button" class="btn btn-outline-info p-2" th:value="${order.orderId}"
+                                            onclick="sendCode(this.value)">코드발송</button>
+                                    <button type="button" class="btn btn-outline-warning p-2" th:value="${order.orderId}"
+                                            onclick="cancelOrder(this.value)">주문취소</button>
+                                </th:block>
+                                <th:block th:unless="${order.orderStatus == T(com.playground.constant.OrderStatus).ORDER}">
+                                    <h6 style="text-align:right;">환불 금액: <span class="highlightPrice" th:text="${#numbers.formatInteger(order.totalPrice - T(java.lang.Math).abs(order.pointDto.usedPoint), 1,'COMMA')}"></span>원</h6>
+                                    <h5 class="orderComplete" style="color:#E43B3B;">취소 완료</h5>
+                                </th:block>
+                            </th:block>
+                        </div>
+                    </div>
+                </div>
 
-            <li class="page-item" th:classappend="${orders.number+1 ge orders.totalPages}?'disabled':''">
-                <a th:href="@{'/orders/' + ${orders.number+1}}" aria-label='Next' class="page-link">
-                    <span aria-hidden='true'>Next</span>
-                </a>
-            </li>
+            </div>
+        </div>
 
-        </ul>
-    </div>
+        <div th:with="start=${(orders.number/maxPage)*maxPage + 1}, end=(${(orders.totalPages == 0) ? 1 : (start + (maxPage - 1) < orders.totalPages ? start + (maxPage - 1) : orders.totalPages)})">
+            <ul class="pagination justify-content-center">
 
+                <li class="page-item" th:classappend="${orders.number eq 0}?'disabled':''">
+                    <a th:href="@{'/orders/' + ${orders.number-1}}" aria-label='Previous' class="page-link">
+                        <span aria-hidden='true'>Previous</span>
+                    </a>
+                </li>
+
+                <li class="page-item" th:each="page: ${#numbers.sequence(start, end)}"
+                    th:classappend="${orders.number eq page-1}?'active':''">
+                    <a th:href="@{'/orders/' + ${page-1}}" th:inline="text" class="page-link">[[${page}]]</a>
+                </li>
+
+                <li class="page-item" th:classappend="${orders.number+1 ge orders.totalPages}?'disabled':''">
+                    <a th:href="@{'/orders/' + ${orders.number+1}}" aria-label='Next' class="page-link">
+                        <span aria-hidden='true'>Next</span>
+                    </a>
+                </li>
+
+            </ul>
+        </div>
+    </th:block>
 
     <!-- 모달 -->
     <div class="modal fade" id="loadingIndicator" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
