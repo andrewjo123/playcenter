@@ -50,6 +50,9 @@ public class CartServiceImpl implements CartService {
         CartItem savedCartItem = cartItemRepository.findByCartIdAndItemId(cart.getId(), item.getId());
 
         if (savedCartItem != null) {
+            if(savedCartItem.getCount()+cartItemDto.getCount()>item.getStockNumber()){
+                return 0L;
+            }
             savedCartItem.addCount(cartItemDto.getCount());
             return savedCartItem.getId();
         } else {
