@@ -3,7 +3,163 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/layout1}" class="main">
 <head>
-    <link th:href="@{/css/layout1.css}" rel="stylesheet">
+<!--    <link th:href="@{/css/layout1.css}" rel="stylesheet"> -->
+    <style>
+        /* main */
+        .main .carousel-inner > .item {
+            height: 350px;
+        }
+        .main .margin{
+            margin-bottom:30px;
+        }
+        .main .banner{
+            height: 300px;
+            position: absolute; top:0; left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .main .card-text{
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+        .main a{
+            text-decoration: none;
+        }
+        .main a:hover{
+            text-decoration:gray;
+        }
+        .main .center{
+            text-align:center;
+        }
+        /* 추가 css */
+        .main .arrow {
+            font-size: 1.2em;   /* 화살표 크기 조정 */
+        }
+          /* 네비게이션 텍스트 스타일 */
+          .main .arrow {
+            font-size: 1.2em;
+        }
+
+        /* 그리드 아이템 스타일 */
+        .main .company-items h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-top: 30px;
+        }
+
+        .main .company-items .row {
+            display: flex;
+            flex-wrap: nowrap;
+            justify-content: center;
+            position: relative;
+        }
+
+        .main .company-items .card {
+            width: 150%;
+            height: 0;
+            max-width: 340px;
+            border: none;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-radius: 8px;
+            min-height: 280px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* 카드 hover 효과 */
+        .main .company-items .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .main .company-items .card img {
+            position: relative;
+            width: 100%;
+            height: 170px;
+            object-fit: cover;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+        }
+        .main .company-items .card-body {
+            display: flex;
+            justify-content: flex-start;
+            height: 40%;
+            align-items: center;
+            flex-grow: 1;
+            padding: 10px;
+            text-align: center;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        .main .company-items .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden; 
+            width: 100%; 
+        }
+
+        .main .company-items .card-price {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: #28a745;
+        }
+
+        .main .company-items .card-stock {
+            font-size: 1rem;
+            color: #e74c3c;
+        }
+ 
+
+        .main h2{
+            padding: 30px;
+            border-radius: 10px;
+        }
+        /* 아이템을 수평으로 나열하는 컨테이너 */
+        .main .horizontal-scroll-container {
+            display: flex;
+            overflow-x: auto;    /* 수평 스크롤을 추가 */
+            overflow-y: hidden;
+            gap: 8.8%;          
+            scroll-behavior: smooth; /* 부드러운 스크롤 애니메이션 */
+            flex-wrap: nowrap;
+            -webkit-overflow-scrolling: touch; 
+            position: relative;
+            width: 100%;  
+            height: 300px;
+            margin: 30px auto;
+        }
+
+
+        /* 좌우로 스크롤하는 아이템들이 애니메이션처럼 보이도록 설정 */
+        .main .horizontal-scroll-container::-webkit-scrollbar {
+            display: none;
+        }
+        .carousel-control-prev, .carousel-control-next {
+            position: absolute;
+            top: 50%;
+            z-index: 2;            
+            font-size: 50px;
+            transform: translateY(-50%);
+            transition: background-color 0.5s;
+            background-color: rgba(0, 0, 0, 0.692);
+            width: 40px;
+            height: 83%;
+        }
+        .carousel-control-prev{
+            margin-left: -42px;
+        }
+        .carousel-control-next{
+            margin-right: -42px;
+        }
+    </style>
 </head>
 
 <div layout:fragment="content">
@@ -29,93 +185,137 @@
         </div>
     </div>
 
+    <div th:each="company : ${result}" class="company-items">
+        <h2 th:if="${company.key=='all'}">  <a href="/list" class="text-dark">추천컨텐츠  <span class="arrow"> &gt; </span></a></h2>
+        <h2 th:if="${company.key=='steam'}">  <a href="/steam" class="text-dark">Steam <span class="arrow"> &gt; </span></a></h2>
+        <h2 th:if="${company.key=='nintendo'}">  <a href="/nintendo" class="text-dark">Nintendo <span class="arrow"> &gt; </span></a></h2>
+        <h2 th:if="${company.key=='ps'}"><a href="/ps" class="text-dark">PS<span class="arrow"> &gt; </span></a></h2>
+       
+        
+         <!-- 고유한 carousel 아이디 설정 -->
+    <div id="carouselControls_[[${index}]]" class="carousel slide margin carousel-custom" data-ride="carousel">
 
-    <div id="all-items" >
-        <h2>모든 아이템</h2>
-        <!-- 모든 아이템을 표시할 영역 -->
-        <div  class="row">
-            <th:block th:if="${allItems.getContent().size() > 0}">
-                <th:block th:each="item, status: ${allItems.getContent()}">
-                    <div class="col-md-4">
-                        <div class="card">
-                            <a th:href="'/item/' +${item.id}" class="text-dark">
-                                <img th:src="${item.imgUrl}" class="card-img-top" th:alt="${item.itemNm}" height="400">
-                                <div class="card-body">
-                                    <h4 class="card-title">[[${item.itemNm}]]</h4>
-                                    <p class="card-text">[[${item.itemDetail}]]</p>
-                                    <h3 class="card-title text-danger">[[${item.price}]]원</h3>
-                                </div>
-                            </a>
+        <ul class="carousel-indicators">
+            <li th:each="i : ${#numbers.sequence(0, 2)}" 
+                th:data-target="'#carouselControls_' + ${index}" 
+                th:data-slide-to="${i}" 
+                th:class="${i == 0 ? 'active' : ''}">
+            </li>
+        </ul>
+        
+        <div class="carousel-inner">
+
+            <div class="carousel-item active carousel-item-custom">
+                <div class="horizontal-scroll-container">
+                    <th:block th:each="item : ${company.value}">
+                        <div class="col-12 col-md-2 margin">
+                            <div class="card">
+                                <a th:href="'/item/' + ${item.id}" class="text-dark">
+                                    <img th:src="${item.imgUrl}" class="card-img-top" th:alt="${item.itemNm}" height="400">
+                                    <div class="card-body">
+                                        <h4 class="card-title">[[${item.itemNm}]]</h4>
+                                        <th:block th:if="${item.stockNumber<=0}">
+                                            <h3 class="card-title text-danger">품절</h3>
+                                        </th:block>
+                                        <th:block th:unless="${item.stockNumber<=0}">
+                                            <h3 class="card-title text-danger">[[${item.price}]]원</h3>
+                                        </th:block>
+                                    </div>
+                                </a>
+                            </div>
                         </div>
-                    </div>
-                </th:block>
-            </th:block>  
-        </div>  
-    </div>
-
-    <div class="company-items">
-        <h2>스팀</h2>
-        <div  class="row">
-        <th:block th:if="${steamItems.getContent().size() > 0}">
-            <th:block th:each="item, status: ${steamItems.getContent()}">
-                <div class="col-md-4 margin">
-                    <div class="card">
-                        <a th:href="'/item/' +${item.id}" class="text-dark">
-                            <img th:src="${item.imgUrl}" class="card-img-top" th:alt="${item.itemNm}" height="400">
-                            <div class="card-body">
-                                <h4 class="card-title">[[${item.itemNm}]]</h4>
-                                <p class="card-text">[[${item.itemDetail}]]</p>
-                                <h3 class="card-title text-danger">[[${item.price}]]원</h3>
-                            </div>
-                        </a>
-                    </div>
+                    </th:block>
                 </div>
-            </th:block>
-        </th:block>  
+              
+            </div>
         </div>
-    </div>
-    <div class="company-items">
-        <h2>닌텐도</h2>
-        <div  class="row">
-        <th:block th:if="${nintendoItems.getContent().size() > 0}">
-            <th:block th:each="item, status: ${nintendoItems.getContent()}">
-                <div class="col-md-4 margin">
-                    <div class="card">
-                        <a th:href="'/item/' +${item.id}" class="text-dark">
-                            <img th:src="${item.imgUrl}" class="card-img-top" th:alt="${item.itemNm}" height="400">
-                            <div class="card-body">
-                                <h4 class="card-title">[[${item.itemNm}]]</h4>
-                                <p class="card-text">[[${item.itemDetail}]]</p>
-                                <h3 class="card-title text-danger">[[${item.price}]]원</h3>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-            </th:block>
-        </th:block>  
-        </div>
-    </div>
-    <div class="company-items">
-        <h2>플레이스테이션</h2>
-        <div  class="row">
-        <th:block th:if="${psItems.getContent().size() > 0}">
-            <th:block th:each="item, status: ${psItems.getContent()}">
-                <div class="col-md-4 margin">
-                    <div class="card">
-                        <a th:href="'/item/' +${item.id}" class="text-dark">
-                            <img th:src="${item.imgUrl}" class="card-img-top" th:alt="${item.itemNm}" height="400">
-                            <div class="card-body">
-                                <h4 class="card-title">[[${item.itemNm}]]</h4>
-                                <p class="card-text">[[${item.itemDetail}]]</p>
-                                <h3 class="card-title text-danger">[[${item.price}]]원</h3>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-            </th:block>
-        </th:block>  
-        </div>
-    </div>
+        <!-- 좌측, 우측 스크롤 버튼 -->
+        <a class="carousel-control-prev" href="#carouselControls_[[${index}]]" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#carouselControls_[[${index}]]" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+        </a>
 
-
+    </div>
 </div>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    document.querySelectorAll('.carousel-control-prev').forEach((prevButton, index) => {
+        const nextButton = document.querySelectorAll('.carousel-control-next')[index];
+        const scrollContainer = document.querySelectorAll('.horizontal-scroll-container')[index];
+
+        // 카드 너비와 갭
+        const cardWidth = 340; // 카드 너비
+        const gap = 90;        // 카드 간 간격
+        const visibleCards = 4; // 한 번에 보여지는 카드 개수 (4개로 설정)
+
+        // 이동할 거리 (4개 카드 만큼 이동)
+        const scrollDistance = (cardWidth + gap) * visibleCards - gap; 
+
+        const updateButtonsVisibility = () => {
+            const maxScrollLeft = scrollContainer.scrollWidth - scrollContainer.clientWidth; // 최대 스크롤 거리
+            const currentScroll = scrollContainer.scrollLeft;
+
+            // **끝에 약간의 여유를 두고** 버튼의 가시성 업데이트
+            const scrollThreshold = 10;  // 끝과의 여유 값 (10px 정도)
+
+            // 현재 스크롤이 맨 왼쪽일 때
+            if (currentScroll <= 0 + scrollThreshold) {
+                prevButton.style.visibility = "hidden"; // 이전 버튼 숨김
+                nextButton.style.visibility = "visible"; // 다음 버튼 보이기
+            } 
+            // 현재 스크롤이 맨 오른쪽일 때
+            else if (currentScroll >= maxScrollLeft - scrollThreshold) {
+                prevButton.style.visibility = "visible"; // 이전 버튼 보이기
+                nextButton.style.visibility = "hidden";  // 다음 버튼 숨김
+            } 
+            // 중간에 있을 때
+            else {
+                prevButton.style.visibility = "visible"; // 이전 버튼 보이기
+                nextButton.style.visibility = "visible"; // 다음 버튼 보이기
+            }
+        };
+
+        updateButtonsVisibility(); // 처음 버튼 상태 업데이트
+
+        // 이전 버튼 클릭 시
+        prevButton.addEventListener('click', (event) => {
+            event.preventDefault();
+            scrollContainer.scrollBy({
+                left: -scrollDistance,  // 왼쪽으로 4개 카드 만큼 이동
+                behavior: 'smooth'
+            });
+            updateButtonsVisibility();  // 버튼 상태 업데이트
+        });
+
+        // 다음 버튼 클릭 시
+        nextButton.addEventListener('click', (event) => {
+            event.preventDefault();
+            const maxScrollLeft = scrollContainer.scrollWidth - scrollContainer.clientWidth;
+
+            // 이동하려는 거리만큼 이동 (끝까지 가지 않도록)
+            if (scrollContainer.scrollLeft + scrollDistance <= maxScrollLeft) {
+                scrollContainer.scrollBy({
+                    left: scrollDistance,  // 오른쪽으로 4개 카드 만큼 이동
+                    behavior: 'smooth'
+                });
+            } else {
+                // 오른쪽 끝으로 스크롤 (끝까지 갔을 때)
+                scrollContainer.scrollTo({
+                    left: maxScrollLeft,
+                    behavior: 'smooth'
+                });
+            }
+            updateButtonsVisibility();  // 버튼 상태 업데이트
+        });
+
+        // 스크롤 중 버튼 상태 업데이트
+        scrollContainer.addEventListener('scroll', updateButtonsVisibility);
+    });
+});
+
+
+</script>

@@ -3,7 +3,9 @@ package com.playground.repository;
 import com.playground.dto.ItemCategoryDto;
 import com.playground.entity.QItemCategory;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.Wildcard;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -21,6 +23,7 @@ import org.springframework.data.domain.Pageable;
 import org.thymeleaf.util.StringUtils;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
@@ -32,7 +35,17 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
     }
 
     private BooleanExpression searchSellStatusEq(ItemSellStatus searchSellStatus){
-        return searchSellStatus == null ? null : QItem.item.itemSellStatus.eq(searchSellStatus);
+        if (searchSellStatus == null) {
+            return null;
+        }
+        // searchSellStatus 값에 따라 조건을 설정
+        if (searchSellStatus == ItemSellStatus.SOLD_OUT) {
+            return QItem.item.stockNumber.eq(0); // 품절 상태 + stockNumber가 0
+        } else if (searchSellStatus == ItemSellStatus.SELL) {
+            return QItem.item.stockNumber.gt(0); // 재고 있음 + stockNumber가 0보다 큼
+        } else {
+            return null; //기본 값
+        }
     }
 
     private BooleanExpression regDtsAfter(String searchDateType){
@@ -105,6 +118,19 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
         whereClause.and(itemImg.repimgYn.eq("Y"));
         whereClause.and(itemNmLike(itemSearchDto.getSearchQuery()));
 
+        //정렬 조건 추가
+        List<OrderSpecifier<?>> orderClauses = new ArrayList<>();
+        if(itemSearchDto.getOrderBy()!=null){
+            if (itemSearchDto.getOrderBy().equals("price_high")) {
+                orderClauses.add(item.price.desc());
+            } else if (itemSearchDto.getOrderBy().equals("price_low")) {
+                orderClauses.add(item.price.asc());
+            } else if (itemSearchDto.getOrderBy().equals("sales")){
+                orderClauses.add(item.buyCnt.desc());
+            }
+        }
+        orderClauses.add(item.id.desc());
+
         // ItemCategoryDto의 필드 추가
         if (itemCategoryDto != null) {
             if (itemCategoryDto.isAction()) whereClause.and(itemCategory.action.eq(true));
@@ -128,23 +154,21 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
             if (itemCategoryDto.isMoba()) whereClause.and(itemCategory.moba.eq(true));
             if (itemCategoryDto.isMmorpg()) whereClause.and(itemCategory.mmorpg.eq(true));
         }
-        System.out.println(itemCategoryDto.isAction());
-        System.out.println("::::::::::::::::::::::::::::::::::::::");
-        System.out.println(whereClause);
         List<MainItemDto> content = queryFactory
                 .select(
                         new QMainItemDto(
                                 item.id,
                                 item.itemNm,
-                                item.itemDetail,
                                 itemImg.imgUrl,
-                                item.price)
+                                item.price,
+                                item.stockNumber,
+                                item.buyCnt)
                 )
                 .from(itemImg)
                 .join(itemImg.item, item)
                 .join(itemCategory).on(itemCategory.item.eq(item))
                 .where(whereClause)
-                .orderBy(item.id.desc())
+                .orderBy(orderClauses.toArray(new OrderSpecifier[0]))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -174,6 +198,19 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
         whereClause.and(itemCategory.company.eq(company));
         whereClause.and(itemNmLike(itemSearchDto.getSearchQuery()));
 
+        //정렬 조건 추가
+        List<OrderSpecifier<?>> orderClauses = new ArrayList<>();
+        if(itemSearchDto.getOrderBy()!=null){
+            if (itemSearchDto.getOrderBy().equals("price_high")) {
+                orderClauses.add(item.price.desc());
+            } else if (itemSearchDto.getOrderBy().equals("price_low")) {
+                orderClauses.add(item.price.asc());
+            } else if (itemSearchDto.getOrderBy().equals("sales")){
+                orderClauses.add(item.buyCnt.desc());
+            }
+        }
+        orderClauses.add(item.id.desc());
+
         // ItemCategoryDto의 필드 추가
         if (itemCategoryDto != null) {
             if (itemCategoryDto.isAction()) whereClause.and(itemCategory.action.eq(true));
@@ -205,15 +242,16 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
                         new QMainItemDto(
                                 item.id,
                                 item.itemNm,
-                                item.itemDetail,
                                 itemImg.imgUrl,
-                                item.price)
+                                item.price,
+                                item.stockNumber,
+                                item.buyCnt)
                 )
                 .from(itemImg)
                 .join(itemImg.item, item)
                 .join(itemCategory).on(itemCategory.item.eq(item))
                 .where(whereClause)
-                .orderBy(item.id.desc())
+                .orderBy(orderClauses.toArray(new OrderSpecifier[0]))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -230,7 +268,7 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
     }
 
     @Override
-    public Page<MainItemDto> getMainItem(String company, ItemSearchDto itemSearchDto, ItemCategoryDto itemCategoryDto,Pageable pageable) {
+    public List<MainItemDto> getMainItem(String company, ItemCategoryDto itemCategoryDto) {
         QItem item = QItem.item;
         QItemImg itemImg = QItemImg.itemImg;
         QItemCategory itemCategory= QItemCategory.itemCategory;
@@ -240,7 +278,6 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
 
        // 기본 조건 추가
        whereClause.and(itemImg.repimgYn.eq("Y")); // 대표 이미지 조건
-   
 
        if (company != null) {
         whereClause.and(itemCategory.company.eq(company));
@@ -251,17 +288,17 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
                         new QMainItemDto(
                                 item.id,
                                 item.itemNm,
-                                item.itemDetail,
                                 itemImg.imgUrl,
-                                item.price)
+                                item.price,
+                                item.stockNumber,
+                                item.buyCnt)
                 )
                 .from(itemImg)
                 .join(itemImg.item, item)
                 .join(itemCategory).on(itemCategory.item.eq(item))
                 .where(whereClause)
-                .orderBy(item.openDate.desc(), item.id.desc()) 
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
+                .orderBy(Expressions.numberTemplate(Double.class, "rand()").asc())
+                .limit(8)
                 .fetch();
     
         long total = queryFactory
@@ -272,7 +309,7 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
                 .where(whereClause)
                 .fetchOne();
     
-        return new PageImpl<>(content, pageable, total);
+        return content;
     }
 
 }

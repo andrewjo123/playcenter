@@ -6,6 +6,9 @@ html {
 body {
     min-height: 100%;
 }
+.layout-row{
+    min-height: 600px;
+}
 .content{
     margin-bottom:100px;
     margin-top: 50px;
@@ -24,7 +27,10 @@ li,ul{
     text-align: left;
     font-size: 12px;
     margin-top:20px;
-    top:10px;
+    width:100%;
+}
+.footer .link {
+    padding: 0 20px;
 }
 .footer a {
     font-size: 12px
@@ -35,78 +41,68 @@ li,ul{
 }
 /* footer end */
 
-/* main */
-.main .carousel-inner > .item {
-    height: 350px;
+/* 페이지 top, bottom 이동 */
+#pageIndicators{
+    width:100px;
+    height:200px;
+    position:fixed;
+    bottom:20vh;
+    right:6vw;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    font-size:35px;
+    z-index:10;
+    display:none;
 }
-.main .margin{
-    margin-bottom:30px;
+#pageIndicators #goTop{
+    width:50px;
+    height:50px;
+    cursor:pointer;
+    position:absolute;
+    top:30px;
+    display:none;
+    border-radius:50%;
+    border:2px solid #ccc;
+    color:#ccc;
+    padding-left:6px;
 }
-.main .banner{
-    height: 300px;
-    position: absolute; top:0; left: 0;
-    width: 100%;
-    height: 100%;
+#pageIndicators #goBottom{
+    width:50px;
+    height:50px;
+    cursor:pointer;
+    position:absolute;
+    top:90px;
+    display:none;
+    border-radius:50%;
+    border:2px solid #ccc;
+    color:#ccc;
+    padding-left:6px;
+    padding-bottom:10px;
 }
-.main .card-text{
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-}
-.main a{
-    text-decoration: none;
-}
-.main a:hover{
-    text-decoration:gray;
-}
-.main .center{
-    text-align:center;
-}
-/* itemList */
-.itemList .carousel-inner > .item {
-    height: 350px;
-}
-.itemList .margin{
-    margin-bottom:30px;
-}
-.itemList .banner{
-    height: 300px;
-    position: absolute; top:0; left: 0;
-    width: 100%;
-    height: 100%;
-}
-.itemList .card-text{
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-}
-.itemList a{
-    text-decoration: none;
-}
-.itemList a:hover{
-    text-decoration:gray;
-}
-.itemList .center{
-    text-align:center;
+#pageIndicators #indicatorBtn{
+    width:50px;
+    height:50px;
+    cursor:pointer;
+    position:absolute;
+    top:150px;
+    opacity:0.8;
 }
 
-.itemList .sold-out-filter {
-    filter: grayscale(100%);
-    opacity: 0.5;
-}
-.itemList .sold-out-badge {
+#pageIndicators #indicatorBtn #horizonLine {
     position: absolute;
-    top: 10px;
-    left: 10px;
-    background-color: rgba(255, 0, 0, 0.8);
-    color: white;
-    padding: 5px;
-    font-weight: bold;
-    border-radius: 5px;
-    font-size: 14px;
+    background-color: #ccc;
+    width: 100%;
+    height: 10px;
+    top: 20px;
 }
-#toggleTagSelectBtn {
-    display: none;
+
+#pageIndicators #indicatorBtn #verticalLine {
+    position: absolute;
+    background-color: #ccc;
+    width: 10px;
+    height: 100%;
+    left: 20px;
 }
 
 /* 모바일 화면 전용 스타일 */
@@ -200,48 +196,4 @@ li,ul{
     }
     /*footer 끝*/
 
-    /*itemList 시작*/
-    .itemList .content {
-        padding: 10px;
-    }
-    .itemList .card img {
-        width: 100%;
-        height: auto;
-        max-height: 250px; /* 모바일 최적화된 높이 */
-    }
-    .itemList .company-items, .orderBy {
-        width: 100%;
-    }
-    /* nav-item을 숨김 처리 */
-    .itemList .navbar-nav .nav-item {
-        display: none;
-    }
-    /* 모바일 상태에서 검색 창과 장르 선택 버튼의 크기와 위치 조정 */
-    .itemList .form-inline {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-    .itemList .form-inline .form-control {
-        width: 80%;
-        margin-bottom: 5px;
-    }
-    .itemList .form-inline .btn-outline-success,
-    .itemList .form-inline #toggleTagSelectBtn {
-        width: 80%;
-        margin-bottom: 5px;
-    }
-    /* 검색창, 장르 선택 버튼 모바일 상태에서 상하 여백 */
-    .itemList .form-inline .form-control, .itemList .form-inline .btn {
-        margin-bottom: 10px;
-    }
-    /*태그 선택*/
-    #absolute {
-        display: none;
-    }
-    #toggleTagSelectBtn {
-        display: inline-block;
-    }
-    /*itemList 끝*/
 }
