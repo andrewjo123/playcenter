@@ -28,11 +28,9 @@
                     dataType:"text",
                     success:function(result){
                         if(result>0){
-                            $("#getCount").text(`(${result})`).show();
-                            $("#sidebarGetCount").text(result).show();
+                            $(".getCount").text(`(${result})`).show();
                         } else {
-                            $("#getCount").hide();
-                            $("#sidebarGetCount").hide();
+                            $(".getCount").hide();
                         }
                     }
                 });
@@ -49,11 +47,9 @@
                     dataType:"text",
                     success:function(result){
                         if(result>0){
-                            $("#getCountDibs").text(`(${result})`).show();
-                            $("#sidebarGetCountDibs").text(result).show();
+                            $(".getCountDibs").text(`(${result})`).show();
                         } else {
-                            $("#getCountDibs").hide();
-                            $("sidebarGetCountDibs").hide();
+                            $(".getCountDibs").hide();
                         }
                     }
                 });
