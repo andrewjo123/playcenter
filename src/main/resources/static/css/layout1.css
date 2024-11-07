@@ -65,6 +65,71 @@ li,ul{
 .main .center{
     text-align:center;
 }
+
+/* 페이지 top, bottom 이동 */
+#pageIndicators{
+    width:100px;
+    height:200px;
+    position:fixed;
+    bottom:20vh;
+    right:6vw;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    font-size:35px;
+    z-index:10;
+    display:none;
+}
+#pageIndicators #goTop{
+    width:50px;
+    height:50px;
+    cursor:pointer;
+    position:absolute;
+    top:30px;
+    display:none;
+    border-radius:50%;
+    border:2px solid #ccc;
+    color:#ccc;
+    padding-left:6px;
+}
+#pageIndicators #goBottom{
+    width:50px;
+    height:50px;
+    cursor:pointer;
+    position:absolute;
+    top:90px;
+    display:none;
+    border-radius:50%;
+    border:2px solid #ccc;
+    color:#ccc;
+    padding-left:6px;
+    padding-bottom:10px;
+}
+#pageIndicators #indicatorBtn{
+    width:50px;
+    height:50px;
+    cursor:pointer;
+    position:absolute;
+    top:150px;
+    opacity:0.8;
+}
+
+#pageIndicators #indicatorBtn #horizonLine {
+    position: absolute;
+    background-color: #ccc;
+    width: 100%;
+    height: 10px;
+    top: 20px;
+}
+
+#pageIndicators #indicatorBtn #verticalLine {
+    position: absolute;
+    background-color: #ccc;
+    width: 10px;
+    height: 100%;
+    left: 20px;
+}
+
 /* 모바일 화면 전용 스타일 */
 @media (max-width: 768px) {
     html, body {
