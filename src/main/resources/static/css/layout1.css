@@ -6,6 +6,9 @@ html {
 body {
     min-height: 100%;
 }
+.layout-row{
+    min-height: 600px;
+}
 .content{
     margin-bottom:100px;
     margin-top: 50px;
@@ -24,7 +27,6 @@ li,ul{
     text-align: left;
     font-size: 12px;
     margin-top:20px;
-    top:10px;
     width:100%;
 }
 .footer .link {
