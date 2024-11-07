@@ -62,6 +62,9 @@
     margin: 0;
     background-color: #d9d9d9;
 }
+.cartList .close {
+    margin-right: 10px;
+}
 
 .cartList .table {
     width: 100%;
@@ -1008,58 +1011,6 @@ width: auto;
     .itemdtl .reviewModal .modal-body .form-group, .itemdtl .imageModal .modal-body {
         font-size: 0.9rem;
     }
-
-    /*cartlist 반응형 시작*/
-
-    .cartList .content-mg {
-    margin-left: 15%;
-    margin-right: 15%;
-    margin-top: 2%;
-    margin-bottom: 100px;
-    }
-
-    .cartList .repImgDiv {
-    margin-right: 10px;
-    margin-left: 10px;
-    height: auto;
-    width: auto;
-    }
-
-    .cartList .repImg {
-    min-width: 80px;
-    }
-
-    .cartList .fs18 {
-    font-size: clamp(10px, 2vw, 14px);
-    }
-
-    .cartList .fs24 {
-    font-size: clamp(14px, 2vw, 18px);
-    }
-
-    .cartList .cartItem {
-    margin: 5px 0;
-    background-color: #d9d9d9;
-    }
-
-    .cartList .table {
-    width: 100%;
-    table-layout:fixed;
-    }
-
-    .cartList .custom-margin {
-    min-width: 8px;
-    }
-
-    .cartList .mb4 {
-    font-size: 24px
-    }
-
-    .cartList .btn {
-    padding: 10px 20px;
-    font-size: 16px;
-    }
-    /*cartList 반응형 끝*/
     /*itemMng 아이템관리페이지 시작*/
     .itemMng .pc-table {
         display: none !important; /* 모바일 화면에서 테이블 숨기기 */
@@ -1196,4 +1147,34 @@ width: auto;
     .orderHist .highlightPrice{
         font-size:1.2rem;
     }
+    /*주문내역 끝*/
+
+
+    /* cartList 장바구니 시작-------------------------------------------------------- */
+    .cartList .table {
+        width: 100%; /* 테이블을 100% 너비로 설정 */
+        margin: 0;   /* 여백을 없애기 */
+    }
+
+    .cartList .table td, .cartList .table th {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .cartList .content-mg {
+        padding: 0; /* 테이블 주변에 있는 다른 요소 여백 제거 */
+        margin: 0;
+    }
+    .cartList h2 {
+        text-align: center;
+        margin-top: 20px;
+    }
+    .cartList .repImgDiv {
+        margin: 0;
+        height: auto;
+    }
+    .cartList h4{
+        margin-top: 10px;
+    }
+    /* cartList 장바구니 끝--------------------------*/
 }
