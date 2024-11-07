@@ -5,18 +5,17 @@
 <head>
     <!-- 리스트 css파일을 따로 생성했습니다
      스스타일 태그안에 넣고 적용후 옮긴거라 모바일 버전도 그렇게 하시면 될것같아요 -->
-     <link th:href="@{/css/list.css}" rel="stylesheet">
+    <link th:href="@{/css/list.css}" rel="stylesheet">
 </head>
 
 <div layout:fragment="content">
     <!-- 검색 -->
-    <div>
+    <div class="search-container">
         <div class="search-wrapper">
             <!-- 데스크탑 검색 -->
             <div class="desktop-search">
-                <form class="form-inline my-2 my-lg-0" action="/list" method="get" id="cateSearch"
-                      style="display: none;">
-                    <div>
+                <form class="form-inline my-2 my-lg-0" action="/list" method="get" id="cateSearch">
+                    <div class="search-set-item">
                         <input name="searchQuery" class="form-control mr-sm-2" type="search" placeholder="Search"
                                aria-label="Search" id="search2" th:value="${itemSearchDto.searchQuery}">
                         <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
@@ -24,8 +23,11 @@
                 </form>
                 <i class="fa-solid fa-magnifying-glass" id="searchIcon"></i>
             </div>
+
         </div>
         <div class="order-container">
+            <!-- 사이드바 토글 버튼 (모바일에서만 표시) -->
+            <button id="toggleSidebarBtn" class="sidebar-toggle-btn">장르선택</button>
             <span th:text="${company}" id="getCompany" style="display:none;"></span>
             <select class="form-control orderBy">
                 <option value="latest" th:selected="${itemSearchDto.orderBy == 'latest'}">최신순</option>
@@ -73,7 +75,7 @@
                 </div>
             </th:block>
         </div>
-        <div id="loadMore" class="center" style="display:none;"><i class="fas fa-chevron-down"></i> </div>
+        <div id="loadMore" class="center" style="display:none;"><i class="fas fa-chevron-down"></i></div>
     </div>
 
     <div id="absolute">
@@ -411,6 +413,16 @@
                 $("#cateSearch").fadeToggle();
             });
         })
+
+        // 사이드바 토글 기능
+        document.getElementById('toggleSidebarBtn').addEventListener('click', function() {
+            var sidebar = document.getElementById('absolute');
+            if (sidebar.style.display === 'none' || sidebar.style.display === '') {
+                sidebar.style.display = 'block';
+            } else {
+                sidebar.style.display = 'none';
+            }
+        });
 
     </script>
 
