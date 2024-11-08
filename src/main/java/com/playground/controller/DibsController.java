@@ -44,13 +44,21 @@ public class DibsController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping(value = "/dibs")
-    public String dibsHist(Principal principal, Model model){
-
+    public String dibsHist(Principal principal, Model model) {
         if (principal == null) {
             return "redirect:/members/login";
         }
 
+        // 로그인된 사용자의 Dibs 목록을 가져옵니다.
         List<DibsDto> dibsDetailList = dibsService.getDibsList(principal.getName());
+
+        // DibsDto 객체에 품절 상태를 확인하여 모델에 추가
+        for (DibsDto dibsItem : dibsDetailList) {
+            // 품절 상태를 갱신할 필요는 없지만, 추가 처리가 필요하다면 여기에 작성
+            // 예: dibsItem.setSoldOut(dibsItem.isSoldOut());
+        }
+
+        // 품절 상태를 모델에 추가하여 품절 배지가 Thymeleaf 템플릿에서 사용 가능
         model.addAttribute("dibsItems", dibsDetailList);
         return "dibs/dibsList";
     }

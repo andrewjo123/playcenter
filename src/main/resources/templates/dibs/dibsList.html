@@ -26,7 +26,11 @@
                 <tr th:each="dibsItem : ${dibsItems}">
                     <td class="d-flex dibsItem">
                         <div class="repImgDiv align-self-center">
-                            <img th:src="${dibsItem.imgUrl}" class = "rounded repImg" th:alt="${dibsItem.itemNm}">
+                            <!-- 품절 상태에 따라 이미지에 필터 추가 및 품절 배지 표시 -->
+                            <img th:src="${dibsItem.imgUrl}" class="rounded repImg" th:alt="${dibsItem.itemNm}"
+                                 th:classappend="${dibsItem.stockNumber<=0 ? 'sold-out-filter' : ''}">
+                            <!-- 품절 상태일 경우 배지 표시 -->
+                            <span th:if="${dibsItem.stockNumber<=0}" class="sold-out-badge">Sold Out</span>
                         </div>
                         <div class="align-self-center">
                             <a th:href="'/item/' +${dibsItem.itemId}">
@@ -44,7 +48,11 @@
                                 </span>
                             </div>
                         </div>
-                        <div class="ml-auto align-self-center"><i class="fa-solid fa-cart-shopping addCart" th:data-id="${dibsItem.dibsItemId}" onclick="addCartFromDibs(this)"></i></div>
+                        <div class="ml-auto align-self-center">
+                            <!-- 품절되지 않은 경우 장바구니에 추가할 수 있도록 처리 -->
+                            <i th:if="${dibsItem.stockNumber>0}" class="fa-solid fa-cart-shopping addCart" th:data-id="${dibsItem.dibsItemId}" onclick="addCartFromDibs(this)"></i>
+                            <span th:if="${dibsItem.stockNumber<=0}" class="fs16 text-muted">품절</span>
+                        </div>
                     </td>
                 </tr>
             </th:block>
@@ -53,11 +61,6 @@
             </th:block>
         </tbody>
     </table>
-
-    <style>
-
-    </style>
-
 </div>
 
 

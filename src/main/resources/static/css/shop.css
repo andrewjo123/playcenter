@@ -19,6 +19,7 @@
     margin-top: 2%;
 }
 .dibsList .repImgDiv {
+    position: relative;
     margin-right: 15px;
     margin-left: 15px;
     height: auto;
@@ -36,6 +37,24 @@
     font-size:2.5rem;
     color:black;
     cursor:pointer;
+}
+
+.dibsList .sold-out-filter {
+    filter: grayscale(100%);
+    opacity: 0.5;
+}
+
+.dibsList .sold-out-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: rgba(255, 0, 0, 0.8);
+    color: white;
+    padding: 5px;
+    font-weight: bold;
+    border-radius: 5px;
+    font-size: 14px;
+    z-index: 10;
 }
 /* cartList-------------------------------------------------------- */
 .cartList .content-mg {
@@ -908,5 +927,21 @@ width: auto;
     .cartList h4{
         margin-top: 10px;
     }
-    /* cartList 장바구니 끝--------------------------*/
+    /* cartList 장바구니 끝---------------------------------------------- */
+
+    /* dibsList-------------------------------------------------------- */
+    .dibsList h2{
+        margin-top: 10px;
+        text-align: center;
+    }
+    .dibsList .dibsItem {
+        padding: 10px 20px;
+        width : 100%;
+        background-color: #d9d9d9;
+    }
+    .dibsList .content-mg {
+        margin-right: 0;
+        margin-left: 0;
+
+    }
 }
