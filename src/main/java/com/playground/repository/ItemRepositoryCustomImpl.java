@@ -298,7 +298,7 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
                 .join(itemCategory).on(itemCategory.item.eq(item))
                 .where(whereClause)
                 .orderBy(Expressions.numberTemplate(Double.class, "rand()").asc())
-                .limit(3)
+                .limit(8)
                 .fetch();
     
         long total = queryFactory

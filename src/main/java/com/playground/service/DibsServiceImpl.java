@@ -101,4 +101,9 @@ public class DibsServiceImpl implements DibsService{
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public Long getDibsItem(Long dibsItemId) {
+        DibsItem dibsItem=dibsItemRepository.findById(dibsItemId).orElseThrow(EntityNotFoundException::new);
+        return dibsItem.getItem().getId();
+    }
 }

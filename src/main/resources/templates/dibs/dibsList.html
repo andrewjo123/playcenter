@@ -17,47 +17,94 @@
     </h2>
     <table class="table">
         <thead>
-        <tr class="text-center">
-            <td>상품정보</td>
-        </tr>
-        </thead>
-        <tbody>
-        <th:block th:unless="${dibsItems.size() == 0}">
-            <tr th:each="dibsItem : ${dibsItems}">
-                <td class="d-flex dibsItem">
-                    <div class="repImgDiv align-self-center">
-                        <img th:src="${dibsItem.imgUrl}" class = "rounded repImg" th:alt="${dibsItem.itemNm}">
-                    </div>
-                    <div class="align-self-center">
-                        <a th:href="'/item/' +${dibsItem.itemId}">
-                            <span th:text="${dibsItem.itemNm}" class="itnm fs24 font-weight-bold"></span>
-                        </a>
-                        <div class="fs18 font-weight-light">
-                            <span class="input-group mt-2">
-                                <span th:id="'price_' + ${dibsItem.dibsItemId}"
-                                      th:data-price="${dibsItem.price}"
-                                      th:text="${dibsItem.price} + '원'" class="align-self-center mr-2">
-                                </span>
-                                <button type="button" class="close" aria-label="Close">
-                                    <span aria-hidden="true" th:data-id="${dibsItem.dibsItemId}" onclick="deleteDibsItem(this)">&times;</span>
-                                </button>
-                            </span>
-                        </div>
-                    </div>
-                </td>
+            <tr class="text-center">
+                <td>상품정보</td>
             </tr>
-        </th:block>
-        <th:block th:if="${dibsItems.size() == 0}">
-            <tr><td class="d-flex"><h4>결과 없음</h4></td></tr>
-        </th:block>
+        </thead>
+        <tbody class="dibsLists">
+            <th:block th:unless="${dibsItems.size() == 0}">
+                <tr th:each="dibsItem : ${dibsItems}">
+                    <td class="d-flex dibsItem">
+                        <div class="repImgDiv align-self-center">
+                            <!-- 품절 상태에 따라 이미지에 필터 추가 및 품절 배지 표시 -->
+                            <img th:src="${dibsItem.imgUrl}" class="rounded repImg" th:alt="${dibsItem.itemNm}"
+                                 th:classappend="${dibsItem.stockNumber<=0 ? 'sold-out-filter' : ''}">
+                            <!-- 품절 상태일 경우 배지 표시 -->
+                            <span th:if="${dibsItem.stockNumber<=0}" class="sold-out-badge">Sold Out</span>
+                        </div>
+                        <div class="align-self-center">
+                            <a th:href="'/item/' +${dibsItem.itemId}">
+                                <span th:text="${dibsItem.itemNm}" class="itnm fs24 font-weight-bold"></span>
+                            </a>
+                            <div class="fs18 font-weight-light">
+                                <span class="input-group mt-2">
+                                    <span th:id="'price_' + ${dibsItem.dibsItemId}"
+                                          th:data-price="${dibsItem.price}"
+                                          th:text="${dibsItem.price} + '원'" class="align-self-center mr-2">
+                                    </span>
+                                    <button type="button" class="close" aria-label="Close">
+                                        <span aria-hidden="true" th:data-id="${dibsItem.dibsItemId}" onclick="deleteDibsItem(this)">&times;</span>
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="ml-auto align-self-center">
+                            <!-- 품절되지 않은 경우 장바구니에 추가할 수 있도록 처리 -->
+                            <i th:if="${dibsItem.stockNumber>0}" class="fa-solid fa-cart-shopping addCart" th:data-id="${dibsItem.dibsItemId}" onclick="addCartFromDibs(this)"></i>
+                            <span th:if="${dibsItem.stockNumber<=0}" class="fs16 text-muted">품절</span>
+                        </div>
+                    </td>
+                </tr>
+            </th:block>
+            <th:block th:if="${dibsItems.size() == 0}">
+                <tr><td class="d-flex"><h4>결과 없음</h4></td></tr>
+            </th:block>
         </tbody>
     </table>
 </div>
+
 
 <!-- 사용자 스크립트 추가 -->
 <th:block layout:fragment="script">
 
     <script th:inline="javascript">
+        function addCartFromDibs(obj){
+            var token = $("meta[name='_csrf']").attr("content");
+            var header = $("meta[name='_csrf_header']").attr("content");
+            var dibsItemId=$(obj).data('id');
+
+            var paramData = {
+                dibsItemId: dibsItemId
+            };
+            var param = JSON.stringify(paramData);
+            console.log(param);
+
+            $.ajax({
+                url: "/dibsToCart",
+                type: "POST",
+                data: {dibsItemId: dibsItemId},
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader(header, token);
+                },
+                cache: false,
+                success: function (result, status) {
+                    if(result==0){
+                        alert("재고가 없습니다.");
+                        return;
+                    }
+                    alert("상품을 장바구니에 담았습니다.");
+                    if(confirm("장바구니로 이동하시겠습니까?")){
+                        location.href="/cart";
+                    } else{
+                        location.reload();
+                    }
+                },
+                error: function (jqXHR, status, error) {
+                    alert('잠시 후 다시 시도해주세요');
+                }
+            });
+
+        }
 
         function deleteDibsItem(obj){
             var token = $("meta[name='_csrf']").attr("content");
@@ -75,26 +122,20 @@
                 contentType: "application/json",
                 data: param,
                 beforeSend : function(xhr){
-                    /* 데이터를 전송하기 전에 헤더에 csrf값을 설정 */
                     xhr.setRequestHeader(header, token);
                 },
                 dataType : "json",
                 cache   : false,
-                success  : function(result, status){
-                    location.href='/dibs';
+                success  : function(result){
+                    location.reload();
                 },
                 error : function(jqXHR, status, error){
-
-                    if(jqXHR.status == '401'){
-                        alert('로그인 후 이용해주세요');
-                        location.href='/members/login';
-                    } else{
-                        alert(jqXHR.responseJSON.message);
-                    }
-
+                    alert('잠시 후 다시 시도해주세요');
                 }
             });
         }
+
+
     </script>
 
 </th:block>

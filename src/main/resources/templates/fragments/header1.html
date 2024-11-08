@@ -29,10 +29,10 @@
                         <a class="nav-link" href="/mypage">마이페이지</a>
                     </li>
                     <li class="nav-item" sec:authorize="isAuthenticated()">
-                        <a class="nav-link" href="/dibs">찜한목록 <span id="getCountDibs" style="display:none"></span></a>
+                        <a class="nav-link" href="/dibs">찜한목록 <span class="getCountDibs" style="display:none"></span></a>
                     </li>
                     <li class="nav-item" sec:authorize="isAuthenticated()">
-                        <a class="nav-link" href="/cart">장바구니 <span id="getCount">()</span></a>
+                        <a class="nav-link" href="/cart">장바구니 <span class="getCount">()</span></a>
                     </li>
                     <li class="nav-item" sec:authorize="isAuthenticated()">
                         <a class="nav-link" href="/orders">내주문</a>
@@ -108,7 +108,7 @@
                     <button class="dropbtn"><i class="fa-solid fa-bars"></i></button>
                     <div class="dropdown-content">
                         <div class="dropdown-header user-info">
-                            <img sec:authorize="isAuthenticated()" th:src="@{'icon/icon_'+${#authentication.principal.profileImg}+'.svg'}" class="user-image" style="width: 60px; height: 60px;"/>
+                            <img sec:authorize="isAuthenticated()" th:src="@{'/icon/icon_'+${#authentication.principal.profileImg}+'.svg'}" class="user-image" style="width: 60px; height: 60px;"/>
                             <div style="margin-left: 10px; margin-top: 25px;">
                                 <b sec:authorize="isAuthenticated()" sec:authentication="principal.name">님</b>
                                 <p sec:authorize="isAuthenticated()" sec:authentication="principal.email"></p>
@@ -122,10 +122,10 @@
                             <b class="dropdown-header">buy</b>
 
                             <a class="nav-link" href="/dibs">❤ 찜한목록
-                                <span id="getCountDibs" style="display:none"></span>
+                                <span class="getCountDibs" style="display:none"></span>
                             </a>
                                 <a class="dropdown-item" href="/cart">🛒 장바구니
-                                    <span id="getCount">()</span></a>
+                                    <span class="getCount">()</span></a>
                                     <a class="dropdown-item" href="/orders">📑 내주문</a>
 
                         </div>

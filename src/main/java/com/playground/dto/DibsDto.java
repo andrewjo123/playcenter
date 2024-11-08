@@ -16,11 +16,21 @@ public class DibsDto {
 
     private String imgUrl;
 
-    public DibsDto(Long itemId, Long dibsItemId, String itemNm, int price,  String imgUrl){
-        this.itemId=itemId;
+    private int stockNumber;
+
+    public DibsDto(Long itemId, Long dibsItemId, String itemNm, int price, String imgUrl, int stockNumber) {
+        this.itemId = itemId;
         this.dibsItemId = dibsItemId;
         this.itemNm = itemNm;
         this.price = price;
         this.imgUrl = imgUrl;
+        this.stockNumber = stockNumber; // 추가된 필드
+    }
+
+    public boolean isSoldOut() {
+        return stockNumber <= 0;
+    }
+
+    public void setSoldOut(boolean soldOut) {
     }
 }

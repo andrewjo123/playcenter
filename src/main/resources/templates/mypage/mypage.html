@@ -11,22 +11,23 @@
 <div layout:fragment="content">
     <div class="container mt-5">
         <div class="row text-center mb-4">
-            <div class="col-md-5 d-flex justify-content-center">
-                <div id="getPImg" class="profile-img"></div>
+            <div class="col-md-5 d-flex-column">
+                <div id="getPImg" class="profile-img m-auto"></div>
+                <div id="getPImg2" class="mt-1 w-50 m-auto">아이콘 변경</div>
                 <input type="hidden" value="" id="currentPImg">
             </div>
-            <div class="col-md-7">
+            <div class="col-md-7 userInfo">
                 <h2 th:text="${memberForm.name}" class="member-name"></h2>
                 <div>Email: <span sec:authentication="principal.username"></span></div>
                 <div>Phone: <span th:text="${memberForm.phone}"></span></div>
-                <div><a class="nav-link" href="/members/modify">회원 정보 수정</a></div>
+                <div class="userModifyDiv"><a class="nav-link" href="/members/modify">회원 정보 수정</a></div>
             </div>
         </div>
 
         <div class="linkList row mb-5">
-            <div><a class="dropdown-item" href="/dibs" title="찜">❤</a></div>
-            <div><a class="dropdown-item" href="/cart" title="장바구니">🛒</a></div>
-            <div><a class="dropdown-item" href="/orders" title="주문내역">📑</a></div>
+            <div class="linkIcon"><a class="dropdown-item iconDibs" href="/dibs">❤</a><div class="showInfo dibsInfo">찜</div></div>
+            <div class="linkIcon"><a class="dropdown-item iconCart" href="/cart">🛒</a><div class="showInfo cartInfo">장바구니</div></div>
+            <div class="linkIcon"><a class="dropdown-item iconOrder" href="/orders">📑</a><div class="showInfo orderInfo">주문내역</div></div>
         </div>
 
         <div class="point-management">
@@ -130,7 +131,7 @@
                         <p th:if="${challenge.countForSteam < 10}" class="text-warning">스팀 게임을 10개 이상 구매하세요</p>
                         <p th:if="${challenge.countForSteam >= 10 && challenge.achievementForSteam == 0}">
                             보상을 받을 수 있습니다!
-                            <button class="btn btn-primary chal" data-challenge="steam">3000P + 프로필 아이콘 받기</button>
+                            <button class="btn btn-primary chal" data-challenge="steam">2000P + 프로필 아이콘 받기</button>
                         </p>
                         <p th:if="${challenge.achievementForSteam == 1}" class="text-success">✅ 스팀 게임 10개 이상 구매 및 보상 받기 완료!</p>
                     </div>
@@ -170,7 +171,7 @@
                         <p th:if="${challenge.countForPs < 10}" class="text-warning">플레이스테이션 게임을 10개 이상 구매하세요</p>
                         <p th:if="${challenge.countForPs >= 10 && challenge.achievementForPs == 0}">
                             보상을 받을 수 있습니다!
-                            <button class="btn btn-primary chal" data-challenge="ps">3000P + 프로필 아이콘 받기</button>
+                            <button class="btn btn-primary chal" data-challenge="ps">2000P + 프로필 아이콘 받기</button>
                         </p>
                         <p th:if="${challenge.achievementForPs == 1}" class="text-success">✅ 플레이스테이션 게임 10개 이상 구매 및 보상 받기 완료!</p>
                     </div>
@@ -218,7 +219,7 @@
     <script>
         function showProfileImg(pImg){
             $("#getPImg").empty();
-            var str='<img src="icon/icon_'+pImg+'.svg" class="user-image" style="width: 100px; height: 100px;"/>';
+            var str='<img src="icon/icon_'+pImg+'.svg" class="user-image" style="width: 100px; height: 100px; margin:0;"/>';
             $("#getPImg").append(str);
             $("#currentPImg").val(pImg);
         }
@@ -316,7 +317,7 @@
 
             });
 
-            $("#getPImg").on('click',function(){
+            $("#getPImg,#getPImg2").on('click',function(){
                 $("#profileImgList").modal('show');
             })
 
@@ -341,6 +342,37 @@
                     }
                 });
             })
+
+            $(".iconDibs").mousemove(function(e){
+                var divOffset = $(this).offset(); //div의 좌표
+                var mouseX = e.pageX-divOffset.left;
+                var mouseY = e.pageY-divOffset.top;
+                $(".dibsInfo").css({"left":mouseX+5+"px","top":mouseY+5+"px"}).show();
+            });
+
+            $(".iconCart").mousemove(function(e){
+                var divOffset = $(this).offset(); //div의 좌표
+                var mouseX = e.pageX-divOffset.left;
+                var mouseY = e.pageY-divOffset.top;
+                $(".cartInfo").css({"left":mouseX+10+"px","top":mouseY+10+"px"}).show();
+            });
+
+            $(".iconOrder").mousemove(function(e){
+                var divOffset = $(this).offset(); //div의 좌표
+                var mouseX = e.pageX-divOffset.left;
+                var mouseY = e.pageY-divOffset.top;
+                $(".orderInfo").css({"left":mouseX+10+"px","top":mouseY+10+"px"}).show();
+            });
+
+            $(".iconDibs, iconCart, iconOrder").mouseleave(function(){
+                $(".dibsInfo").hide();
+            });
+            $(".iconCart").mouseleave(function(){
+                $(".cartInfo").hide();
+            });
+            $(".iconOrder").mouseleave(function(){
+                $(".orderInfo").hide();
+            });
 
         });
 

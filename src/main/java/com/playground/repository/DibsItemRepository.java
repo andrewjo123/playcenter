@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface DibsItemRepository extends JpaRepository<DibsItem, Long>{
     DibsItem findByDibsIdAndItemId(Long dibsId, Long itemId);
 
-    @Query("select new com.playground.dto.DibsDto(i.id, di.id, i.itemNm, i.price, im.imgUrl) " +
+    @Query("select new com.playground.dto.DibsDto(i.id, di.id, i.itemNm, i.price, im.imgUrl, i.stockNumber) " +
             "from DibsItem di, ItemImg im " +
             "join di.item i " +
             "where di.dibs.id = :dibsId " +

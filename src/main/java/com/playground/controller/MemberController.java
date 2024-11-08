@@ -49,7 +49,7 @@ public class MemberController {
     }
 
     @PostMapping(value = "/new")
-    public String newMember(@Valid MemberFormDto memberFormDto, BindingResult bindingResult, Model model){
+    public String newMember(@Valid MemberFormDto memberFormDto, BindingResult bindingResult, Model model, RedirectAttributes attr){
 
         if(bindingResult.hasErrors()){
             return "member/memberForm";
@@ -64,7 +64,8 @@ public class MemberController {
             return "member/memberForm";
         }
 
-        return "redirect:/";
+        attr.addFlashAttribute("message", "회원가입이 완료되었습니다");
+        return "redirect:/members/login";
     }
 
     @GetMapping("/login")
@@ -131,10 +132,11 @@ public class MemberController {
     }
     //소셜 로그인 전용 수정페이지
     @PostMapping(value="/modify2")
-    public String modifyUser2(MemberFormDto memberFormDto, Model model){
+    public String modifyUser2(MemberFormDto memberFormDto, RedirectAttributes attr){
         memberFormDto.setPassword(passwordEncoder.encode(memberFormDto.getPassword()));
         memberService.registSocialMember(memberFormDto);
-        return "member/memberLoginForm";
+        attr.addFlashAttribute("message", "회원가입이 완료되었습니다");
+        return "redirect:/members/login";
     }
 
     //로그인폼 인증버튼클릭
@@ -212,7 +214,7 @@ public class MemberController {
 
         if(result.equals("valid")){
             String token=memberService.createPasswordResetToken(memberFormDto.getEmail());
-            String subject="[놀이마당]임시 비밀번호 전송";
+            String subject="[놀이마당]새로운 비밀번호를 등록해주세요";
             Context context=new Context();
             context.setVariable("token",token);
             emailService.sendEmail(memberFormDto.getEmail(), subject, "mailForm/passwordChange",context);

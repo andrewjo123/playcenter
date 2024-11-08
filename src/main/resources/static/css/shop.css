@@ -19,6 +19,7 @@
     margin-top: 2%;
 }
 .dibsList .repImgDiv {
+    position: relative;
     margin-right: 15px;
     margin-left: 15px;
     height: auto;
@@ -30,6 +31,30 @@
 }
 .dibsList .fs24 {
     font-size: clamp(18px, 2vw, 24px);
+}
+
+.dibsList .addCart{
+    font-size:2.5rem;
+    color:black;
+    cursor:pointer;
+}
+
+.dibsList .sold-out-filter {
+    filter: grayscale(100%);
+    opacity: 0.5;
+}
+
+.dibsList .sold-out-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: rgba(255, 0, 0, 0.8);
+    color: white;
+    padding: 5px;
+    font-weight: bold;
+    border-radius: 5px;
+    font-size: 14px;
+    z-index: 10;
 }
 /* cartList-------------------------------------------------------- */
 .cartList .content-mg {
@@ -62,6 +87,9 @@
     margin: 0;
     background-color: #d9d9d9;
 }
+.cartList .close {
+    margin-right: 10px;
+}
 
 .cartList .table {
     width: 100%;
@@ -82,280 +110,6 @@
 .cartList .custom-margin {
     min-width: 48px;
 }
-
-
-/* itemDtl--------------------------------------------------------*/
-
-.itemDtl .mgb-15 {
-margin-bottom: 15px;
-}
-
-.itemDtl .mgt-30 {
-margin-top: 30px;
-}
-
-.itemDtl .mgt-50 {
-margin-top: 50px;
-}
-
-.itemDtl .repImgDiv {
-margin-right: 15px;
-height: auto;
-width: 50%;
-}
-
-.itemDtl .repImg {
-width: 100%;
-height: 400px;
-}
-
-.itemDtl .wd50 {
-height: auto;
-width: 50%;
-}
-
-.itemDtl .itemdtl {
-margin-left: 20%;
-margin-right: 20%;
-}
-
-.itemDtl .dtlinfo {
-padding-left: 10px;
-font-weight: bolder;
-font-size: 18px;
-}
-
-.itemDtl .lead {
-padding: 10px;
-}
-
-.itemDtl .no-cursor {
-cursor: default;
-}
-.itemDtl .carousel-indicators{
-margin-top:100px;
-}
-.itemDtl .carousel-indicators li {
-margin-top:100px !important;
-background-color: gray;
-}
-
-.fa-chevron-left,  .fa-chevron-right{
-    color: gray;
-    font-size: 50px;
-    margin: 10px 0px;
-    }
-    
-
-.itemDtl .d-block {
-margin: auto;
-}
-
-.itemDtl .carousel-inner {
-    width: 700px;
-    height: 700px;
-    overflow: hidden;
-    position: relative;
-    text-align:center;
-    margin:auto;
-}
-
-.itemDtl .carousel-item {
-    height: 100%;
-}
-
-.itemDtl .carousel-item img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-.itemDtl .responsive-img {
-    width: 800px; /* 기본 화면에서의 너비 */
-    max-width: 100%; /* 기본 너비보다 커지지 않도록 제한 */
-    height: auto; /* 비율 유지 */
-}
-
-.itemDtl .instructions {
-    font-family: Arial, sans-serif;
-    line-height: 1.6;
-}
-
-.itemDtl .instructions h2 {
-    color: #333;
-    font-size: 1.5em;
-    margin-bottom: 10px;
-}
-
-.itemDtl .instructions ol {
-    list-style-type: decimal;
-    padding-left: 20px;
-}
-
-.itemDtl .instructions li {
-    margin-bottom: 10px;
-}
-
-.itemDtl .instructions strong {
-    color: #0073e6; /* 강조할 부분에 색상 추가 */
-}
-/*찜 버튼 부분*/
-.itemDtl .wish-button {
-    width: 40px;
-    height: 40px;
-    background-color: #bbb;
-    cursor: pointer;
-    position: relative;
-    outline:none;
-    border-radius: 5px;
-    transform: rotate(45deg);
-}
-.itemDtl .wish-button::before,
-.itemDtl .wish-button::after {
-    content: '';
-    width: 40px;
-    height: 40px;
-    background-color: #bbb;
-    border-radius: 50%;
-    position: absolute;
-}
-.itemDtl .wish-button::before {
-    left: -20px;
-    top:0;
-}
-.itemDtl .wish-button::after {
-    top: -20px;
-    left:0;
-}
-.itemDtl .wish-button.active::before,
-.itemDtl .wish-button.active::after,
-.itemDtl .wish-button.active{
-    background-color: #ff1744;
-}
-
-/* review List 수정 - 신영 *************************************/
-.itemDtl .custom-dropdown-menu {
-    position: absolute;
-    top: 100px; /* 상단에서 100px의 위치 */
-    right: 50px; /* 오른쪽에서 50px의 위치 */
-}
-
-.itemDtl #currentSortMethod{
-    font-size: 15px;
-    height: 20px;
-    margin-bottom: 10px;
-    bottom: 10px;
-}
-/* 리스트 테두리제거 - 신영 */
-.itemDtl .review-item {
-    border: none; /* 테두리 제거 */
-    border-bottom: 0.2px solid #a1a3a5; /* 아래쪽 테두리만 추가 */
-}
-/* 페이지네이션 -신영*/
-.itemDtl .pagination {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px; /* 버튼 사이 간격 */
-    margin-top: 20px;
-}
-
-.itemDtl 
-.pagination button,
-.pagination .page-number {
-    background-color: #f1f1f1; /* 버튼 배경색 */
-    border: 1px solid #ddd; /* 버튼 테두리 */
-    color: #333; /* 텍스트 색상 */
-    padding: 8px 12px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 14px;
-    min-width: 32px; /* 버튼 크기 균일하게 설정 */
-    text-align: center;
-}
-
-.itemDtl
-.pagination button:hover,
-.pagination .page-number:hover {
-    background-color: #e0e0e0; /* 호버 시 배경색 */
-}
-
-.itemDtl
-.pagination .page-number.active {
-    background-color: #d3d3d3; /* 현재 페이지 색상 */
-    font-weight: bold;
-    color: #000; /* 현재 페이지 텍스트 색상 */
-    pointer-events: none; /* 클릭 불가 */
-}
-/* 별 색 바꾸기 */
-/* 채워진 별 */
-.itemDtl
-.starrr .fa-star {
-    color: #FFD700; /* 채워진 별 색상 (노란색) */
-}
-
-/* 빈 별 */
-.itemDtl
-.starrr .fa-star-o {
-    color: #d3d3d3; /* 빈 별 색상 (회색) */
-}
-
-/* 추천아이콘 */
-.itemDtl
-.btn-outline-primary {
-    background-color: transparent;
-    border-color: transparent;
-    color: #808080; /* 글자 색상을 #808080으로 설정 */
-    font-size: 18px;
-}
-
-.itemDtl
-.btn-outline-primary:hover,
-.btn-outline-primary:focus,
-.btn-outline-primary:active {
-    background-color: #808080; /* 마우스 오버, 포커스, 활성 상태에서 배경 색상을 #808080으로 설정 */
-    color: white; /* 마우스 오버, 포커스, 활성 상태에서 글자 색상을 흰색으로 설정 */
-    border-color: #808080; /* 마우스 오버, 포커스, 활성 상태에서 테두리 색상을 #808080으로 설정 */
-}
-
-/* 추천된 버튼 스타일 */
-.itemDtl
-.btn-primary {
-    background-color: transparent;
-    border-color: transparent;
-    color: #808080; /* 글자 색상을 흰색으로 설정 */
-    font-size: 18px;
-    
-}
-
-.itemDtl
-.btn-primary:hover,
-.btn-primary:focus,
-.btn-primary:active {
-    background-color: #666666; /* 마우스 오버, 포커스, 활성 상태에서 조금 더 어두운 회색으로 변경 */
-    color: white;
-    border-color: #666666; /* 마우스 오버, 포커스, 활성 상태에서 테두리 색상을 조금 더 어두운 회색으로 변경 */
-}
-
-/* 등록버튼 -신영 */
-/* 게임 평가하기 버튼의 기본 스타일 */
-.itemDtl
-.addReviewBtn {
-    background-color: white; /* 배경색을 하얀색으로 설정 */
-    color: black; /* 글자색을 검정색으로 설정 */
-    border: 1px solid black; /* 테두리를 검정색으로 설정 */
-}
-
-/* 게임 평가하기 버튼의 hover 상태 스타일 */
-.itemDtl
-.addReviewBtn:hover {
-    background-color: #808080; /* 마우스 오버 시 배경색을 #808080(회색)으로 변경 */
-    color: white; /* 마우스 오버 시 글자색을 흰색으로 변경 */
-    border-color: #808080; /* 마우스 오버 시 테두리 색상을 #808080로 변경 */
-}
-
-/* 리뷰 부분 끝 */
-
-
 
 /* itemForm--------------------------------------------------------*/
 
@@ -1008,58 +762,6 @@ width: auto;
     .itemdtl .reviewModal .modal-body .form-group, .itemdtl .imageModal .modal-body {
         font-size: 0.9rem;
     }
-
-    /*cartlist 반응형 시작*/
-
-    .cartList .content-mg {
-    margin-left: 15%;
-    margin-right: 15%;
-    margin-top: 2%;
-    margin-bottom: 100px;
-    }
-
-    .cartList .repImgDiv {
-    margin-right: 10px;
-    margin-left: 10px;
-    height: auto;
-    width: auto;
-    }
-
-    .cartList .repImg {
-    min-width: 80px;
-    }
-
-    .cartList .fs18 {
-    font-size: clamp(10px, 2vw, 14px);
-    }
-
-    .cartList .fs24 {
-    font-size: clamp(14px, 2vw, 18px);
-    }
-
-    .cartList .cartItem {
-    margin: 5px 0;
-    background-color: #d9d9d9;
-    }
-
-    .cartList .table {
-    width: 100%;
-    table-layout:fixed;
-    }
-
-    .cartList .custom-margin {
-    min-width: 8px;
-    }
-
-    .cartList .mb4 {
-    font-size: 24px
-    }
-
-    .cartList .btn {
-    padding: 10px 20px;
-    font-size: 16px;
-    }
-    /*cartList 반응형 끝*/
     /*itemMng 아이템관리페이지 시작*/
     .itemMng .pc-table {
         display: none !important; /* 모바일 화면에서 테이블 숨기기 */
@@ -1195,5 +897,51 @@ width: auto;
     }
     .orderHist .highlightPrice{
         font-size:1.2rem;
+    }
+    /*주문내역 끝*/
+
+
+    /* cartList 장바구니 시작-------------------------------------------------------- */
+    .cartList .table {
+        width: 100%; /* 테이블을 100% 너비로 설정 */
+        margin: 0;   /* 여백을 없애기 */
+    }
+
+    .cartList .table td, .cartList .table th {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .cartList .content-mg {
+        padding: 0; /* 테이블 주변에 있는 다른 요소 여백 제거 */
+        margin: 0;
+    }
+    .cartList h2 {
+        text-align: center;
+        margin-top: 20px;
+    }
+    .cartList .repImgDiv {
+        margin: 0;
+        height: auto;
+    }
+    .cartList h4{
+        margin-top: 10px;
+    }
+    /* cartList 장바구니 끝---------------------------------------------- */
+
+    /* dibsList-------------------------------------------------------- */
+    .dibsList h2{
+        margin-top: 10px;
+        text-align: center;
+    }
+    .dibsList .dibsItem {
+        padding: 10px 20px;
+        width : 100%;
+        background-color: #d9d9d9;
+    }
+    .dibsList .content-mg {
+        margin-right: 0;
+        margin-left: 0;
+
     }
 }

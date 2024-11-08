@@ -12,10 +12,14 @@
         <table style="width: 100%; border-collapse: collapse;">
             <th:block th:each="codeList, status: ${codeLists}">
                 <tr>
-                    <td style="width: 50%; background-color: #eaf8e7; padding: 10px; font-size: 1.2em; color: #7ED957; border: 1px solid #7ED957; vertical-align: top; text-align: center;" th:text="${codeList.key}"></td>
+                    <td style="width: 50%; background-color: #eaf8e7; padding: 10px; font-size: 1.4rem; border: 1px solid #7ED957; vertical-align: top; text-align: center;">
+                        <span th:text="${codeList.key.get(0)}"></span><br/>
+                        <img th:src="@{'http://localhost:8887'+${codeList.key.get(1)}}" alt="제품 이미지" style="width: 80%; border-radius: 8px; max-height:250px">
+                    </td>
                     <td style="width: 50%; border: 1px solid #7ED957; vertical-align: top; text-align: left; padding: 10px; background-color: #f9f9f9;">
                         <th:block th:each="code, status: ${codeList.value}">
-                            <span style="display: block; margin: 5px 0; padding: 5px 10px; background-color: #7ED957; color: white; border-radius: 3px;" th:text="${code}"></span>
+                            <span style="display: block; margin: 5px 0; padding: 5px 10px;" th:text="${code}"></span>
+                            <hr/>
                         </th:block>
                     </td>
                 </tr>

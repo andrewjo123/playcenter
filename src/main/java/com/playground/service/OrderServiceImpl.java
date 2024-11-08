@@ -235,7 +235,7 @@ public class OrderServiceImpl implements OrderService {
         Member member1=memberRepository.findByEmail(email);
         Optional<Order> order = orderRepository.findById(orderId);
         if (order.isPresent()){
-            Map<String, List<String>> sendCodeLists=new LinkedHashMap<>();
+            Map<List<String>, List<String>> sendCodeLists=new LinkedHashMap<>();
             List<OrderItem> orderItems = order.get().getOrderItems();
             List<ItemCode> gatherCodes = new ArrayList<>();
             Map<String,Integer> companyCount=new HashMap<>();
@@ -243,14 +243,17 @@ public class OrderServiceImpl implements OrderService {
                 int count=item.getCount();
                 totalPrice.addAndGet(item.getTotalPrice());
                 List<ItemCode> codeList=codeRepository.getCode(count);
+                List<String> itemNameAndImg=new ArrayList<>();
+                itemNameAndImg.add(0,item.getItem().getItemNm());
+                itemNameAndImg.add(1,itemImgRepository.findByItemId(item.getItem().getId()).get(0).getImgUrl());
                 List<String> sendCodes=new ArrayList<>();
                 codeList.forEach(code1->{
                     sendCodes.add(code1.getCodNum());
                     code1.setMember(member1);
                     gatherCodes.add(code1);
                 });
-                sendCodeLists.put(item.getItem().getItemNm(),sendCodes);
-                String company=categoryRepository.findByItemId(item.getId()).getCompany();
+                sendCodeLists.put(itemNameAndImg,sendCodes);
+                String company=categoryRepository.findByItemId(item.getItem().getId()).getCompany();
                 if(company.equals("steam")){
                     companyCount.put("steam",companyCount.getOrDefault("steam", 0)+count);
                 }

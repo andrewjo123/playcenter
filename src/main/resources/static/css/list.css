@@ -222,14 +222,6 @@
     transform: translateY(-2px); /* 살짝 떠오르는 느낌 */
 }
 
-.itemList button {
-    padding: 15px 30px;
-    font-size: 16px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
 #searchTagBtn {
     background-color: #5bbf4e;
     color: #fff;
@@ -344,11 +336,12 @@
         background-color: #5bbf4e;
         color: #fff;
         border: none;
-        padding: 8px 12px;
         border-radius: 5px;
         font-size: 14px;
         cursor: pointer;
         width: 100%;
+        padding: 8px;
+        margin-top: 10px;
     }
     .itemList .orderBy {
         flex-shrink: 0; /* 선택 요소의 너비가 줄어들지 않도록 설정 */
@@ -452,7 +445,7 @@
      }
 
      /* 버튼 크기 조정 */
-     .itemList button {
+     .itemList .search-set-item button {
          width: 100%;
          font-size: 14px;
          padding: 8px;

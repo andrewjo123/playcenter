@@ -28,11 +28,9 @@
                     dataType:"text",
                     success:function(result){
                         if(result>0){
-                            $("#getCount").text(`(${result})`).show();
-                            $("#sidebarGetCount").text(result).show();
+                            $(".getCount").text(`(${result})`).show();
                         } else {
-                            $("#getCount").hide();
-                            $("#sidebarGetCount").hide();
+                            $(".getCount").hide();
                         }
                     }
                 });
@@ -49,11 +47,9 @@
                     dataType:"text",
                     success:function(result){
                         if(result>0){
-                            $("#getCountDibs").text(`(${result})`).show();
-                            $("#sidebarGetCountDibs").text(result).show();
+                            $(".getCountDibs").text(`(${result})`).show();
                         } else {
-                            $("#getCountDibs").hide();
-                            $("sidebarGetCountDibs").hide();
+                            $(".getCountDibs").hide();
                         }
                     }
                 });
@@ -155,6 +151,21 @@
         <div id="verticalLine"></div>
     </div>
 </div>
+
+<div id="kakao-talk-channel-chat-button">
+    <img th:src="@{/icon/kakaochat_pc.png}" class="icon-pc">
+    <img th:src="@{/icon/kakaochat_mobile.png}" class="icon-mobile">
+</div>
+<script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
+<script type='text/javascript'>
+    // 사용할 앱의 JavaScript 키를 설정해 주세요.
+   Kakao.init('4b0f7e8130382c0a80263997720a0ce8');
+   document.getElementById('kakao-talk-channel-chat-button').addEventListener('click', function () {
+       Kakao.Channel.chat({
+           channelPublicId: '_xmUaEn' // 카카오톡 채널 홈 URL에 명시된 ID
+       });
+   });
+</script>
 
 <div th:replace="~{fragments/footer::footer}"></div>
 </body>

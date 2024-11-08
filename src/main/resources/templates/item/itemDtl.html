@@ -1,121 +1,93 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layouts/layout1}" class="itemDtl">
+    layout:decorate="~{layouts/layout1}" class="itemDtl">
 
 <head>
     <meta name="_csrf" th:content="${_csrf.token}" />
     <meta name="_csrf_header" th:content="${_csrf.headerName}" />
-    <link th:href="@{/css/shop.css}" rel="stylesheet">
+    <link th:href="@{/css/itemDtl.css}" rel="stylesheet">
     <!-- Font Awesome 링크 추가 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    
+  
 </head>
 
 <div layout:fragment="content">
 
     <input type="hidden" id="itemId" th:value="${item.id}">
 
+    <div class="breadcrumb">
+        <a href="/" class="breadcrumb-link">홈</a>
+        <span class="breadcrumb-separator">›</span>
+        <span class="breadcrumb-separator" th:text="${item.company}"></span>
+        <span class="breadcrumb-separator">›</span>
+        <span class="breadcrumb-separator" th:if="${item.itemCategoryDto.action}">액션</span>
+        <span class="breadcrumb-separator"th:if="${item.itemCategoryDto.adventure}">모험</span>
+        <span class="breadcrumb-separator"th:if="${item.itemCategoryDto.rpg}">RPG</span>
+        <span class="breadcrumb-separator"th:if="${item.itemCategoryDto.shooter}">슈팅</span>
+        <span class="breadcrumb-separator" th:if="${item.itemCategoryDto.strategy}">전략</span>
+        <span class="breadcrumb-separator"th:if="${item.itemCategoryDto.simulation}">시뮬레이션</span>
+        <span class="breadcrumb-separator"th:if="${item.itemCategoryDto.puzzle}">퍼즐</span>
+        <span class="breadcrumb-separator"th:if="${item.itemCategoryDto.sports}">스포츠</span>
+        <span class="breadcrumb-separator"th:if="${item.itemCategoryDto.racing}">레이싱</span>
+        <span class="breadcrumb-separator"th:if="${item.itemCategoryDto.fighting}">격투</span>
+        <span class="breadcrumb-separator"th:if="${item.itemCategoryDto.survival}">생존</span>
+        <span class="breadcrumb-separator"th:if="${item.itemCategoryDto.rhythm}">리듬게임</span>
+        <span class="breadcrumb-separator"th:if="${item.itemCategoryDto.sandbox}">샌드박스</span>
+        <span class="breadcrumb-separator"th:if="${item.itemCategoryDto.battleRoyale}">대전</span>
+        <span class="breadcrumb-separator"th:if="${item.itemCategoryDto.card}">카드</span>
+        <span class="breadcrumb-separator"th:if="${item.itemCategoryDto.boardGame}">보드게임</span>
+        <span class="breadcrumb-separator"th:if="${item.itemCategoryDto.horror}">공포</span>
+        <span class="breadcrumb-separator"th:if="${item.itemCategoryDto.platformer}">플랫포머</span>
+        <span class="breadcrumb-separator"th:if="${item.itemCategoryDto.moba}">MOBA</span>
+        <span class="breadcrumb-separator"th:if="${item.itemCategoryDto.mmorpg}">MMORPG</span>
+        <span class="breadcrumb-separator">›</span>
+        <span class="breadcrumb-current" th:text="${item.itemNm}"></span>
+        <hr class="my-2">
+    </div>
+
     <div class="d-flex">
         <div class="repImgDiv">
             <img th:src="${item.itemImgDtoList[0].imgUrl}" class="rounded repImg" th:alt="${item.itemNm}">
         </div>
         <div class="wd50">
-            <span th:if="${item.stockNumber!=0}"
-                  class="badge badge-primary mgb-15">판매중</span>
-            <span th:if="${item.stockNumber==0}"
-                  class="badge btn-danger mgb-15">품절</span>
-            <div class="h4" th:text="${item.itemNm}"></div>
+            <span th:if="${item.stockNumber!=0}" class="badge badge-primary mgb-15">판매중</span>
+            <span th:if="${item.stockNumber==0}" class="badge btn-danger mgb-15">품절</span>
+            <div class="h2" th:text="${item.itemNm}"></div>
+            <div>
+                별점:
+                <span th:if="${item.avg == 0}">평점 없음</span>
+                <span th:if="${item.avg > 0}">
+                    <span th:text="${#numbers.formatDecimal(item.avg, 1, 1)}"></span>
+                    <span th:each="i : ${#numbers.sequence(1, item.avg)}"><i class="fas fa-star"></i></span>
+                    <span th:each="i : ${#numbers.sequence(item.avg + 1, 5)}"><i class="far fa-star"></i></span>
+                </span>
+                (<span th:text="${item.allReview}"></span>건)
+            </div>
             <hr class="my-4">
 
-            <div class="text-right">
-                <div class="h4 text-danger text-left">
-                    <input type="hidden" th:value="${item.price}" id="price" name="price">
-                    <span th:text="${item.price}"></span>원
-                </div>
-                <div class="input-group w-50">
+
+            <div class="h3 text-dark text-left">
+                <div class="input-group ml-auto priceform">
+                    <div class="firstPrice w-100">
+                        <span th:text="${item.price}"></span>원
+                    </div>
                     <div class="input-group-prepend">
-                        <span class="input-group-text">수량</span>
+                        <span class="input-group-text">구매수량</span>
                     </div>
                     <input type="number" name="count" id="count" class="form-control" value="1" min="1">
                 </div>
+                <div class="totalPrice">
+                    합계 : 
+                    <span name="totalPrice" id="totalPrice" class="font-weight-bold"></span>
+                </div>   
+                <input type="hidden" th:value="${item.price}" id="price" name="price">                    
             </div>
-            <hr class="my-4">
 
-            <div class="text-right mgt-50">
-                <h5>결제 금액</h5>
-                <h3 name="totalPrice" id="totalPrice" class="font-weight-bold"></h3>
-            </div>
-            <div th:unless="${item.stockNumber==0}" class="text-right">
-                <button type="button" class="btn btn-light border border-primary btn-lg" onclick="addCart()">장바구니
-                    담기</button>
-                <button type="button" class="btn btn-primary btn-lg" onclick="order()">주문하기</button>
-            </div>
-            <div th:if="${item.stockNumber==0}" class="text-right">
-                <button type="button" class="btn btn-danger btn-lg no-cursor">품절</button>
-            </div>
-            <div id="wish-button" class="wish-button" aria-label="찜하기" onclick="addDibs()"></div>
-        </div>
-    </div>
-    <div>
-        별점:
-        <span th:if="${item.avg == 0}">평점 없음</span>
-        <span th:if="${item.avg > 0}">
-            <span th:text="${#numbers.formatDecimal(item.avg, 1, 1)}"></span>
-            <span th:each="i : ${#numbers.sequence(1, item.avg)}"><i class="fas fa-star"></i></span>
-            <span th:each="i : ${#numbers.sequence(item.avg + 1, 5)}"><i class="far fa-star"></i></span>
-        </span>
-    </div>
-    <div class="jumbotron jumbotron-fluid mgt-30">
-        <div><span class="dtlinfo">플랫폼:</span> <span th:text="${item.company}"></span></div>
-        <div>
-            <span class="dtlinfo">장르:</span>
-            <span th:if="${item.itemCategoryDto.action}">액션</span>
-            <span th:if="${item.itemCategoryDto.adventure}">모험</span>
-            <span th:if="${item.itemCategoryDto.rpg}">RPG</span>
-            <span th:if="${item.itemCategoryDto.shooter}">슈팅</span>
-            <span th:if="${item.itemCategoryDto.strategy}">전략</span>
-            <span th:if="${item.itemCategoryDto.simulation}">시뮬레이션</span>
-            <span th:if="${item.itemCategoryDto.puzzle}">퍼즐</span>
-            <span th:if="${item.itemCategoryDto.sports}">스포츠</span>
-            <span th:if="${item.itemCategoryDto.racing}">레이싱</span>
-            <span th:if="${item.itemCategoryDto.fighting}">격투</span>
-            <span th:if="${item.itemCategoryDto.survival}">생존</span>
-            <span th:if="${item.itemCategoryDto.rhythm}">리듬게임</span>
-            <span th:if="${item.itemCategoryDto.sandbox}">샌드박스</span>
-            <span th:if="${item.itemCategoryDto.battleRoyale}">대전</span>
-            <span th:if="${item.itemCategoryDto.card}">카드</span>
-            <span th:if="${item.itemCategoryDto.boardGame}">보드게임</span>
-            <span th:if="${item.itemCategoryDto.horror}">공포</span>
-            <span th:if="${item.itemCategoryDto.platformer}">플랫포머</span>
-            <span th:if="${item.itemCategoryDto.moba}">MOBA</span>
-            <span th:if="${item.itemCategoryDto.mmorpg}">MMORPG</span>
-        </div>
-        
-        <div class="container">
-            <h2 class="display-5">상품 상세 안내</h2>
-            <hr class="my-4">
-            <div class="product-details">
-                <h3>구매 절차</h3>
-                <p>본 상품은 구매 완료 후, 고유 코드가 발급되며, <strong>"코드 전송"</strong> 버튼을 클릭하시면 회원님의 이메일로 발송됩니다.<br>
-                    코드 전송 후에는 교환 및 환불이 불가하므로, 결제 및 코드 수령 과정에서 유의해주시기 바랍니다.</p>
-
-                <h3>교환 및 환불 정책</h3>
-                <p>결제 완료 후에는 발급된 코드가 회원님의 이메일로 발송되므로, <strong>교환 및 환불이 불가</strong>합니다.<br>
-                    코드를 발송하기 전에는 결제 취소가 가능하지만, 발송 이후에는 불가능합니다.</p>
-
-                <h3>고객 주의 사항</h3>
-                <p>코드 전송 버튼을 클릭하기 전, 이메일 주소를 정확히 확인해주시기 바랍니다.<br>
-                    오기입으로 인한 코드 미수령은 고객님 책임이므로 주의 바랍니다.<br>
-                    상품 사용을 위한 고유 코드의 유효 기간은 <strong>[유효 기간 예시: 발급일로부터 30일]</strong>입니다.</p>
-
-                <h3>사용법 및 유의사항</h3>
-                <p>본 상품의 코드는 1회 사용만 가능하며, 타인에게 양도가 불가능합니다.<br>
-                    코드 사용 시, 지정된 플랫폼 또는 애플리케이션에서만 유효합니다.</p>
-
-                <h3>고객 지원</h3>
-                <p>코드 발송 후 문의사항이나 도움이 필요하시면 <a href="[고객 지원 링크]">고객 지원</a>으로 문의해 주시기 바랍니다.</p>
-            </div>
-            <!-- 닌텐도 안내문 -->
-            <div class="instructions" th:if="${item.company == 'nintendo'}">
+            <hr class="my-4-4">
+             <!-- 닌텐도 안내문 -->
+             <div class="instructions" th:if="${item.company == 'nintendo'}">
                 <h2>닌텐도 스위치에서 코드 입력 방법</h2>
                 <ol>
                     <li><strong>홈 메뉴</strong>에서 <strong>"닌텐도 e샵"</strong>을 실행하세요.</li>
@@ -130,7 +102,8 @@
                 <h2>스팀에서 코드 입력 방법</h2>
                 <ol>
                     <li><strong>스팀 클라이언트</strong>에 접속하여 <strong>스팀에 로그인</strong>합니다.</li>
-                    <li>스팀 클라이언트 <strong>왼쪽 하단</strong>에 있는 <strong>'게임 추가 - STEAM에 제품 등록'</strong>을 클릭합니다.</li>
+                    <li>스팀 클라이언트 <strong>왼쪽 하단</strong>에 있는 <strong>'게임 추가 - STEAM에 제품 등록'</strong>을 클릭합니다.
+                    </li>
                     <li>제품 등록 약관에 동의한 후 메일에 적혀있는 <strong>게임 코드를 입력</strong>합니다.</li>
                 </ol>
             </div>
@@ -144,187 +117,295 @@
                     <li>그러면 크레딧 또는 콘텐츠가 계정에 적용됩니다.</li>
                 </ol>
             </div>
-            <p class="lead" th:text="${item.itemDetail}"></p>
+            <!-- <p class="lead" th:text="${item.itemDetail}"></p> -->
+             <span class="guide"> 구매 전 안내사항을 확인해 주세요.</span>
+             <hr class="my-4-4">
+            </div>
+            
         </div>
-    </div>
-
-    <!--   이미지캐러셀  -->
-    <div id="carouselControls" class="carousel slide text-center" data-ride="carousel" >
-
-        <div class="carousel-inner" data-interval="2200">
-            <div class="carousel-item active item">
-                <img th:src="${item.itemImgDtoList[0].imgUrl}" th:alt="${item.itemNm}" alt="First slide" class="d-block rounded">
+        <div class="custombar">
+            <div th:unless="${item.stockNumber==0}" class="text-right">
+                <button type="button" class="btn btn-order" onclick="order()">주문하기</button>
             </div>
-            <div class="carousel-item item">
-                <img th:src="${item.itemImgDtoList[1].imgUrl}" th:alt="${item.itemNm}" alt="Second slide" class="d-block rounded">
-            </div>
-            <div class="carousel-item item">
-                <img th:src="${item.itemImgDtoList[2].imgUrl}" th:alt="${item.itemNm}" alt="Third slide" class="d-block rounded">
-            </div>
-            <div class="carousel-item item">
-                <img th:src="${item.itemImgDtoList[3].imgUrl}" th:alt="${item.itemNm}" alt="Fourth slide" class="d-block rounded">
-            </div>
-        </div>
-
-
-        <ul class="carousel-indicators">
-            <li data-target="#carouselControls" data-slide-to="0" class="active"></li>
-            <li data-target="#carouselControls" data-slide-to="1"></li>
-            <li data-target="#carouselControls" data-slide-to="2"></li>
-            <li data-target="#carouselControls" data-slide-to="3"></li>
-        </ul>
-
-        <a class="carousel-control-prev" href="#carouselControlso" data-slide="prev">
-            <i class="fa-solid fa-chevron-left"></i>
-        </a>
-        <a class="carousel-control-next" href="#carouselControls" data-slide="next">
-            <i class="fa-solid fa-chevron-right"></i>
-        </a>
-
-
-    </div>
-    <!--   이미지캐러셀 end-->
-
-    <div th:each="itemImg : ${item.itemImgDtoList}" class="text-center">
-        <img th:if="${not #strings.isEmpty(itemImg.imgUrl)}" th:src="${itemImg.imgUrl}" class="rounded mgb-15 responsive-img">
-    </div>
-
-
-    <!-- 별점 평점 + 리뷰수 -->
-    <div>
-        별점:
-        <span th:if="${item.avg == 0}">평점 없음</span>
-        <span th:if="${item.avg > 0}">
-            <span th:text="${#numbers.formatDecimal(item.avg, 1, 1)}"></span>
-            <span th:each="i : ${#numbers.sequence(1, item.avg)}"><i class="fas fa-star"></i></span>
-            <span th:each="i : ${#numbers.sequence(item.avg + 1, 5)}"><i class="far fa-star"></i></span>
-        </span>
-    </div>
-    <div>리뷰수: <span th:text="${item.allReview}"></span></div>
-
-    <!-- 리뷰 등록 버튼 -->
-    <button type="button" class="btn btn-info addReviewBtn">게임 평가하기</button>
-
-    <!-- 리뷰 별점 높은순 버튼 -->
-    <div class="dropdown" style="float: right; margin-right: 20px;">
-        <button class="btn btn-sm btn-link text-dark toggle" style="height: 20px;" type="button" id="sortDropdownButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <span id="currentSortMethod">최신순</span> <!-- 초기 표시값 설정 -->
-            <i class="fa-solid fa-lines-leaning"></i>
-        </button>
-        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="sortDropdownButton">
-            <button class="dropdown-item rating">별점 높은 순</button>
-            <button class="dropdown-item asc">별점 낮은 순</button>
-            <button class="dropdown-item recommendation">추천순</button>
-            <button class="dropdown-item latest">최신순</button>
-        </div>
-    </div>
-
-
-    <!-- 리뷰 목록 -->
-    <div class="list-group reviewList"></div>
-
-     <!-- 리뷰 목록을 표시할 때 추천(따봉) 카운트와 버튼 추가 -->
-    <div th:each="review : ${reviewList}" class="review-item card card border-0 shadow-none p-3 mb-3" data-reviewnum="${review.reviewnum}" data-mid="${review.email}">
-        
-        <div class="d-flex align-items-center">
-        <!-- 프로필 아이콘 -->
-            <div class="profile-icon bg-secondary rounded-circle text-white d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
-                <span th:text="${review.email.substring(0, 1).toUpperCase()}"></span>
-            </div>
-            <div class="ml-3">
-                <h6 class="card-subtitle mb-1 text-muted" th:text="${review.email}"></h6>
-                <p class="card-text small" th:text="${#dates.format(review.regTime, 'yyyy-MM-dd HH:mm:ss')}"></p>
-            </div>
-        </div>
-
-        <!-- 옵션 버튼 -->
-        <div class="dropdown" >
-            <button class="btn btn-sm btn-link text-dark toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="fas fa-ellipsis-v"></i>
+            <div th:unless="${item.stockNumber==0}" class="text-right">
+            <button type="button" class="btn btn-custom" onclick="addCart()">장바구니</button>
+            <button type="button" id="wish-button" class="btn wish-button" onclick="addDibs()">
+                <i class="fa-solid fa-heart-circle-plus"></i>
             </button>
-            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                <button class="dropdown-item modalBtn" type="button">수정</button>
-                <button class="dropdown-item removeBtn" type="button">삭제</button>
             </div>
         </div>
-         
-    
-        <div class="mt-2">
-            <div class="reviewgrade" data-grade="${review.grade}"></div>
-            <h5 class="card-title mt-2" th:text="${review.text}"></h5>
+
+        <div class="custombar">
+            <div th:if="${item.stockNumber==0}" class="text-right">
+                <button type="button" class="btn btn-soldout">품절된 게임 입니다.</button>
+                <button type="button" id="wish-button" class="btn wish-button" onclick="addDibs()">
+                    <i class="fa-regular fa-heart"></i>
+                </button>
+            </div>
+        </div>
+    <div class="container-fluid" style="margin: auto;">
+        <div class="sticky-nav">
+            <div class="info-item">
+                <a href="#purchase-info">안내사항</a>
+            </div>
+            <div class="info-item">
+                <a href="#shipping-info">게임 내용</a>
+            </div>
+            <div class="info-item">
+                <a href="#review-info">리뷰(<span th:text="${item.allReview}"></span>)</a>
+            </div>
         </div>
 
-        <!-- 추천 수 표시 및 추천 버튼 -->
-        <div class="recommend-section d-flex align-items-center mt-3">
-            <span class="rCnt mr-2">${review.rcnt != null ? review.rcnt : 0}</span>명이 유용하다고 답한 리뷰입니다.<br>
+        <div id="purchase-info" class="jumbotron jumbotron-fluid mgt-30">
+            <!-- <div><span class="dtlinfo">플랫폼:</span> <span th:text="${item.company}"></span></div>
+            <div>
+                <span class="dtlinfo">장르:</span>
+                <span th:if="${item.itemCategoryDto.action}">액션</span>
+                <span th:if="${item.itemCategoryDto.adventure}">모험</span>
+                <span th:if="${item.itemCategoryDto.rpg}">RPG</span>
+                <span th:if="${item.itemCategoryDto.shooter}">슈팅</span>
+                <span th:if="${item.itemCategoryDto.strategy}">전략</span>
+                <span th:if="${item.itemCategoryDto.simulation}">시뮬레이션</span>
+                <span th:if="${item.itemCategoryDto.puzzle}">퍼즐</span>
+                <span th:if="${item.itemCategoryDto.sports}">스포츠</span>
+                <span th:if="${item.itemCategoryDto.racing}">레이싱</span>
+                <span th:if="${item.itemCategoryDto.fighting}">격투</span>
+                <span th:if="${item.itemCategoryDto.survival}">생존</span>
+                <span th:if="${item.itemCategoryDto.rhythm}">리듬게임</span>
+                <span th:if="${item.itemCategoryDto.sandbox}">샌드박스</span>
+                <span th:if="${item.itemCategoryDto.battleRoyale}">대전</span>
+                <span th:if="${item.itemCategoryDto.card}">카드</span>
+                <span th:if="${item.itemCategoryDto.boardGame}">보드게임</span>
+                <span th:if="${item.itemCategoryDto.horror}">공포</span>
+                <span th:if="${item.itemCategoryDto.platformer}">플랫포머</span>
+                <span th:if="${item.itemCategoryDto.moba}">MOBA</span>
+                <span th:if="${item.itemCategoryDto.mmorpg}">MMORPG</span>
+            </div> -->
+
+            <div class="container">
+                <h2 class="display-5">구매 전 안내사항</h2>
+                <hr class="my-4">
+                <div class="product-details">
+                    <h3>구매 절차</h3>
+                    <p>본 상품은 구매 완료 후, 고유 코드가 발급되며, <strong>"코드 전송"</strong> 버튼을 클릭하시면 회원님의 이메일로 발송됩니다.<br>
+                        코드 전송 후에는 교환 및 환불이 불가하므로, 결제 및 코드 수령 과정에서 유의해주시기 바랍니다.</p>
+
+                    <h3>교환 및 환불 정책</h3>
+                    <p>결제 완료 후에는 발급된 코드가 회원님의 이메일로 발송되므로, <strong>교환 및 환불이 불가</strong>합니다.<br>
+                        코드를 발송하기 전에는 결제 취소가 가능하지만, 발송 이후에는 불가능합니다.</p>
+
+                    <h3>고객 주의 사항</h3>
+                    <p>코드 전송 버튼을 클릭하기 전, 이메일 주소를 정확히 확인해주시기 바랍니다.<br>
+                        오기입으로 인한 코드 미수령은 고객님 책임이므로 주의 바랍니다.<br>
+                        상품 사용을 위한 고유 코드의 유효 기간은 <strong>[유효 기간 예시: 발급일로부터 30일]</strong>입니다.</p>
+
+                    <h3>사용법 및 유의사항</h3>
+                    <p>본 상품의 코드는 1회 사용만 가능하며, 타인에게 양도가 불가능합니다.<br>
+                        코드 사용 시, 지정된 플랫폼 또는 애플리케이션에서만 유효합니다.</p>
+
+                    <h3>고객 지원</h3>
+                    <p>코드 발송 후 문의사항이나 도움이 필요하시면 <a href="[고객 지원 링크]">고객 지원</a>으로 문의해 주시기 바랍니다.</p>
+                </div>
+               
+            </div>
         </div>
-        <div>
-            <span>리뷰가 도움이 되었나요?</span>
-            <button class="btn btn-sm ${review.recommended ? 'btn-primary' : 'btn-outline-primary'} recommendBtn" data-reviewnum="${review.reviewnum}">
-                <i class="${review.recommended ? 'fas fa-solid' : 'far fa-regular'} fa-thumbs-up"></i>
+
+        <!--   이미지캐러셀  -->
+        <div id="shipping-info">
+            <div id="carouselControls" class="carousel slide text-center" data-ride="carousel">
+
+                <div class="carousel-inner" data-interval="2200">
+                    <div class="carousel-item active item">
+                        <img th:src="${item.itemImgDtoList[0].imgUrl}" th:alt="${item.itemNm}" alt="First slide"
+                            class="d-block rounded">
+                    </div>
+                    <div class="carousel-item item">
+                        <img th:src="${item.itemImgDtoList[1].imgUrl}" th:alt="${item.itemNm}" alt="Second slide"
+                            class="d-block rounded">
+                    </div>
+                    <div class="carousel-item item">
+                        <img th:src="${item.itemImgDtoList[2].imgUrl}" th:alt="${item.itemNm}" alt="Third slide"
+                            class="d-block rounded">
+                    </div>
+                    <div class="carousel-item item">
+                        <img th:src="${item.itemImgDtoList[3].imgUrl}" th:alt="${item.itemNm}" alt="Fourth slide"
+                            class="d-block rounded">
+                    </div>
+                </div>
+
+
+                <ul class="carousel-indicators">
+                    <li data-target="#carouselControls" data-slide-to="0" class="active"></li>
+                    <li data-target="#carouselControls" data-slide-to="1"></li>
+                    <li data-target="#carouselControls" data-slide-to="2"></li>
+                    <li data-target="#carouselControls" data-slide-to="3"></li>
+                </ul>
+
+                <a class="carousel-control-prev" href="#carouselControlso" data-slide="prev">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </a>
+                <a class="carousel-control-next" href="#carouselControls" data-slide="next">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </a>
+
+
+            </div>
+        </div>
+        <!--   이미지캐러셀 end-->
+
+        <!-- 이미지 나열 -->
+        <div th:each="itemImg : ${item.itemImgDtoList}" class="text-center">
+            <img th:if="${not #strings.isEmpty(itemImg.imgUrl)}" th:src="${itemImg.imgUrl}"
+                class="rounded mgb-15 responsive-img">
+        </div>
+
+        <hr class="my-4-2" id="review-info">
+        <!-- 별점 평점 + 리뷰수 -->
+        <div class="rating-value">
+            <div class="rating-count">총<span th:text="${item.allReview}"></span>건</div>
+            <span th:if="${item.avg == 0}">평점 없음</span>
+            <span th:if="${item.avg > 0}">
+                <div>
+                    <span th:text="${#numbers.formatDecimal(item.avg, 1, 1)}"></span>점
+                </div>
+                <span th:each="i : ${#numbers.sequence(1, item.avg)}"><i class="fas fa-star"></i></span>
+                <span th:each="i : ${#numbers.sequence(item.avg + 1, 5)}"><i class="far fa-star"></i></span>
+            </span>
+        </div>
+
+        <!-- 리뷰 등록 버튼 -->
+        <button type="button" class="btn btn-info addReviewBtn">게임 평가하기</button>
+
+        <!-- 리뷰 별점 높은순 버튼 -->
+        <div class="dropdown" style="float: right; margin-right: 20px;">
+            <button class="btn btn-sm btn-link text-dark toggle" style="height: 20px;" type="button"
+                id="sortDropdownButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span id="currentSortMethod">최신순</span> <!-- 초기 표시값 설정 -->
+                <i class="fa-solid fa-lines-leaning"></i>
             </button>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="sortDropdownButton">
+                <button class="dropdown-item rating">별점 높은 순</button>
+                <button class="dropdown-item asc">별점 낮은 순</button>
+                <button class="dropdown-item recommendation">추천순</button>
+                <button class="dropdown-item latest">최신순</button>
+            </div>
         </div>
 
-    </div>
 
-    <!-- 페이지 네비게이션 -->
-    <div class="pagination">
-        <button class="page-btn prevPage">&lt;</button> <!-- 이전 페이지 버튼 -->
-        <div id="pageNumbers" class="page-numbers"></div> <!-- 동적 페이지 버튼 -->
-        <button class="page-btn nextPage">&gt;</button> <!-- 다음 페이지 버튼 -->
-    </div>
+        <!-- 리뷰 목록 -->
+        <div class="list-group reviewList"></div>
 
-     <!-- 로그인 여부에 따라 hidden 필드에 값 설정 -->
-    <input type="hidden" id="isLoggedIn" th:value="${email != null ? 'true' : 'false'}">
-    <input type="hidden" id="isLoginCheck" th:value="${email}">
+        <!-- 리뷰 목록을 표시할 때 추천(따봉) 카운트와 버튼 추가 -->
+        <div th:each="review : ${reviewList}" class="review-item card card border-0 shadow-none p-3 mb-3"
+            data-reviewnum="${review.reviewnum}" data-mid="${review.email}">
 
-    <!-- 리뷰 모달 -->
-    <div class="reviewModal modal" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Game Review</h5>
-                    <button type="button" class="close closeBtn" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+            <div class="d-flex align-items-center">
+                <!-- 프로필 아이콘 -->
+                <div class="profile-icon bg-secondary rounded-circle text-white d-flex align-items-center justify-content-center"
+                    style="width: 40px; height: 40px;">
+                    <span th:text="${review.email.substring(0, 1).toUpperCase()}"></span>
                 </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label>Reviewer ID</label>
-                        <input type="text" class="form-control" name="email" th:value="${email}" readonly>
-                    </div>
-                    <div class="form-group" id="divGrade">
-                        <label>Grade <span class="grade"></span></label>
-                        <div class='starrr'></div>
-                    </div>
-                    <div class="form-group">
-                        <label>Review Text</label>
-                        <input type="text" class="form-control" name="text" placeholder="여기에 게임을 평가해주세요!">
-                    </div>
+                <div class="ml-3">
+                    <h6 class="card-subtitle mb-1 text-muted" th:text="${review.email}"></h6>
+                    <p class="card-text small" th:text="${#dates.format(review.regTime, 'yyyy-MM-dd HH:mm:ss')}">
+                    </p>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary closeBtn" data-dismiss="modal">닫기</button>
-                    <button type="button" class="btn btn-primary reviewSaveBtn">리뷰 등록</button>
-                    <button type="button" class="btn btn-warning modifyBtn">Modify</button>
-                    <button type="button" class="btn btn-danger removeBtn">Remove</button>
+            </div>
+
+            <!-- 옵션 버튼 -->
+            <div class="dropdown">
+                <button class="btn btn-sm btn-link text-dark toggle" type="button" id="dropdownMenuButton"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-ellipsis-v"></i>
+                </button>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                    <button class="dropdown-item modalBtn" type="button">수정</button>
+                    <button class="dropdown-item removeBtn" type="button">삭제</button>
+                </div>
+            </div>
+
+
+            <div class="mt-2">
+                <div class="reviewgrade" data-grade="${review.grade}"></div>
+                <h5 class="card-title mt-2" th:text="${review.text}"></h5>
+            </div>
+
+            <!-- 추천 수 표시 및 추천 버튼 -->
+            <div class="recommend-section d-flex align-items-center mt-3">
+                <span class="rCnt mr-2">${review.rcnt != null ? review.rcnt : 0}</span>명이 유용하다고 답한 리뷰입니다.<br>
+            </div>
+            <div>
+                <span>리뷰가 도움이 되었나요?</span>
+                <button class="btn btn-sm ${review.recommended ? 'btn-primary' : 'btn-outline-primary'} recommendBtn"
+                    data-reviewnum="${review.reviewnum}">
+                    <i class="${review.recommended ? 'fas fa-solid' : 'far fa-regular'} fa-thumbs-up"></i>
+                </button>
+            </div>
+
+        </div>
+
+        <!-- 페이지 네비게이션 -->
+        <div class="pagination">
+            <button class="page-btn prevPage">&lt;</button> <!-- 이전 페이지 버튼 -->
+            <div id="pageNumbers" class="page-numbers"></div> <!-- 동적 페이지 버튼 -->
+            <button class="page-btn nextPage">&gt;</button> <!-- 다음 페이지 버튼 -->
+        </div>
+
+        <!-- 로그인 여부에 따라 hidden 필드에 값 설정 -->
+        <input type="hidden" id="isLoggedIn" th:value="${email != null ? 'true' : 'false'}">
+        <input type="hidden" id="isLoginCheck" th:value="${email}">
+
+        <!-- 리뷰 모달 -->
+        <div class="reviewModal modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="review-current" th:text="${item.itemNm}"></h5>
+                        <button type="button" class="close closeBtn" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">                            
+                            <input type="hidden" class="form-control" name="email" th:value="${email}" readonly>
+                        </div>
+                        <div class="form-group" id="divGrade">
+                            <div>
+                            <label><h5 class="reviewment">이 게임은 어떠셨나요?</h5><span class="grade"></span></label>
+                            </div>
+                            <div class='starrr reviewmodalstarrr'></div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-group" id="label-container">
+                                <label>어떤 점이 좋았나요?</label>
+                            </div>
+                            <textarea class="form-control" name="text" placeholder="여기에 게임을 평가해주세요!" rows="4" maxlength="5000"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary closeBtn closeModal" data-dismiss="modal">닫기</button>
+                        <button type="button" class="btn btn-secondary reviewSaveBtn saveModal">등록</button>
+                        <button type="button" class="btn btn-warning modifyBtn">확인</button>
+                        <!-- <button  class="btn btn-danger removeBtn modalRemove">Remove</button> -->
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
 
-    <div class="imageModal modal " tabindex="-2" role="dialog">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Picture</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body"></div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <div class="imageModal modal " tabindex="-2" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Picture</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body"></div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -338,7 +419,7 @@
     <th:block layout:fragment="script">
         <script th:inline="javascript">
             $(document).ready(function () {
-                
+
                 calculateToalPrice();
 
                 $("#count").change(function () {
@@ -346,7 +427,7 @@
                 });
 
                 //찜하기 버튼 로직
-                const dibs = [[${callDibs}]]; // 또는 false로 변경 가능
+                const dibs = [[${ callDibs }]]; // 또는 false로 변경 가능
                 const wishBtn = $("#wish-button");
                 if (dibs) {
                     wishBtn.addClass("active");
@@ -354,7 +435,7 @@
                     wishBtn.removeClass("active");
                 }
                 // 버튼 클릭 시 토글 기능
-                wishBtn.on("click", function() {
+                wishBtn.on("click", function () {
                     $(this).toggleClass("active");
                 });
 
@@ -366,7 +447,7 @@
                 // 리뷰 모달 관련 변수 정의
                 var reviewModal = $(".reviewModal");
                 var inputMid = $('input[name="email"]');
-                var inputText = $('input[name="text"]');
+                var inputText = $('textarea[name="text"]');
 
                 //리뷰 정렬 변수 정의
                 let currentPage = 0;
@@ -379,7 +460,7 @@
                 });
 
                 // 리뷰 목록 로드 함수
-                function loadReviews(page, sort="regTime") {
+                function loadReviews(page, sort = "regTime") {
                     currentSort = sort;
                     const itemId = $("#itemId").val();
                     const loggedInEmail = $('#isLoginCheck').val(); // 로그인한 사용자의 이메일
@@ -406,7 +487,7 @@
                                             </div>
                                         </div>`;
                                 }
-                                
+
                                 reviewHtml += `
                                     <div class="review-item card p-3 mb-3" data-reviewnum="${review.reviewnum}" data-mid="${review.email}">
                                         <div class="d-flex align-items-center">
@@ -445,7 +526,7 @@
                         }
                     });
                 }
-                
+
                 loadReviews(0);
 
                 // 별점 표시 함수
@@ -492,12 +573,13 @@
                     }
                 });
 
+
                 // 추천 버튼 클릭 이벤트
-                $(".reviewList").on("click", ".recommendBtn", function(e) {
+                $(".reviewList").on("click", ".recommendBtn", function (e) {
                     e.stopPropagation();
                     const reviewnum = $(this).data("reviewnum");
                     const email = $("#isLoginCheck").val();
-                    
+
                     if ($("#isLoggedIn").val() === "false") {
                         alert("로그인이 필요합니다. 로그인 페이지로 이동합니다.");
                         window.location.href = "/members/login";
@@ -506,17 +588,17 @@
                             url: `/reviews/${reviewnum}/recommend`,
                             type: "POST",
                             data: { email: email },
-                            success: function(response) {
-                                console.log(response+"!@#!@#");
+                            success: function (response) {
+                                console.log(response + "!@#!@#");
                                 const icon = $(this).find('i');
-                                if (response=="추천 완료") {
+                                if (response == "추천 완료") {
                                     icon.removeClass('far fa-regular').addClass('fas fa-solid');
                                 } else {
                                     icon.removeClass('fas fa-solid').addClass('far fa-regular');
                                 }
                                 loadReviews(currentPage, currentSort); // 추천 상태 변경 후 리뷰 목록 다시 로드
                             },
-                            error: function(xhr) {
+                            error: function (xhr) {
                                 console.error("Error: " + xhr.responseText);
                             }
                         });
@@ -524,10 +606,11 @@
                 });
 
                 // 정렬 버튼 클릭 시 이벤트
-                $('.dropdown-item').click(function() {
+                $('.dropdown-item').click(function () {
                     var selectedSortMethod = $(this).text();
                     $('#currentSortMethod').text(selectedSortMethod); // 선택된 정렬 방식 표시 업데이트
                     const sortType = $(this).attr('class').split(' ')[1];
+                    console.log(sortType);
                     loadReviews(0, sortType); // 첫 페이지부터 새로운 정렬 방식으로 로드
                 });
 
@@ -685,7 +768,7 @@
                     dataType: "json",
                     cache: false,
                     success: function (result, status) {
-                        if(result==0){
+                        if (result == 0) {
                             alert("죄송합니다. 수량이 부족합니다.");
                             return;
                         }
@@ -701,7 +784,7 @@
                             dataType: "json",
                             cache: false,
                             success: function (result, status) {
-                                    location.href='/order/payment?orderId=' + result;
+                                location.href = '/order/payment?orderId=' + result;
                             },
                             error: function (jqXHR, status, error) {
                                 alert('로그인 후 이용해주세요');
@@ -742,14 +825,14 @@
                     dataType: "json",
                     cache: false,
                     success: function (result, status) {
-                        if(result==0){
+                        if (result == 0) {
                             alert("죄송합니다. 수량이 부족합니다.");
                             return;
                         }
                         alert("상품을 장바구니에 담았습니다.");
                         cartCount();
-                        if(confirm("장바구니로 이동하시겠습니까?")){
-                            location.href="/cart";
+                        if (confirm("장바구니로 이동하시겠습니까?")) {
+                            location.href = "/cart";
                         }
                     },
                     error: function (jqXHR, status, error) {
@@ -764,15 +847,15 @@
                 var token = $("meta[name='_csrf']").attr("content");
                 var header = $("meta[name='_csrf_header']").attr("content");
 
-                var url="/dibsAdd";
-                var type="POST";
+                var url = "/dibsAdd";
+                var type = "POST";
                 var paramData = {
                     itemId: $("#itemId").val()
                 };
 
-                if($("#wish-button").hasClass("active")){
-                    url="/dibsDelete";
-                    type="DELETE";
+                if ($("#wish-button").hasClass("active")) {
+                    url = "/dibsDelete";
+                    type = "DELETE";
                 }
 
                 var param = JSON.stringify(paramData);
@@ -800,5 +883,6 @@
         </script>
     </th:block>
 </div>
+
 
 </html>

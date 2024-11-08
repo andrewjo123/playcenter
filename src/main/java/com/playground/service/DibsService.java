@@ -21,4 +21,6 @@ public interface DibsService {
     boolean checkDibs(String email, Long itemId);
 
     List<Long> dibsListforItemId(String email);
+
+    Long getDibsItem(Long dibsItemId);
 }
