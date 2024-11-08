@@ -161,7 +161,19 @@
     filter: grayscale(100%);
 }
 .mypage #getPImg{
+    width:100px; height:100px;
     cursor:pointer;
+}
+.mypage #getPImg2{
+    cursor:pointer;
+    color:gray;
+}
+.mypage #getPImg2:hover{
+    text-decoration: underline;
+}
+.mypage .member-name {
+    font-weight: bold;
+    font-size: 1.5em;
 }
 .mypage .notice{
     max-height:40vh;
@@ -176,9 +188,27 @@
     align-items: center;
     justify-content: center;
 }
-.mypage .member-name {
-    font-weight: bold;
-    font-size: 1.5em;
+.mypage .userModifyDiv{
+    border:1px solid #7FDA56;
+    display:inline-block;
+    border-radius:7px;
+}
+.mypage .userModifyDiv a{
+    color:green;
+}
+.mypage .userModifyDiv:hover{
+    opacity:0.5;
+    background-color:#eee;
+}
+.mypage .linkIcon{
+    position:relative;
+}
+.mypage .dibsInfo, .mypage .cartInfo, .mypage .orderInfo{
+    font-size:1.5rem;
+    position:absolute;
+    display:none;
+    z-index:10;
+    white-space: nowrap;
 }
 .mypage .point-management {
     background: #f9f9f9;
@@ -243,10 +273,29 @@
 margin-right: 10px;
 width: auto;
 }
+.memberMng .table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+    background-color: #f9f9f9; /* 테이블 배경을 밝은 회색으로 */
+    color: #333;
+}
+
+.memberMng .table th,
+.memberMng .table td {
+    padding: 12px 15px; /* 셀 내부 여백 */
+    text-align: center;
+    border: 1px solid #ddd; /* 셀 테두리 색상 */
+}
+
 .memberMng .table th {
-    background-color: #7FDA56;
+    background-color: #7FDA56; /* 트레이드 마크 색상으로 헤더 배경 */
     color: #ffffff; /* 헤더 글씨를 흰색으로 */
     font-weight: bold;
+}
+
+.memberMng .table tbody tr:nth-child(even) {
+    background-color: #ffffff; /* 짝수 행에 흰색 배경 */
 }
 
 .memberMng .btn-primary {
@@ -291,6 +340,15 @@ width: auto;
     color: #fff;
     border: 1px solid #7FDA56;
 }
+/*검색 부분 옵션 간격*/
+.memberMng .form-inline {
+    margin: 20px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
 /* 활성화 상태 버튼 스타일 */
 .memberMng .active-btn {
     padding: 6px 12px;
@@ -367,6 +425,9 @@ width: auto;
     /* 마이페이지 --------------------------------- */
     .mypage .imgCandidate{
         width:100px; height:100px;
+    }
+    .mypage .userInfo{
+        margin-top:3.5vh;
     }
 
     /* 이메일 찾기 --------------------------------- */
