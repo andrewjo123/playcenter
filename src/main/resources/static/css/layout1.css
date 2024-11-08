@@ -132,6 +132,24 @@ li,ul{
     height: 100%;
     left: 20px;
 }
+#kakao-talk-channel-chat-button, #kakao-talk-channel-chat-button img {
+    position: fixed;
+    padding: 0;
+    z-index: 999;
+    width:100px;
+    bottom:12vh;
+    right: calc(6vw + 50px);
+}
+#kakao-talk-channel-chat-button img {
+    border-radius: 15px; /* 모서리를 살짝 둥글게 */
+}
+#kakao-talk-channel-chat-button .icon-pc {
+    display: block;
+}
+
+#kakao-talk-channel-chat-button .icon-mobile {
+    display: none;
+}
 
 /* 모바일 화면 전용 스타일 */
 @media (max-width: 768px) {
@@ -223,5 +241,27 @@ li,ul{
         height: auto;
     }
     /*footer 끝*/
-
+    /* 페이지 top, bottom 이동  시작*/
+    #pageIndicators {
+        width: 55px;
+        right: 10px;
+        bottom: 65px; /* 화면 아래에서 10px 띄움 */
+    }
+    #pageIndicators #indicatorBtn{
+        opacity:0.9;
+    }
+    /* 페이지 top, bottom 이동  끝*/
+    #kakao-talk-channel-chat-button, #kakao-talk-channel-chat-button img  {
+        position: fixed;
+        z-index: 999;
+        width:55px;
+        right: 10px; /* 화면 오른쪽으로부터의 거리, 숫자만 변경 */
+        bottom: 10px; /* 화면 아래쪽으로부터의 거리, 숫자만 변경 */
+    }
+    #kakao-talk-channel-chat-button .icon-pc {
+        display: none;
+    }
+    #kakao-talk-channel-chat-button .icon-mobile {
+        display: block;
+    }
 }
