@@ -839,7 +839,8 @@ width: auto;
     }
     .dibsList .repImg {
         height: auto;
-        min-width: 100px;
+        width: 200px;
+        object-pit: cover;
     }
     .dibsList .fs24 {
         font-size: clamp(16px, 2vw, 20px);
