@@ -24,7 +24,10 @@ public interface ReviewService {
 
      //리뷰 추천
     //  void reviewRecommend(Long reviewnum); // 추천 증가 메서드
-    String toggleRecommend(Long reviewnum, String email); 
+    String toggleRecommend(Long reviewnum, String email);
+
+    // 게임 산 사람만 리뷰가능
+    String validRegist(Long id, String email);
 
     default Review dtoToEntity(ReviewDto itemReviewDto){
 

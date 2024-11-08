@@ -239,13 +239,13 @@ public class OrderServiceImpl implements OrderService {
             List<OrderItem> orderItems = order.get().getOrderItems();
             List<ItemCode> gatherCodes = new ArrayList<>();
             Map<String,Integer> companyCount=new HashMap<>();
-            orderItems.forEach(item ->{
-                int count=item.getCount();
-                totalPrice.addAndGet(item.getTotalPrice());
-                List<ItemCode> codeList=codeRepository.getCode(count);
+            orderItems.forEach(oItem ->{
+                int count=oItem.getCount();
+                totalPrice.addAndGet(oItem.getTotalPrice());
+                List<ItemCode> codeList=codeRepository.getCode(oItem.getItem().getId(),count);
                 List<String> itemNameAndImg=new ArrayList<>();
-                itemNameAndImg.add(0,item.getItem().getItemNm());
-                itemNameAndImg.add(1,itemImgRepository.findByItemId(item.getItem().getId()).get(0).getImgUrl());
+                itemNameAndImg.add(0,oItem.getItem().getItemNm());
+                itemNameAndImg.add(1,itemImgRepository.findByItemId(oItem.getItem().getId()).get(0).getImgUrl());
                 List<String> sendCodes=new ArrayList<>();
                 codeList.forEach(code1->{
                     sendCodes.add(code1.getCodNum());
@@ -253,7 +253,7 @@ public class OrderServiceImpl implements OrderService {
                     gatherCodes.add(code1);
                 });
                 sendCodeLists.put(itemNameAndImg,sendCodes);
-                String company=categoryRepository.findByItemId(item.getItem().getId()).getCompany();
+                String company=categoryRepository.findByItemId(oItem.getItem().getId()).getCompany();
                 if(company.equals("steam")){
                     companyCount.put("steam",companyCount.getOrDefault("steam", 0)+count);
                 }
@@ -263,7 +263,7 @@ public class OrderServiceImpl implements OrderService {
                 if(company.equals("ps")){
                     companyCount.put("ps",companyCount.getOrDefault("ps", 0)+count);
                 }
-                Item originItem=item.getItem();
+                Item originItem=oItem.getItem();
                 originItem.setBuyCnt(originItem.getBuyCnt()+count);
                 itemRepository.save(originItem);
             });

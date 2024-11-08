@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.playground.dto.ReviewDto;
 import com.playground.service.ReviewService;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 @RestController
 @RequestMapping("/reviews")
@@ -100,6 +101,13 @@ public class ReviewController {
         return new ResponseEntity<>( reviewnum, HttpStatus.OK);
     }
 
+    @PreAuthorize("isAuthenticated()")
+    @RequestMapping(value = "/validRegist", method = {RequestMethod.POST})
+    public ResponseEntity<String> validRegist(@RequestParam("itemId")Long itmeId, Principal principal){
+        String email = principal.getName();
+        String result = reviewService.validRegist(itmeId, email);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 
 }
 

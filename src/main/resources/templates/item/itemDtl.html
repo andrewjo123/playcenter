@@ -625,22 +625,39 @@
                     if (isLoggedIn === "false") {
                         alert("로그인이 필요합니다. 로그인 페이지로 이동합니다.");
                         window.location.href = "/members/login";
-                    } else {
-                        grade = 0;
-                        inputText.val("");
-                        var star = $(".starrr").clone();
-                        $(".starrr").remove();
-                        $("#divGrade").append(star);
-                        $('.starrr').starrr({
-                            rating: grade,
-                            change: function (e, value) {
-                                if (value) grade = value;
-                            }
-                        });
-                        $(".removeBtn ,  .modifyBtn").hide();
-                        $(".reviewSaveBtn").show();
-                        reviewModal.modal('show');
+                        return;
                     }
+                    $.ajax({
+                        url: `/reviews/validRegist`,
+                        type: "POST",
+                        data: { itemId: $("#itemId").val()},
+                        success: function (response) {
+                            if (response == "valid") {
+                                grade = 0;
+                                inputText.val("");
+                                var star = $(".starrr").clone();
+                                $(".starrr").remove();
+                                $("#divGrade").append(star);
+                                $('.starrr').starrr({
+                                    rating: grade,
+                                    change: function (e, value) {
+                                        if (value) grade = value;
+                                    }
+                                });
+                                $(".removeBtn, .modifyBtn").hide();
+                                $(".reviewSaveBtn").show();
+                                reviewModal.modal('show');
+                            } else {
+                                alert("게임을 구매한 사람만 리뷰등록이 가능합니다");
+                            }
+                        },
+                        error: function (xhr) {
+                            console.error("Error: " + xhr.responseText);
+                        }
+                    });
+
+
+
                 });
 
                 // 리뷰 저장 버튼
