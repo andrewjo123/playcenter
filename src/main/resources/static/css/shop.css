@@ -931,7 +931,7 @@ width: auto;
 
     /* dibsList-------------------------------------------------------- */
     .dibsList h2{
-        margin-top: 10px;
+        margin-top: 20px;
         text-align: center;
     }
     .dibsList .dibsItem {
@@ -942,6 +942,12 @@ width: auto;
     .dibsList .content-mg {
         margin-right: 0;
         margin-left: 0;
-
+    }
+    .dibsList .repImg {
+        height: auto;
+        min-width: 100px;
+    }
+    .dibsList .fs24 {
+        font-size: clamp(16px, 2vw, 20px);
     }
 }
