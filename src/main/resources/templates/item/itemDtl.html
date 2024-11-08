@@ -5,6 +5,7 @@
 <head>
     <meta name="_csrf" th:content="${_csrf.token}" />
     <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link th:href="@{/css/itemDtl.css}" rel="stylesheet">
     <!-- Font Awesome 링크 추가 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -67,11 +68,11 @@
             </div>
             <hr class="my-4">
 
-
+            <!-- 가격 ---------------------------------------------------->
             <div class="h3 text-dark text-left">
                 <div class="input-group ml-auto priceform">
                     <div class="firstPrice w-100">
-                        <span th:text="${item.price}"></span>원
+                        <span th:text="${#numbers.formatInteger(item.price, 1,'COMMA')}"></span>원
                     </div>
                     <div class="input-group-prepend">
                         <span class="input-group-text">구매수량</span>
@@ -86,8 +87,8 @@
             </div>
 
             <hr class="my-4-4">
-             <!-- 닌텐도 안내문 -->
-             <div class="instructions" th:if="${item.company == 'nintendo'}">
+            <!-- 닌텐도 안내문 -->
+            <div class="instructions" th:if="${item.company == 'nintendo'}">
                 <h2>닌텐도 스위치에서 코드 입력 방법</h2>
                 <ol>
                     <li><strong>홈 메뉴</strong>에서 <strong>"닌텐도 e샵"</strong>을 실행하세요.</li>
@@ -118,44 +119,47 @@
                 </ol>
             </div>
             <!-- <p class="lead" th:text="${item.itemDetail}"></p> -->
-             <span class="guide"> 구매 전 안내사항을 확인해 주세요.</span>
-             <hr class="my-4-4">
-            </div>
-            
+            <span class="guide"> 구매 전 안내사항을 확인해 주세요.</span>
+            <hr class="my-4-4">
         </div>
-        <div class="custombar">
-            <div th:unless="${item.stockNumber==0}" class="text-right">
-                <button type="button" class="btn btn-order" onclick="order()">주문하기</button>
-            </div>
-            <div th:unless="${item.stockNumber==0}" class="text-right">
+    </div>
+
+    <!-- 버튼 시작 -장바구니, 주문하기, 찜, 품절 -->
+    <div class="custombar">
+        <div th:unless="${item.stockNumber==0}" class="text-right">
+            <button type="button" class="btn btn-order" onclick="order()">주문하기</button>
+        </div>
+        <div th:unless="${item.stockNumber==0}" class="text-right">
             <button type="button" class="btn btn-custom" onclick="addCart()">장바구니</button>
             <button type="button" id="wish-button" class="btn wish-button" onclick="addDibs()">
-                <i class="fa-solid fa-heart-circle-plus"></i>
+                <span>🤍</span>
             </button>
-            </div>
         </div>
+    </div>
 
-        <div class="custombar">
-            <div th:if="${item.stockNumber==0}" class="text-right">
-                <button type="button" class="btn btn-soldout">품절된 게임 입니다.</button>
-                <button type="button" id="wish-button" class="btn wish-button" onclick="addDibs()">
-                    <i class="fa-regular fa-heart"></i>
-                </button>
-            </div>
+    <div class="custombar">
+        <div th:if="${item.stockNumber==0}" class="text-right">
+            <button type="button" class="btn btn-soldout">품절된 게임 입니다.</button>
+            <button type="button" id="wish-button" class="btn wish-button" onclick="addDibs()">
+                <span>🤍</span>
+            </button>
         </div>
+    </div>
+
+    <div class="sticky-nav">
+        <div class="info-item">
+            <a href="#purchase-info">안내사항</a>
+        </div>
+        <div class="info-item">
+            <a href="#shipping-info">게임 내용</a>
+        </div>
+        <div class="info-item">
+            <a href="#review-info">리뷰(<span th:text="${item.allReview}"></span>)</a>
+        </div>
+    </div>
+
     <div class="container-fluid" style="margin: auto;">
-        <div class="sticky-nav">
-            <div class="info-item">
-                <a href="#purchase-info">안내사항</a>
-            </div>
-            <div class="info-item">
-                <a href="#shipping-info">게임 내용</a>
-            </div>
-            <div class="info-item">
-                <a href="#review-info">리뷰(<span th:text="${item.allReview}"></span>)</a>
-            </div>
-        </div>
-
+        
         <div id="purchase-info" class="jumbotron jumbotron-fluid mgt-30">
             <!-- <div><span class="dtlinfo">플랫폼:</span> <span th:text="${item.company}"></span></div>
             <div>
@@ -307,8 +311,9 @@
                 </div>
                 <div class="ml-3">
                     <h6 class="card-subtitle mb-1 text-muted" th:text="${review.email}"></h6>
-                    <p class="card-text small" th:text="${#dates.format(review.regTime, 'yyyy-MM-dd HH:mm:ss')}">
-                    </p>
+                    <p class="card-text small" th:text="${#dates.format(review.regTime, 'yyyy-MM-dd HH:mm:ss')}"></p>
+                    <div class="reviewgrade" data-grade="${review.grade}"></div>
+                    
                 </div>
             </div>
 
@@ -326,16 +331,16 @@
 
 
             <div class="mt-2">
-                <div class="reviewgrade" data-grade="${review.grade}"></div>
-                <h5 class="card-title mt-2" th:text="${review.text}"></h5>
+                <!-- <div class="reviewgrade" data-grade="${review.grade}"></div> -->
+                <h6 class="card-title mt-2" th:text="${review.text}"></h6>
             </div>
 
             <!-- 추천 수 표시 및 추천 버튼 -->
             <div class="recommend-section d-flex align-items-center mt-3">
-                <span class="rCnt mr-2">${review.rcnt != null ? review.rcnt : 0}</span>명이 유용하다고 답한 리뷰입니다.<br>
+                <span class="rCnt mr-2">${review.rcnt != null ? review.rcnt : 0}</span><span class="rCnt mr-3">명이 유용하다고 답한 리뷰입니다.</span>
             </div>
             <div>
-                <span>리뷰가 도움이 되었나요?</span>
+                <span class="rCnt mr-3">리뷰가 도움이 되었나요?</span>
                 <button class="btn btn-sm ${review.recommended ? 'btn-primary' : 'btn-outline-primary'} recommendBtn"
                     data-reviewnum="${review.reviewnum}">
                     <i class="${review.recommended ? 'fas fa-solid' : 'far fa-regular'} fa-thumbs-up"></i>
@@ -497,16 +502,16 @@
                                                 <p class="card-text small">${new Date(review.regTime).toLocaleString()}</p>
                                             </div>
                                         </div>
-                                        ${dropdownHtml}
-                                        <div class="mt-2">
+                                    ${dropdownHtml}
+                                            <div class="mt-2">
                                             <div class="reviewgrade" data-grade2="${review.grade}"></div>
-                                            <h5 class="card-title mt-2">${review.text}</h5>
+                                            <h6 class="card-title mt-2">${review.text}</h6>
                                         </div>
                                         <div class="recommend-section d-flex align-items-center mt-3">
-                                            <span class="rCnt mr-2">${review.rcnt != null ? review.rcnt : 0}</span>명이 유용하다고 답한 리뷰입니다.<br>
+                                            <span class="rCnt mr-2">${review.rcnt != null ? review.rcnt : 0}</span><span class="rCnt mr-3">명이 유용하다고 답한 리뷰입니다.</span>
                                             </div>
                                             <div>
-                                            <span>이 리뷰가 도움이 되었나요?</span>
+                                            <span class="rCnt mr-3">이 리뷰가 도움이 되었나요?</span>
                                             <button class="btn btn-sm ${review.recommended ? 'btn-primary' : 'btn-outline-primary'} recommendBtn" data-reviewnum="${review.reviewnum}">
                                                 <i class="${review.recommended ? 'fas fa-solid' : 'far fa-regular'} fa-thumbs-up"></i>
                                             </button>
@@ -889,6 +894,13 @@
                     cache: false,
                     success: function (result) {
                         dibsCount();
+
+                        // 텍스트 변경
+                        if ($("#wish-button").hasClass("active")) {
+                            $("#wish-button span").text("❤");
+                        } else {
+                            $("#wish-button span").text("🤍");
+                        }
                     },
                     error: function (jqXHR, status, error) {
                         alert('로그인 후 이용해주세요');
