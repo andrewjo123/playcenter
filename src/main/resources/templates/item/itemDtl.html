@@ -630,22 +630,39 @@
                     if (isLoggedIn === "false") {
                         alert("로그인이 필요합니다. 로그인 페이지로 이동합니다.");
                         window.location.href = "/members/login";
-                    } else {
-                        grade = 0;
-                        inputText.val("");
-                        var star = $(".starrr").clone();
-                        $(".starrr").remove();
-                        $("#divGrade").append(star);
-                        $('.starrr').starrr({
-                            rating: grade,
-                            change: function (e, value) {
-                                if (value) grade = value;
-                            }
-                        });
-                        $(".removeBtn ,  .modifyBtn").hide();
-                        $(".reviewSaveBtn").show();
-                        reviewModal.modal('show');
+                        return;
                     }
+                    $.ajax({
+                        url: `/reviews/validRegist`,
+                        type: "POST",
+                        data: { itemId: $("#itemId").val()},
+                        success: function (response) {
+                            if (response == "valid") {
+                                grade = 0;
+                                inputText.val("");
+                                var star = $(".starrr").clone();
+                                $(".starrr").remove();
+                                $("#divGrade").append(star);
+                                $('.starrr').starrr({
+                                    rating: grade,
+                                    change: function (e, value) {
+                                        if (value) grade = value;
+                                    }
+                                });
+                                $(".removeBtn, .modifyBtn").hide();
+                                $(".reviewSaveBtn").show();
+                                reviewModal.modal('show');
+                            } else {
+                                alert("게임을 구매한 사람만 리뷰등록이 가능합니다");
+                            }
+                        },
+                        error: function (xhr) {
+                            console.error("Error: " + xhr.responseText);
+                        }
+                    });
+
+
+
                 });
 
                 // 리뷰 저장 버튼
@@ -855,15 +872,12 @@
             function addDibs() {
                 var token = $("meta[name='_csrf']").attr("content");
                 var header = $("meta[name='_csrf_header']").attr("content");
-                
+
                 var url = "/dibsAdd";
                 var type = "POST";
                 var paramData = {
-                    itemId: $("#itemId").val()                    
+                    itemId: $("#itemId").val()
                 };
-                console.log("itemId:", itemId); // itemId가 null이나 undefined가 아닌지 확인
-                console.log("CSRF token:", token);
-                console.log("CSRF header:", header);
 
                 if ($("#wish-button").hasClass("active")) {
                     url = "/dibsDelete";
