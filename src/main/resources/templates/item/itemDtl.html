@@ -783,17 +783,16 @@
                 var param = JSON.stringify(paramData);
 
                 $.ajax({
-                    url: "/cart",
+                    url: "/itemDetailToOrder",
                     type: "POST",
-                    contentType: "application/json",
-                    data: param,
+                    data: {itemId:$("#itemId").val(), count:$("#count").val()},
                     beforeSend: function (xhr) {
                         /* 데이터를 전송하기 전에 헤더에 csrf값을 설정 */
                         xhr.setRequestHeader(header, token);
                     },
-                    dataType: "json",
+                    dataType: "Text",
                     cache: false,
-                    success: function (result, status) {
+                    success: function (result) {
                         if (result == 0) {
                             alert("죄송합니다. 수량이 부족합니다.");
                             return;
@@ -821,7 +820,6 @@
                     },
                     error: function (jqXHR, status, error) {
                         alert('로그인 후 이용해주세요');
-                        console.log(jqXHR);
                         location.href = '/members/login';
                     }
                 });

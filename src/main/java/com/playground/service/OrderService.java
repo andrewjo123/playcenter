@@ -29,4 +29,5 @@ public interface OrderService {
 
     List<String> checkStack(Map<String, String> cartIds);
     List<String> checkStackById(Long orderId);
+    Long checkStackFromItemDtl(Long itemId, int count, String email);
 }

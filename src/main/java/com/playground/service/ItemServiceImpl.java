@@ -169,7 +169,7 @@ public class ItemServiceImpl implements ItemService {
                 context.setVariable("itemId", item.getId());
                 context.setVariable("itemNm",item.getItemNm());
                 context.setVariable("count",codes.size());
-                context.setVariable("itemImgUrl",itemImgRepository.findByItemId(itemId).get(0).getImgUrl());
+                context.setVariable("itemImgName",itemImgRepository.findByItemId(itemId).get(0).getImgName());
 
                 emailService.sendEmailToMany(emailList, subject, "mailForm/stockNotification",context);
             }

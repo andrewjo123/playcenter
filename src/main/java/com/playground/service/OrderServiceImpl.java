@@ -35,6 +35,7 @@ public class OrderServiceImpl implements OrderService {
     private final CartItemRepository cartItemRepository;
     private final MemberChallengeRepsoitory challengeRepository;
     private final ItemCategoryRepository categoryRepository;
+    private final CartRepository cartRepository;
 
     @Override
     public Long order(OrderDto orderDto, String email) {
@@ -245,7 +246,7 @@ public class OrderServiceImpl implements OrderService {
                 List<ItemCode> codeList=codeRepository.getCode(oItem.getItem().getId(),count);
                 List<String> itemNameAndImg=new ArrayList<>();
                 itemNameAndImg.add(0,oItem.getItem().getItemNm());
-                itemNameAndImg.add(1,itemImgRepository.findByItemId(oItem.getItem().getId()).get(0).getImgUrl());
+                itemNameAndImg.add(1,itemImgRepository.findByItemId(oItem.getItem().getId()).get(0).getImgName());
                 List<String> sendCodes=new ArrayList<>();
                 codeList.forEach(code1->{
                     sendCodes.add(code1.getCodNum());
@@ -291,9 +292,8 @@ public class OrderServiceImpl implements OrderService {
                 challenge.setCountForPs(challenge.getCountForPs() + companyCount.getOrDefault("ps", 0));
                 challengeRepository.save(challenge);
             }
-            Context context=new Context();
-            context.setVariable("codeLists",sendCodeLists);
-            emailService.sendEmail(email, "[놀이마당] 게임코드 발송", "mailForm/sendGameCodes",context);
+
+            emailService.sendAllCodes(email, "[놀이마당] 게임코드 발송", "mailForm/sendGameCodes",sendCodeLists);
             result="success";
         } else{
             result="none";
@@ -329,6 +329,20 @@ public class OrderServiceImpl implements OrderService {
             result.add("conTinueForPay");
         }
         return result;
+    }
+
+    @Override
+    public Long checkStackFromItemDtl(Long itemId, int count, String email) {
+        Item item=itemRepository.findById(itemId).orElseThrow(EntityNotFoundException::new);
+        if(item.getStockNumber()>=count){
+            CartItem cartItem=cartItemRepository.findByCartIdAndItemId(cartRepository.findByEmail(email).getId(),itemId);
+            if(cartItem!=null){
+                cartItemRepository.delete(cartItem);
+            }
+            return item.getId();
+        } else{
+            return 0L;
+        }
     }
 
 }
