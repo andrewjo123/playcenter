@@ -14,6 +14,7 @@ body {
     margin-top: 50px;
     margin-left: 175px;
     margin-right: 175px;
+    min-height: 800px;
 }
 li,ul{
     text-decoration:none ;
