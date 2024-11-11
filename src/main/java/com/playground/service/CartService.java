@@ -21,4 +21,7 @@ public interface CartService {
 
     //1024추가
     int getCartCount(String email);
+
+    // 1111추가
+    List<String> checkBeforeOrder(List<CartOrderDto> cartOrderDtoList);
 }

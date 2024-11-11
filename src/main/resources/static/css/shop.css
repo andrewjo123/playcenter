@@ -111,6 +111,10 @@
     min-width: 48px;
 }
 
+.cartList .itemLink{
+    color:#7FDA56;
+}
+
 /* itemForm--------------------------------------------------------*/
 
 /* 입력 그룹 스타일 */
@@ -627,8 +631,8 @@ width: auto;
 }
 
 .orderHist .repImg {
-    height: 100px;
-    width: 100px;
+    width: 200px;
+    height: 150px;
 }
 
 .orderHist .card {

@@ -20,6 +20,8 @@ import org.thymeleaf.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -134,5 +136,21 @@ public class CartServiceImpl implements CartService {
     public int getCartCount(String email) {
         Long cartId=cartRepository.findByEmail(email).getId();
         return (int)cartItemRepository.countByCartId(cartId);
+    }
+
+    // 1111추가
+    @Override
+    public List<String> checkBeforeOrder(List<CartOrderDto> cartOrderDtoList) {
+        List<String> result=new ArrayList<>();
+        cartOrderDtoList.forEach((cartOrder)->{
+            Optional<CartItem> cartItem=cartItemRepository.findById(cartOrder.getCartItemId());
+            if(cartItem.get().getCount()>cartItem.get().getItem().getStockNumber()){
+                result.add(cartItem.get().getItem().getItemNm());
+            }
+        });
+        if (result.isEmpty()) {
+            result.add("conTinueForPay");
+        }
+        return result;
     }
 }

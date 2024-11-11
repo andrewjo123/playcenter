@@ -40,15 +40,20 @@
                 </td>
                 <td class="d-flex">
                     <div class="repImgDiv align-self-center">
-                        <img th:src="${cartItem.imgUrl}" class = "rounded repImg" th:alt="${cartItem.itemNm}">
+                        <a th:href="'/item/' +${cartItem.itemId}">
+                            <img th:src="${cartItem.imgUrl}" class = "rounded repImg" th:alt="${cartItem.itemNm}">
+                        </a>
                     </div>
                     <div class="align-self-center">
-                        <span th:text="${cartItem.itemNm}" class="fs24 font-weight-bold"></span>
+                        <a th:href="'/item/' +${cartItem.itemId}" class="itemLink">
+                            <span th:text="${cartItem.itemNm}" class="fs24 font-weight-bold"></span>
+                        </a>
                         <div class="fs18 font-weight-light">
                             <span class="input-group mt-2">
                                 <span th:id="'price_' + ${cartItem.cartItemId}"
                                       th:data-price="${cartItem.price}"
-                                      th:text="${cartItem.price} + '원'" class="align-self-center mr-2">
+                                      th:text="${#numbers.formatInteger(cartItem.price, 1,'COMMA')} + '원'" class="align-self-center mr-2">
+
                                 </span>
                                 <input type="number" name="count" th:id="'count_' + ${cartItem.cartItemId}"
                                        th:value="${cartItem.count}" min="1"
@@ -59,7 +64,7 @@
                 </td>
                 <td class="text-center align-middle">
                     <span th:id="'totalPrice_' + ${cartItem.cartItemId}"
-                          name="totalPrice" th:text="${cartItem.price * cartItem.count} + '원'">
+                          name="totalPrice" th:text="${#numbers.formatInteger(cartItem.price * cartItem.count, 1,'COMMA')} + '원'">
                     </span>
                     <button type="button" class="close" aria-label="Close">
                         <span aria-hidden="true" th:data-id="${cartItem.cartItemId}" onclick="deleteCartItem(this)">&times;</span>
@@ -104,7 +109,7 @@
                 orderTotalPrice += price*count;
             });
 
-            $("#orderTotalPrice").html(orderTotalPrice+'원');
+            $("#orderTotalPrice").html(orderTotalPrice.toLocaleString()+'원');
         }
 
         function changeCount(obj){
@@ -145,14 +150,7 @@
                     console.log("cartItem count update success");
                 },
                 error : function(jqXHR, status, error){
-
-                    if(jqXHR.status == '401'){
-                        alert('로그인 후 이용해주세요');
-                        location.href='/members/login';
-                    } else{
-                        alert(jqXHR.responseJSON.message);
-                    }
-
+                    alert('잠시 후 다시 시도해주세요');
                 }
             });
         }
@@ -177,14 +175,7 @@
                     location.href='/cart';
                 },
                 error : function(jqXHR, status, error){
-
-                    if(jqXHR.status == '401'){
-                        alert('로그인 후 이용해주세요');
-                        location.href='/members/login';
-                    } else{
-                        alert(jqXHR.responseJSON.message);
-                    }
-
+                    alert('잠시 후 다시 시도해주세요');
                 }
             });
         }
@@ -192,8 +183,6 @@
         function orders(){
             var token = $("meta[name='_csrf']").attr("content");
             var header = $("meta[name='_csrf_header']").attr("content");
-
-            var url = "/cart/orders";
 
             var dataList = new Array();
             var paramData = new Object();
@@ -205,34 +194,53 @@
                 dataList.push(data);
             });
 
+            if(dataList.length==0){
+                alert("주문하실 상품을 선택해주세요");
+                return;
+            }
+
             paramData['cartOrderDtoList'] = dataList;
 
             var param = JSON.stringify(paramData);
 
             $.ajax({
-                url      : url,
+                url      : "/cartToOrder",
                 type     : "POST",
                 contentType : "application/json",
                 data     : param,
+                dataType:"Text",
                 beforeSend : function(xhr){
-                    /* 데이터를 전송하기 전에 헤더에 csrf값을 설정 */
                     xhr.setRequestHeader(header, token);
                 },
-                dataType : "json",
                 cache   : false,
-                success  : function(result, status){
-                    var query= dataList.map((item, index) => `item${index}=${item.cartItemId}`).join('&');
-                    location.href = '/order/payment?orderId=' + result + '&' + query;
+                success  : function(result){
+                    console.log(result);
+                    if(result=='["conTinueForPay"]'){
+                        $.ajax({
+                            url      : "/cart/orders",
+                            type     : "POST",
+                            contentType : "application/json",
+                            data     : param,
+                            beforeSend : function(xhr){
+                                /* 데이터를 전송하기 전에 헤더에 csrf값을 설정 */
+                                xhr.setRequestHeader(header, token);
+                            },
+                            dataType : "json",
+                            cache   : false,
+                            success  : function(result, status){
+                                var query= dataList.map((item, index) => `item${index}=${item.cartItemId}`).join('&');
+                                location.href = '/order/payment?orderId=' + result + '&' + query;
+                            },
+                            error : function(jqXHR, status, error){
+                                alert('잠시 후 다시 시도해주세요');
+                            }
+                        });
+                    } else{
+                        alert("주문하신 제품: "+result+"의 수량이 없습니다");
+                    }
                 },
                 error : function(jqXHR, status, error){
-
-                    if(jqXHR.status == '401'){
-                        alert('로그인 후 이용해주세요');
-                        location.href='/members/login';
-                    } else{
-                        alert(jqXHR.responseJSON.message);
-                    }
-
+                    alert('잠시 후 다시 시도해주세요');
                 }
             });
         }
