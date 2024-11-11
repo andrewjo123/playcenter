@@ -10,7 +10,6 @@
     <!-- Font Awesome 링크 추가 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
-    
   
 </head>
 
@@ -53,8 +52,8 @@
             <img th:src="${item.itemImgDtoList[0].imgUrl}" class="rounded repImg" th:alt="${item.itemNm}">
         </div>
         <div class="wd50">
-            <span th:if="${item.stockNumber!=0}" class="badge badge-primary mgb-15">판매중</span>
-            <span th:if="${item.stockNumber==0}" class="badge btn-danger mgb-15">품절</span>
+            <span th:if="${item.stockNumber!=0}" class="sell mgb-15">판매중</span>
+            <span th:if="${item.stockNumber==0}" class="soldout mgb-15">품절</span>
             <div class="h2" th:text="${item.itemNm}"></div>
             <div>
                 별점:
@@ -214,50 +213,51 @@
             </div>
         </div>
 
-        <!--   이미지캐러셀  -->
-        <div id="shipping-info">
-            <div id="carouselControls" class="carousel slide text-center" data-ride="carousel">
-
-                <div class="carousel-inner" data-interval="2200">
-                    <div class="carousel-item active item">
-                        <img th:src="${item.itemImgDtoList[0].imgUrl}" th:alt="${item.itemNm}" alt="First slide"
-                            class="d-block rounded">
-                    </div>
-                    <div class="carousel-item item">
-                        <img th:src="${item.itemImgDtoList[1].imgUrl}" th:alt="${item.itemNm}" alt="Second slide"
-                            class="d-block rounded">
-                    </div>
-                    <div class="carousel-item item">
-                        <img th:src="${item.itemImgDtoList[2].imgUrl}" th:alt="${item.itemNm}" alt="Third slide"
-                            class="d-block rounded">
-                    </div>
-                    <div class="carousel-item item">
-                        <img th:src="${item.itemImgDtoList[3].imgUrl}" th:alt="${item.itemNm}" alt="Fourth slide"
-                            class="d-block rounded">
+                <!--   이미지캐러셀  -->
+                <div id="shipping-info">
+                    <div id="carouselControls" class="carousel slide text-center" data-ride="carousel">
+        
+                        <div class="carousel-inner" data-interval="2200">
+                            <div class="carousel-item active item">
+                                <img th:src="${item.itemImgDtoList[0].imgUrl}" th:alt="${item.itemNm}" alt="First slide"
+                                    class="d-block rounded">
+                            </div>
+                            <div class="carousel-item item">
+                                <img th:src="${item.itemImgDtoList[1].imgUrl}" th:alt="${item.itemNm}" alt="Second slide"
+                                    class="d-block rounded">
+                            </div>
+                            <div class="carousel-item item">
+                                <img th:src="${item.itemImgDtoList[2].imgUrl}" th:alt="${item.itemNm}" alt="Third slide"
+                                    class="d-block rounded">
+                            </div>
+                            <div class="carousel-item item">
+                                <img th:src="${item.itemImgDtoList[3].imgUrl}" th:alt="${item.itemNm}" alt="Fourth slide"
+                                    class="d-block rounded">
+                            </div>
+                        </div>
+        
+        
+                        <ul class="carousel-indicators">
+                            <li data-target="#carouselControls" data-slide-to="0" class="active"></li>
+                            <li data-target="#carouselControls" data-slide-to="1"></li>
+                            <li data-target="#carouselControls" data-slide-to="2"></li>
+                            <li data-target="#carouselControls" data-slide-to="3"></li>
+                        </ul>
+        
+                        <a class="carousel-control-prev" href="#carouselControlso" data-slide="prev">
+                            <i class="fa-solid fa-chevron-left"></i>
+                        </a>
+                        <a class="carousel-control-next" href="#carouselControls" data-slide="next">
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </a>
+        
+        
                     </div>
                 </div>
-
-
-                <ul class="carousel-indicators">
-                    <li data-target="#carouselControls" data-slide-to="0" class="active"></li>
-                    <li data-target="#carouselControls" data-slide-to="1"></li>
-                    <li data-target="#carouselControls" data-slide-to="2"></li>
-                    <li data-target="#carouselControls" data-slide-to="3"></li>
-                </ul>
-
-                <a class="carousel-control-prev" href="#carouselControlso" data-slide="prev">
-                    <i class="fa-solid fa-chevron-left"></i>
-                </a>
-                <a class="carousel-control-next" href="#carouselControls" data-slide="next">
-                    <i class="fa-solid fa-chevron-right"></i>
-                </a>
-
-
-            </div>
-        </div>
-        <!--   이미지캐러셀 end-->
+                <!--   이미지캐러셀 end-->
 
         <!-- 이미지 나열 -->
+         
         <div th:each="itemImg : ${item.itemImgDtoList}" class="text-center">
             <img th:if="${not #strings.isEmpty(itemImg.imgUrl)}" th:src="${itemImg.imgUrl}"
                 class="rounded mgb-15 responsive-img">
@@ -435,9 +435,9 @@
                 const dibs = [[${ callDibs }]]; // 또는 false로 변경 가능
                 const wishBtn = $("#wish-button");
                 if (dibs) {
-                    wishBtn.addClass("active");
+                    $("#wish-button span").text("❤");
                 } else {
-                    wishBtn.removeClass("active");
+                    $("#wish-button span").text("🤍");
                 }
                 // 버튼 클릭 시 토글 기능
                 wishBtn.on("click", function () {
@@ -630,39 +630,22 @@
                     if (isLoggedIn === "false") {
                         alert("로그인이 필요합니다. 로그인 페이지로 이동합니다.");
                         window.location.href = "/members/login";
-                        return;
-                    }
-                    $.ajax({
-                        url: `/reviews/validRegist`,
-                        type: "POST",
-                        data: { itemId: $("#itemId").val()},
-                        success: function (response) {
-                            if (response == "valid") {
-                                grade = 0;
-                                inputText.val("");
-                                var star = $(".starrr").clone();
-                                $(".starrr").remove();
-                                $("#divGrade").append(star);
-                                $('.starrr').starrr({
-                                    rating: grade,
-                                    change: function (e, value) {
-                                        if (value) grade = value;
-                                    }
-                                });
-                                $(".removeBtn, .modifyBtn").hide();
-                                $(".reviewSaveBtn").show();
-                                reviewModal.modal('show');
-                            } else {
-                                alert("게임을 구매한 사람만 리뷰등록이 가능합니다");
+                    } else {
+                        grade = 0;
+                        inputText.val("");
+                        var star = $(".starrr").clone();
+                        $(".starrr").remove();
+                        $("#divGrade").append(star);
+                        $('.starrr').starrr({
+                            rating: grade,
+                            change: function (e, value) {
+                                if (value) grade = value;
                             }
-                        },
-                        error: function (xhr) {
-                            console.error("Error: " + xhr.responseText);
-                        }
-                    });
-
-
-
+                        });
+                        $(".removeBtn ,  .modifyBtn").hide();
+                        $(".reviewSaveBtn").show();
+                        reviewModal.modal('show');
+                    }
                 });
 
                 // 리뷰 저장 버튼
@@ -764,7 +747,11 @@
                 var count = $("#count").val();
                 var price = $("#price").val();
                 var totalPrice = price * count;
-                $("#totalPrice").html(totalPrice + '원');
+                 // 천 단위로 쉼표를 추가하여 포맷
+                var formattedTotalPrice = totalPrice.toLocaleString();
+
+                // 포맷된 가격 표시
+                $("#totalPrice").html(formattedTotalPrice + '원');
             }
 
             function order() {
@@ -868,12 +855,15 @@
             function addDibs() {
                 var token = $("meta[name='_csrf']").attr("content");
                 var header = $("meta[name='_csrf_header']").attr("content");
-
+                
                 var url = "/dibsAdd";
                 var type = "POST";
                 var paramData = {
-                    itemId: $("#itemId").val()
+                    itemId: $("#itemId").val()                    
                 };
+                console.log("itemId:", itemId); // itemId가 null이나 undefined가 아닌지 확인
+                console.log("CSRF token:", token);
+                console.log("CSRF header:", header);
 
                 if ($("#wish-button").hasClass("active")) {
                     url = "/dibsDelete";

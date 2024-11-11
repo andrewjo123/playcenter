@@ -21,7 +21,8 @@ margin: auto 2%;
 
 .itemDtl .repImg {
 width: 100%;
-height: 400px;
+height: 500px;
+box-shadow: -5px 5px 20px 0px  rgba(0, 0, 0, 0.616);
 }
 
 
@@ -50,11 +51,11 @@ height: 400px;
 }
 
 .itemDtl .carousel-indicators {
-    margin-top: 100px;
+    position: relative;
+    bottom: 0px; 
 }
 
 .itemDtl .carousel-indicators li {
-    margin-top: 100px !important;
     background-color: gray;
 }
 
@@ -69,25 +70,32 @@ height: 400px;
 .itemDtl .d-block {
     margin: auto;
 }
-
-.itemDtl .carousel-inner {
-    width: 700px;
-    height: 700px;
-    overflow: hidden;
-    position: relative;
-    text-align: center;
-    margin: auto;
+#carouselControls{
+    margin: 25px;
 }
 
+
+
+.itemDtl .carousel-inner {
+            height: 500px; 
+            max-height: 100%;
+            overflow: hidden;
+            position: relative;
+            text-align: center;
+            margin: auto;
+}
+        
 .itemDtl .carousel-item {
     height: 100%;
 }
 
 .itemDtl .carousel-item img {
-    width: 100%;
+    width: auto;
     height: 100%;
-    object-fit: cover;
+    object-fit: scale-down;
+    margin: auto;
 }
+
 
 .itemDtl .responsive-img {
     width: 800px;
@@ -96,6 +104,7 @@ height: 400px;
     /* 기본 너비보다 커지지 않도록 제한 */
     height: auto;
     /* 비율 유지 */
+
 }
 
 .itemDtl .instructions {
@@ -251,12 +260,13 @@ height: 400px;
 /* 등록버튼 -신영 */
 /* 게임 평가하기 버튼의 기본 스타일 */
 .itemDtl .addReviewBtn {
-    background-color: white;
+    background-color: #5bbf4e;
     /* 배경색을 하얀색으로 설정 */
     color: black;
     /* 글자색을 검정색으로 설정 */
     border: 1px solid black;
     /* 테두리를 검정색으로 설정 */
+    
 }
 
 /* 게임 평가하기 버튼의 hover 상태 스타일 */
@@ -463,8 +473,8 @@ height: 400px;
     flex: 1 1 0; /* Flexbox를 사용하여 각 버튼이 유연하게 늘어나거나 줄어들 수 있게 함 */
 }
 .itemDtl .closeModal:hover {
-    background-color: #6c757d; /* 진회색으로 변경 */
-    border-color: #6c757d; /* 테두리도 진회색으로 변경 */
+    background-color: #a9a9aa; /* 진회색으로 변경 */
+    border-color: #a9a9aa; /* 테두리도 진회색으로 변경 */
     color: white;
 }
 .itemDtl .closeModal {
@@ -495,7 +505,7 @@ height: 400px;
     justify-content: space-between; /* 버튼들 사이의 공간을 균등하게 배분 */
     align-items: center; /* 세로 중심으로 정렬 */
     background-color: transparent; /* 배경색 설정 */
-    padding: 5px 20px; /* 패딩으로 버튼 사이의 간격 조절 */
+    padding: 5px 10px; /* 패딩으로 버튼 사이의 간격 조절 */
 }
 /* 장바구니 버튼 */
 .itemDtl .btn-custom{
@@ -512,10 +522,10 @@ height: 400px;
 }
 
 .itemDtl .btn-order {
-    background-color: #80da5660; /* 장바구니 버튼 색상 */
+    background-color: #5bbf4e; /* 주문하기 버튼 색상 */
     color: black; /* 텍스트 색상 */
     font-size: 16px; /* 폰트 크기 */
-    border: 1px solid gray; /* 테두리 제거 */
+    border: 1px solid black; /* 테두리 제거 */
     border-radius: 10px; /* 양쪽 끝을 둥글게 처리 */
     /* padding: 10px 1px; 상하, 좌우 패딩 */
     flex-grow: 1; /* 가용 공간을 모두 차지하도록 설정 */
@@ -601,7 +611,26 @@ height: 400px;
 .itemDtl .h2{
     font-weight: bold;
     /* font-size: 40px; */
+    margin-top: 10px;
 }
+
+/*  상품 상태 */
+.itemDtl .sell, .itemDtl .soldout{
+    font-size: 15px;
+    padding: 5px 10px;
+    border-radius: 10px;
+    font-weight: bold;
+
+}
+.itemDtl .sell{
+    background-color: #5bbf4e;
+    color: white;
+}
+.itemDtl .soldout{
+    background-color: rgba(226, 3, 3, 0.747);
+    color: white;
+}
+
 /* Mobile styling */
 @media (max-width: 768px) {
 .itemDtl .d-flex {
@@ -631,7 +660,7 @@ height: 400px;
     padding: 5px;
 }
 
-.itemDtl .badge {
+.itemDtl .soldout, .sell {
     display: block; /* 배지를 블록 요소로 변환하여 아래로 배치 */
     margin: 10px 0; /* 배지 위아래로 여백 추가 */
 }
@@ -701,11 +730,17 @@ height: 400px;
 .btn-custom {
     width: 100%; /* 버튼이 가로로 꽉 차게 설정 */
 }
-
+/* 찜 */
 .itemDtl .wish-button {
     width: 100% !important; /* 위시 버튼도 가로로 꽉 차게 설정 */
     height: 40px; /* 버튼 높이 조정 */
     margin-right: 10px;
+}
+.itemDtl .wish-button:hover {
+    background-color: transparent !important; /* 원래 배경색으로 설정 */
+    color: rgb(88, 88, 88); /* 원래 텍스트 색상으로 설정 */
+    border: 1px solid black; /* 원래 테두리 색상으로 설정 */
+    cursor: default; /* 모바일에서는 기본 커서 사용 */
 }
 
 .itemDtl .info-item a {
