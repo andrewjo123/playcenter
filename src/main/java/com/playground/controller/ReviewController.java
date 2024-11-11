@@ -48,8 +48,11 @@ public class ReviewController {
       
       // 리뷰 목록을 서비스에서 받아옴
       Page<ReviewDto> reviewDTOPage = reviewService.getListOfItem(id, pageable, currentUserEmail);
-            System.out.println(reviewDTOPage.getContent().get(0).isRecommended()+"[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]");
-    //   return new ResponseEntity<>(reviewDTOPage, HttpStatus.OK);
+      
+      if (!reviewDTOPage.getContent().isEmpty() && reviewDTOPage != null) {
+        System.out.println(reviewDTOPage.getContent().get(0).isRecommended()+"[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]");
+    }
+    
       return new ResponseEntity<>(reviewDTOPage, HttpStatus.OK);
     }
 
