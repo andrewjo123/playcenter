@@ -1,0 +1,161 @@
+/* dibsList-------------------------------------------------------- */
+.dibsList .itnm {
+    color: #5bbf4e;
+}
+.dibsList .itnm:hover {
+    color: #3e7d3a;
+}
+.dibsList .dibsItem {
+    padding: 10px 20px;
+    background-color: white;
+    display: flex;
+    align-items: flex-end; /*오른쪽 끝으로 요소를 정렬*/
+}
+.dibsList .box {
+    padding: 10px 0;
+    text-align:right;
+}
+.dibsList .content-mg {
+    margin-left: 15%;
+    margin-right: 15%;
+    margin-top: 2%;
+}
+.dibsList .repImgDiv {
+    position: relative;
+    margin-right: 15px;
+    margin-left: 15px;
+    height: auto;
+}
+.dibsList .repImg {
+    width: 200px;
+    height: 120px;
+    max-width: 200px;
+}
+.dibsList .fs24 {
+    font-size: clamp(18px, 2vw, 24px);
+}
+
+
+
+.dibsList .sold-out-filter {
+    filter: grayscale(100%);
+    opacity: 0.5;
+}
+
+.dibsList .sold-out-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: rgba(255, 0, 0, 0.8);
+    color: white;
+    padding: 5px;
+    font-weight: bold;
+    border-radius: 5px;
+    font-size: 14px;
+    z-index: 10;
+}
+.dibsList .align-self-center{
+    font-weight: bold;
+    font-size: 17px;
+}
+/* 삭제 버튼 이동 */
+.dibsList .align-right {
+    align-self: flex-end; /* 개별 아이템을 Flex 컨테이너의 끝으로 정렬 */
+}
+.dibsList .align-self-center{
+    display: flex;
+    flex-direction: column;
+}
+/* 버튼들 */
+.dibsList .button-container {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* 버튼 사이 간격 설정 */
+}
+
+.dibsList .custom-btn {
+    flex: 1; /* 모든 버튼의 크기를 동일하게 */
+    text-align: center;
+    padding: 10px 5px; /* 버튼 크기 조정 */
+    border: none; /* 필요 시 추가 */
+    cursor: pointer;
+    /* 버튼 스타일에 필요한 다른 CSS 속성 추가 */
+    width: 100px;
+    border-radius: 10%;
+}
+/* 장바구니 버튼 */
+.dibsList .addCart{
+    font-size: 17px;
+    color:black;
+    cursor:pointer;
+    width: 100px; /* 장바구니 버튼의 너비 고정 */
+    border: 2px solid #5bbf4e;    
+    background-color: white;
+}
+.dibsList .addCart:hover{
+    color: white;
+    background-color: #5bbf4e;
+    border: 2px solid #5bbf4e;
+    font-weight: bold;
+}
+/* 삭제버튼 */
+.dibsList .deleteBtn{
+    font-size: 17px;
+    color:black;
+    cursor:pointer;
+    width: 100px; /* 장바구니 버튼의 너비 고정 */
+    border: 2px solid gray;
+    
+    background-color: white;
+}
+.dibsList .deleteBtn:hover{
+    color: white;
+    background-color: #3e7d3a;
+    border: 2px solid #3e7d3a;
+    font-weight: bold;
+}
+/* 찜 목록 제목 */
+.dibsList .mb-4{
+    font-weight: bold;
+}
+/* 소제목 폰트 디자인 */
+.dibsList .subtitle{
+    font-weight: bold;
+    color: rgb(58, 57, 57);
+}
+
+/* dibsList mobile-------------------------------------------------------- */
+@media (max-width: 768px) {
+.dibsList h2{
+    margin-top: 20px;
+    text-align: center;
+}
+.dibsList .dibsItem {
+    width : 100%;
+    color: #d9d9d9;
+}
+.dibsList .content-mg {
+    width: 100%;
+    margin-left: 0px;        
+}
+.dibsList .repImg {
+    height: 120px;
+    width: 200px;
+    max-width: none;
+    
+}
+.dibsList .button-container .custom-btn{
+    padding: 5px 10px; /* 패딩 줄임 */
+    font-size: 14px; /* 폰트 사이즈 줄임 */
+    width: auto; /* 자동으로 너비 조정 */
+    min-width: 60px; /* 최소 너비 설정 */
+    margin: 2px; /* 버튼 간의 마진 조정 */
+}
+.dibsList .fs24 {
+    font-size: clamp(16px, 2vw, 20px);
+}
+.dibsList .fs18{
+    color: rgba(0, 0, 0, 0.733);
+}
+    
+}

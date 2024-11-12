@@ -13,6 +13,10 @@
         <a class="next" onclick="moveSlide(1)">&#10095;</a>
         <!-- 슬라이드 1 -->
         <div class="w3-content mySlides" id="slideShow1">
+            <img src="/img/ad/playground.png" />
+        </div>
+        <!-- 슬라이드 2 -->
+        <div class="w3-content mySlides" id="slideShow2">
             <div
                     class="large-img"
                     id="largeImg1"
@@ -65,8 +69,8 @@
                 </div>
             </div>
         </div>
-        <!-- 슬라이드 2 -->
-        <div class="w3-content mySlides hide" id="slideShow2">
+        <!-- 슬라이드 3 -->
+        <div class="w3-content mySlides hide" id="slideShow3">
 
             <div
                     class="large-img"
@@ -142,8 +146,8 @@
             </div>
         </div>
 
-        <!-- 슬라이드 3 -->
-        <div class="w3-content mySlides hide" id="slideShow3">
+        <!-- 슬라이드 4 -->
+        <div class="w3-content mySlides hide" id="slideShow4">
             <div
                     class="large-img"
                     id="largeImg3"
@@ -229,6 +233,9 @@
                 <div class="dat"></div>
             </a>
             <a href="javascript:void(0);" class="navigate-link" onclick="showSlide(3)">
+                <div class="dat"></div>
+            </a>
+            <a href="javascript:void(0);" class="navigate-link" onclick="showSlide(4)">
                 <div class="dat"></div>
             </a>
         </div>
@@ -326,15 +333,15 @@
                currentSlideShow.classList.remove("hide");
 
                currentSlide++;
-               if (currentSlide > 3) currentSlide = 1;
+               if (currentSlide > 4) currentSlide = 1;
 
                setTimeout(autoSlide, 10000); // 1분마다 자동으로 슬라이드 변경
            }
            // 이전/다음 버튼 클릭 시 슬라이드 전환
            function moveSlide(n) {
                currentSlide += n;
-               if (currentSlide > 3) currentSlide = 1;  // 슬라이드 번호가 3을 넘으면 1로 돌아감
-               if (currentSlide < 1) currentSlide = 3;  // 슬라이드 번호가 1보다 작으면 3으로 돌아감
+               if (currentSlide > 4) currentSlide = 1;  
+               if (currentSlide < 1) currentSlide = 4; 
 
                showSlide(currentSlide);
            }
