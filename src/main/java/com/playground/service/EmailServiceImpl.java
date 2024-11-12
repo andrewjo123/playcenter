@@ -7,9 +7,7 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.InputStreamSource;
-import org.springframework.mail.SimpleMailMessage;
+import org.springframework.core.io.*;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -19,9 +17,11 @@ import org.thymeleaf.context.Context;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -52,8 +52,12 @@ public class EmailServiceImpl implements EmailService {
             helper.setSubject(subject);
             helper.setText(body, true); // true로 설정하여 HTML로 전송
 
-            File logoFile = new File("src/main/resources/static/img/logo_s.png");
-            helper.addInline("logo-image", logoFile);
+            ClassPathResource resource = new ClassPathResource("static/img/logo_s.png");
+            InputStream inputStream = resource.getInputStream();
+            byte[] fileContent = inputStream.readAllBytes();
+            ByteArrayResource byteArrayResource = new ByteArrayResource(fileContent);
+
+            helper.addInline("logo-image", byteArrayResource, "image/png");
 
             mailSender.send(message);
         } catch (Exception e) {
@@ -86,10 +90,14 @@ public class EmailServiceImpl implements EmailService {
                 helper.setSubject(subject);
                 helper.setText(body, true); // true로 설정하여 HTML로 전송
 
-                File logoFile = new File("src/main/resources/static/img/logo_s.png");
-                helper.addInline("logo-image", logoFile);
+                ClassPathResource resource = new ClassPathResource("static/img/logo_s.png");
+                InputStream inputStream = resource.getInputStream();
+                byte[] fileContent = inputStream.readAllBytes();
+                ByteArrayResource byteArrayResource = new ByteArrayResource(fileContent);
+    
+                helper.addInline("logo-image", byteArrayResource, "image/png");
 
-                File productImg=new File(itemImgLocation+File.separator+ context.getVariable("itemImgName"));
+                File productImg=new File(itemImgLocation+File.separator+context.getVariable("itemImgName"));
                 helper.addInline("product-image", productImg);
 
                 mailSender.send(message);
@@ -116,8 +124,12 @@ public class EmailServiceImpl implements EmailService {
             helper.setSubject(subject);
             helper.setText(body, true); // true로 설정하여 HTML로 전송
 
-            File logoFile = new File("src/main/resources/static/img/logo_s.png");
-            helper.addInline("logo-image", logoFile);
+            ClassPathResource resource = new ClassPathResource("static/img/logo_s.png");
+            InputStream inputStream = resource.getInputStream();
+            byte[] fileContent = inputStream.readAllBytes();
+            ByteArrayResource byteArrayResource = new ByteArrayResource(fileContent);
+
+            helper.addInline("logo-image", byteArrayResource, "image/png");
 
             AtomicInteger i = new AtomicInteger(0);
             codesList.forEach((key,value)->{
