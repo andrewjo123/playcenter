@@ -27,10 +27,7 @@
 
 .cartList .cartItem {
     margin: 0;
-    background-color: #d9d9d9;
-}
-.cartList .close {
-    margin-right: 10px;
+    background-color: white;
 }
 
 .cartList .table {
@@ -55,6 +52,43 @@
 
 .cartList .itemLink{
     color:#7FDA56;
+}
+/* 삭제버튼 */
+.cartList .deleteBtn{
+    font-size: 17px;
+    color:black;
+    cursor:pointer;
+    width: 100px; /* 장바구니 버튼의 너비 고정 */
+    border: 2px solid gray;
+
+    background-color: white;
+}
+.cartList .deleteBtn:hover{
+    color: white;
+    background-color: #3e7d3a;
+    border: 2px solid #3e7d3a;
+    font-weight: bold;
+}
+/* 버튼 */
+.cartList .close{
+    display: flex;
+    align-items: center;
+    gap: 10px; /* 버튼 사이 간격 설정 */
+    padding: 5px 5px; /* 버튼 크기 조정 */
+    border: none; /* 필요 시 추가 */
+    cursor: pointer;
+    /* 버튼 스타일에 필요한 다른 CSS 속성 추가 */
+    width: 50px;
+    border-radius: 10%;
+}
+/* 목록 제목 */
+.cartList .mb-4{
+    font-weight: bold;
+}
+/* 소제목 폰트 디자인 */
+.cartList .subtitle{
+    font-weight: bold;
+    color: rgb(58, 57, 57);
 }
 
 /* itemForm--------------------------------------------------------*/
@@ -749,23 +783,35 @@ width: auto;
 
     .cartList .table td, .cartList .table th {
         padding-left: 0;
-        padding-right: 0;
+        padding-right: 20px;
     }
 
     .cartList .content-mg {
         padding: 0; /* 테이블 주변에 있는 다른 요소 여백 제거 */
         margin: 0;
+        width: 100%;
     }
     .cartList h2 {
         text-align: center;
         margin-top: 20px;
     }
     .cartList .repImgDiv {
-        margin: 0;
+        margin-right: 15px;
+        margin-left: 15px;
         height: auto;
     }
-    .cartList h4{
+    .cartList h4 {
         margin-top: 10px;
+    }
+    .cartList .fs24 {
+        font-size: clamp(16px, 2vw, 20px);
+    }
+    .cartList .close .deleteBtn {
+        padding: 5px 10px; /* 패딩 줄임 */
+        font-size: 14px; /* 폰트 사이즈 줄임 */
+        width: auto; /* 자동으로 너비 조정 */
+        min-width: 50px; /* 최소 너비 설정 */
+        margin: 2px; /* 버튼 간의 마진 조정 */
     }
     /* cartList 장바구니 끝---------------------------------------------- */
 }
