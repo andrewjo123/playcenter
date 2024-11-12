@@ -4,6 +4,7 @@ import com.playground.dto.*;
 import com.playground.service.DibsService;
 import com.playground.service.ItemService;
 import com.playground.service.MemberService;
+import com.playground.service.ReviewService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -26,6 +27,7 @@ public class MainController {
     private final ItemService itemService;
     private final DibsService dibsService;
     private final MemberService memberService;
+    private final ReviewService reviewService;
 
     @GetMapping(value = {"/", "/main"})
     public String getItems(Model model, HttpServletRequest request) {
@@ -130,6 +132,7 @@ public class MainController {
         int date = 6;
         model.addAttribute("pointList", memberService.getPointHistory(principal.getName(), date));
         model.addAttribute("challenge", memberService.getChallengeInfo(email));
+        model.addAttribute("reviewList", reviewService.getReviewList(email));
         return "mypage/mypage";
     }
 

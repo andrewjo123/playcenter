@@ -39,4 +39,6 @@ public class ReviewDto {
     private boolean isRecommended; // 추천 여부 필드 추가
 
     private String profileImg;
+
+    private String itemNm;
 }

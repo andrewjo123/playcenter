@@ -77,6 +77,39 @@
                 </div>
             </div>
         </div>
+
+        <div class="point-management mt-3">
+            <h3 style="text-align:center;">리뷰관리</h3>
+            <div id="notice2" class="tab-pane active notice">
+                <a href="#noticeReview" data-toggle="collapse" class="toggle-points">리뷰 작성 내역</a>
+                <div id="noticeReview" class="collapse">
+                    <th:block th:if="${reviewList.size() > 0}">
+                        검색결과: [[${reviewList.size()}]]건
+                        <th:block th:each="review, status: ${reviewList}">
+                            <div class="card mt-2 reviews">
+                                <span th:text="${#temporals.format(review.updateTime, 'yyyy. MM. dd. HH시 mm분')}"></span>
+                                <a class="itemLink" th:href="@{'/item/'+${review.id}}" th:text="${review.itemNm}"></a>
+                                <span>
+                                    <b>평점:</b> <span th:each="i : ${#numbers.sequence(0, 4)}">
+                                        <span class="stars" th:text="${i < review.grade ? '★' : '☆'}"></span>
+                                    </span>
+                                    <b class="ml-3">추천수:</b> <span th:text="${review.rCnt}"></span>
+                                </span>
+                                <span><b>댓글:</b> <span th:text="${review.text}"></span></span>
+                                <button class="deleteReview" th:data-review="${review.reviewnum}">❌</button>
+                            </div>
+                        </th:block>
+                    </th:block>
+                    <th:block th:if="${reviewList.size() == 0}">
+                        <div class="col-md-12 text-center">
+                            <h4>결과 없음</h4>
+                        </div>
+                    </th:block>
+                </div>
+            </div>
+        </div>
+
+
     </div>
 
     <div class="container mt-5">
@@ -232,7 +265,6 @@
             showProfileImg(pImg);
             $('#pointDuration').on('change',function() {
                 var selectedValue = $(this).val(); // 선택된 값 가져오기
-                console.log("123123");
                 $.ajax({
                     url: '/pointDuration', // 요청할 URL
                     method: 'GET',
@@ -328,7 +360,6 @@
                     $("#profileImgList").modal('hide');
                     return;
                 }
-                console.log(profileImg);
                 $.ajax({
                     url: '/changeProfileImg',
                     type: 'GET',
@@ -373,6 +404,59 @@
             $(".iconOrder").mouseleave(function(){
                 $(".orderInfo").hide();
             });
+
+            // 리뷰 삭제
+            $('#noticeReview').on('click','.deleteReview',function () {
+
+                if(!confirm("삭제하시겠습니까?")){
+                    return;
+                }
+
+                var reviewNum = $(this).data("review");
+
+                $.ajax({
+                    url: '/reviews/deleteFromMyPage',
+                    type: "DELETE",
+                    data:{reviewNum:reviewNum},
+                    beforeSend : function(xhr){
+                        xhr.setRequestHeader(header, token);
+                    },
+                    success: function (result) {
+                        $("#noticeReview").empty();
+
+                        if (result&&result.length > 0) {
+                            let reviewsHtml = `<div>검색결과: ${result.length}건</div>`;
+
+                            result.forEach(function (review) {
+                                reviewsHtml += `
+                                    <div class="card mt-2 reviews">
+                                        <span>${new Date(review.updateTime).toLocaleString('ko-KR', { hour12: false })}</span>
+                                        <a class="itemLink" href="/item/${review.id}">${review.itemNm}</a>
+                                        <span>
+                                            <b>평점:</b>
+                                            ${Array.from({ length: 5 }, (_, i) =>
+                                                `<span class="stars">${i < review.grade ? '★' : '☆'}</span>`).join('')}
+                                            <b class="ml-3">추천수:</b> ${review.rcnt}
+                                        </span>
+                                        <span><b>댓글:</b> ${review.text}</span>
+                                        <button class="deleteReview" data-review="${review.reviewnum}">❌</button>
+                                    </div>
+                                `;
+                            });
+
+                            $("#noticeReview").html(reviewsHtml);
+                        } else {
+                            $("#noticeReview").html('<div class="col-md-12 text-center"><h4>결과 없음</h4></div>');
+                        }
+
+                        alert("해당 리뷰가 삭제되었습니다");
+                    },
+                    error: function (xhr, status, error) {
+                        alert('잠시 후 다시 시도해주세요');
+                    }
+                });
+            });
+
 
         });
 

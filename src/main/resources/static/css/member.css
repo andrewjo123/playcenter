@@ -256,6 +256,24 @@
     width:30%;
 }
 
+.mypage .reviews{
+    position:relative;
+}
+.mypage .deleteReview{
+    position:absolute; top:1vh; right:2vw; font-size:1.3rem;
+    outline:none;
+    border:none;
+    background-color:white;
+}
+.mypage .stars{
+    color:#FFD700;
+}
+.mypage .itemLink{
+    color:#7FDA56;
+    font-weight:600;
+    font-size:1.2rem;
+}
+
 /* 비밀번호 변경 -------------------------------*/
 .resetPw .resetPwDiv{
     width:100%;

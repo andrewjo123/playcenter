@@ -49,7 +49,9 @@
                     <li class="nav-item" sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
                         <a class="nav-link" href="/members/manageMember">회원 관리</a>
                     </li>
+
                     <li class="nav-item login-logout">
+                        <a class="nav-link" href="https://www.playground20.com:3000" >고객센터</a>
                         <!-- 로그아웃 (로그인된 사용자) -->
                         <a class="nav-link" href="/members/logout" sec:authorize="isAuthenticated()">로그아웃</a>
                         <!-- 로그인 (비로그인 사용자) -->
@@ -93,6 +95,9 @@
                     </li>
                     <li class="nav-item" sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
                         <a class="nav-link" href="/members/manageMember">회원 관리</a>
+                    </li>                    
+                    <li class="nav-item" sec:authorize="isAuthenticated()">
+                        <a class="nav-link" href="https://www.playground20.com:3000" >고객센터</a>
                     </li>
                     <li class="nav-item" sec:authorize="isAuthenticated()">
                         <a class="nav-link" href="/members/logout">로그아웃</a>
@@ -121,7 +126,7 @@
                             <div class="dropdown-divider"></div>
                             <b class="dropdown-header">buy</b>
 
-                            <a class="nav-link" href="/dibs">❤ 찜한목록
+                            <a class="dropdown-item" href="/dibs">❤ 찜한목록
                                 <span class="getCountDibs" style="display:none"></span>
                             </a>
                                 <a class="dropdown-item" href="/cart">🛒 장바구니
@@ -150,6 +155,7 @@
                     </div>
                 </span>
                 <span sec:authorize="isAnonymous()">
+                    <a class="btn" href="https://www.playground20.com:3000" >고객센터</a>
                     <a class="btn" href="/members/login">로그인</a>
                 </span>
             </div>

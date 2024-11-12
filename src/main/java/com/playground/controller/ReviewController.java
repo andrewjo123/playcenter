@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
 import java.security.Principal;
+import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -111,6 +112,16 @@ public class ReviewController {
         String result = reviewService.validRegist(itmeId, email);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
+    @PreAuthorize("isAuthenticated()")
+    @DeleteMapping("/deleteFromMyPage")
+    public ResponseEntity<List<ReviewDto>> removeReviewFromMyPage(@RequestParam Long reviewNum, Principal principal){
+        reviewService.remove(reviewNum);
+        return new ResponseEntity<>(reviewService.getReviewList(principal.getName()), HttpStatus.OK);
+    }
+
+
+
 
 }
 
