@@ -28,7 +28,7 @@ public class MainController {
     private final MemberService memberService;
 
     @GetMapping(value = {"/", "/main"})
-    public String getItems(Model model) {
+    public String getItems(Model model, HttpServletRequest request) {
         // 모든 아이템 가져오기
         List<MainItemDto> all = itemService.getMainItem(null, null);
 
@@ -44,6 +44,10 @@ public class MainController {
         result.put("ps",ps);
 
         model.addAttribute("result", result);
+        /*창 정보 가져오기*/
+        String userAgent = request.getHeader("User-Agent");
+        boolean isMobile = userAgent.toLowerCase().contains("mobile");
+        model.addAttribute("isMobile", isMobile);
 
         return "main";
     }

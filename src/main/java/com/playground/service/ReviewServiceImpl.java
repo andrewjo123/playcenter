@@ -1,6 +1,9 @@
 package com.playground.service;
 
 
+import com.playground.entity.ItemCode;
+import com.playground.repository.ItemCodeRepository;
+import com.playground.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
@@ -24,6 +27,7 @@ public class ReviewServiceImpl implements ReviewService {
 
     private final ReviewRepository reviewRepository;
     private final MemberRepository memberRepository;
+    private final ItemCodeRepository codeRepository;
 
     //add paging
     @Override
@@ -90,6 +94,17 @@ public class ReviewServiceImpl implements ReviewService {
             review.incrementRCnt();
             reviewRepository.save(review);
             return "추천 완료";
+        }
+    }
+
+    @Override
+    public String validRegist(Long itemId, String email) {
+        Long memberId = memberRepository.findByEmail(email).getId();
+        Optional<ItemCode> itemCode =codeRepository.findByItemAndMember(itemId,memberId);
+        if(itemCode.isPresent()){
+            return "valid";
+        }else{
+            return "invalid";
         }
     }
 }

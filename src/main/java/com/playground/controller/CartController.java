@@ -16,6 +16,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -119,13 +120,24 @@ public class CartController {
         return new ResponseEntity<Long>(orderId, HttpStatus.OK);
     }
 
-    //추가
     @PreAuthorize("isAuthenticated()")
     @RequestMapping(value="/cartCount",method = {RequestMethod.GET})
     @ResponseBody
     public ResponseEntity<Integer> cartCount(@RequestParam("email") String email){
         int result=cartService.getCartCount(email);
         // ResponseEntity로 반환
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    // 카트 -> 주문 전 수량체크
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping(value = "/cartToOrder")
+    public @ResponseBody ResponseEntity<List<String>> cartToOrder(@RequestBody CartOrderDto cartOrderDto){
+
+        List<CartOrderDto> cartOrderDtoList = cartOrderDto.getCartOrderDtoList();
+
+        List<String> result=cartService.checkBeforeOrder(cartOrderDtoList);
+
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 

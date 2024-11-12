@@ -159,7 +159,13 @@
                     str += '<div class="col-md-4 margin">';
                     str += '  <div class="card" style="position:relative;">';
                     str += '        <a href="/item/' + item.id + '" class="text-dark">';
-                    str += '            <img src="' + item.imgUrl + '" class="card-img-top" alt="' + item.itemNm + '" height="400">';
+                    // 품절 상태일 때만 sold-out-filter 클래스를 추가
+                    var imageClass = item.stockNumber <= 0 ? 'sold-out-filter' : '';
+                    str += ' <img src="' + item.imgUrl + '" class="card-img-top ' + imageClass + '" alt="' + item.itemNm + '" height="400">';
+                    // 품절 상태일 때 품절 배지 추가
+                    if (item.stockNumber <= 0) {
+                    str += ' <span class="sold-out-badge">Sold Out</span>';
+                    }
                     if (dibsList.includes(item.id)) {
                         str += '      <span style="position: absolute; top: 10px; right: 10px; font-size: 24px;">💖</span>';
                     }

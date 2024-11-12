@@ -1,5 +1,6 @@
 package com.playground.controller;
 
+import com.playground.dto.CartItemDto;
 import com.playground.dto.OrderDto;
 import com.playground.dto.OrderHistDto;
 import com.playground.service.CartService;
@@ -29,10 +30,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -220,4 +218,13 @@ public class OrderController {
         String result=orderService.sendAllCodes(orderId,email);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
+    // item detail에서 바로 결제할 때 수량체크
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping(value = "/itemDetailToOrder")
+    public @ResponseBody ResponseEntity<Long> itemDetailToOrder(@RequestParam("itemId")Long itemId, @RequestParam("count")int count,Principal principal){
+        Long result=orderService.checkStackFromItemDtl(itemId,count,principal.getName());
+        return new ResponseEntity<Long>(result, HttpStatus.OK);
+    }
+
 }

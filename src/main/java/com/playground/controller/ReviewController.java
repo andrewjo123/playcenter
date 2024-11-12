@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.playground.dto.ReviewDto;
 import com.playground.service.ReviewService;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 @RestController
 @RequestMapping("/reviews")
@@ -47,8 +48,11 @@ public class ReviewController {
       
       // 리뷰 목록을 서비스에서 받아옴
       Page<ReviewDto> reviewDTOPage = reviewService.getListOfItem(id, pageable, currentUserEmail);
-            System.out.println(reviewDTOPage.getContent().get(0).isRecommended()+"[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]");
-    //   return new ResponseEntity<>(reviewDTOPage, HttpStatus.OK);
+      
+      if (!reviewDTOPage.getContent().isEmpty() && reviewDTOPage != null) {
+        System.out.println(reviewDTOPage.getContent().get(0).isRecommended()+"[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]");
+    }
+    
       return new ResponseEntity<>(reviewDTOPage, HttpStatus.OK);
     }
 
@@ -100,6 +104,13 @@ public class ReviewController {
         return new ResponseEntity<>( reviewnum, HttpStatus.OK);
     }
 
+    @PreAuthorize("isAuthenticated()")
+    @RequestMapping(value = "/validRegist", method = {RequestMethod.POST})
+    public ResponseEntity<String> validRegist(@RequestParam("itemId")Long itmeId, Principal principal){
+        String email = principal.getName();
+        String result = reviewService.validRegist(itmeId, email);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 
 }
 
