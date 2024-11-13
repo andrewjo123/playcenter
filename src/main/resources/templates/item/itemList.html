@@ -30,7 +30,7 @@
             <button id="toggleSidebarBtn" class="sidebar-toggle-btn">장르선택</button>
             <span th:text="${company}" id="getCompany" style="display:none;"></span>
             <select class="form-control orderBy">
-                <option value="latest" th:selected="${itemSearchDto.orderBy == 'latest'}">최신순</option>
+                <option value="latest" th:selected="${itemSearchDto.orderBy == 'latest'}">발매일순</option>
                 <option value="sales" th:selected="${itemSearchDto.orderBy == 'sales'}">판매량순</option>
                 <option value="price_high" th:selected="${itemSearchDto.orderBy == 'price_high'}">가격높은순</option>
                 <option value="price_low" th:selected="${itemSearchDto.orderBy == 'price_low'}">가격낮은순</option>
@@ -54,16 +54,11 @@
                                      th:classappend="${item.stockNumber <= 0} ? 'sold-out-filter'" height="400">
                                 <span th:if="${item.stockNumber <= 0}" class="sold-out-badge">Sold Out</span>
                                 <span th:if="${dibsList.contains(item.id)}"
-                                      class="heart-icon"><i class="fas fa-heart"></i> </span>
+                                    style="position: absolute; top: 5px; right: 10px; font-size: 24px;">❤</span>
                                 <div class="card-body">
-                                    [[${item.openDate}]]
-                                    <h4 class="card-title">[[${item.itemNm}]]</h4>
-                                    <th:block th:if="${item.stockNumber<=0}">
-                                        <h3 class="card-title text-danger">품절</h3>
-                                    </th:block>
-                                    <th:block th:unless="${item.stockNumber<=0}">
-                                        <h3 class="card-title text-danger">[[${item.price}]]원</h3>
-                                    </th:block>
+                                    <span class="openDate">발매  [[${item.openDate}]]</span>
+                                    <h4 class="card-title itemTitle" th:text="${#strings.length(item.itemNm) > 30 ? item.itemNm.substring(0, 30) + '...' : item.itemNm}" th:classappend="${#strings.length(item.itemNm) > 32 ? 'truncate' : ''}">[[${item.itemNm}]]</h4>
+                                    <strong class="card-title text-danger"><span th:text="${#numbers.formatInteger(item.price, 1,'COMMA')}"></span>원</strong>                                    
                                 </div>
                             </a>
                         </div>
@@ -168,15 +163,14 @@
                     str += ' <span class="sold-out-badge">Sold Out</span>';
                     }
                     if (dibsList.includes(item.id)) {
-                        str += '      <span style="position: absolute; top: 10px; right: 10px; font-size: 24px;">💖</span>';
+                    str += '      <span style="position: absolute; top: 10px; right: 10px; font-size: 24px;">❤</span>';
                     }
-                    str += '            <div class="card-body">'+item.openDate;
-                    str += '                <h4 class="card-title">' + item.itemNm + '</h4>';
-                    if (item.stockNumber <= 0) {
-                        str += '                <h3 class="card-title text-danger">품절</h3>';
-                    } else {
-                        str += '                <h3 class="card-title text-danger">' + item.price + '원</h3>';
-                    }
+                    str += '            <div class="card-body openDate"> 발매 : '+item.openDate;
+                    str += '                <h4 class="card-title itemTitle">' + 
+                    (item.itemNm.length > 30 ? item.itemNm.substring(0, 30) + '...' : item.itemNm) + 
+                    '</h4>';                
+                    str += '<strong class="card-title text-danger">' + 
+                        new Intl.NumberFormat().format(item.price) + '원</strong>';
                     str += '            </div></a></div></div>';
                 });
 
