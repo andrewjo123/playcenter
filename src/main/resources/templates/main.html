@@ -223,7 +223,7 @@
                                                     <h3 class="card-title text-danger">품절</h3>
                                                 </th:block>
                                                 <th:block th:unless="${item.stockNumber<=0}">
-                                                    <h3 class="card-title text-danger">[[${item.price}]]원</h3>
+                                                    <h3 class="card-title text-danger">[[${#numbers.formatInteger(item.price, 1,'COMMA')}]]원</h3>
                                                 </th:block>
                                             </div>
                                         </a>
@@ -417,7 +417,7 @@
                                         <h3 class="card-title text-danger">품절</h3>
                                     </th:block>
                                     <th:block th:unless="${item.stockNumber <= 0}">
-                                        <h3 class="card-title text-danger">[[${item.price}]]원</h3>
+                                        <h3 class="card-title text-danger">[[${#numbers.formatInteger(item.price, 1,'COMMA')}]]원</h3>
                                     </th:block>
                                 </div>
                             </a>
