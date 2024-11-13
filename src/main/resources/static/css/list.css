@@ -1,0 +1,493 @@
+/* itemList */
+#lists {
+    min-height: 800px; /* 원하는 최소 높이 값으로 설정 */
+}
+    .itemList .carousel-inner > .item {
+        height: 350px;
+}
+
+.itemList .margin {
+        margin-bottom: 15px;
+}
+
+.itemList .banner {
+    height: 300px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.itemList .card-text {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.itemList a {
+    text-decoration: none;
+}
+
+.itemList a:hover {
+    text-decoration: gray;
+}
+
+.itemList .center {
+    text-align: center;
+}
+
+.itemList .sold-out-filter {
+    filter: grayscale(100%);
+    opacity: 0.5;
+}
+
+.itemList .sold-out-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: rgba(255, 0, 0, 0.8);
+    color: white;
+    padding: 5px;
+    font-weight: bold;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.itemList .card:hover {
+    transform: scale(1.02);
+}
+
+.itemList .card {
+    position: relative;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    margin: 10px 0px;
+}
+
+.itemList .card-img-top {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+}
+
+.itemList .heart-icon {
+    position: absolute;
+    margin: 5px;
+    top: 82%;
+    right: 10px;
+    font-size: 20px;
+    color: #ff1744;
+    transition: transform 0.3s ease;
+    font-size: 48px;
+}
+
+/* -------------list css 보완------------- */
+/* --------검색부분-------- */
+/* 검색 영역 */
+.itemList .desktop-search {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    position: absolute;
+    right: 70px;
+    flex-direction: row;
+    height: 20px;
+}
+#cateSearch {
+    display: none;
+}
+
+.itemList .order-container {
+    display: flex;
+    justify-content: flex-end;
+    position: absolute;
+    top: 100px;
+    width: 160px;
+    padding-bottom: 20px;
+    right: 70px;
+}
+
+.itemList .company-items,
+.itemList .orderBy {
+    width: 130px;
+    text-align: left;
+    position: absolute;
+    display: block;
+    top: 5px;
+}
+
+/* 검색 폼 */
+.itemList .search-form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+}
+#searchIcon {
+    font-size: 24px;
+    cursor: pointer;
+    color: #333;
+    margin-left: 20px;
+}
+
+#searchIcon:hover {
+    color: #3e7d3a;
+}
+
+/*-------------------------------*/
+
+.itemList .desktop-search .form-control {
+    width: 300px; /* 입력창 너비 설정 */
+    padding: 8px 10px; /* 여백 */
+}
+
+.itemList .desktop-search .btn {
+    padding: 8px 15px; /* 버튼 크기 */
+    font-size: 16px; /* 버튼 글자 크기 */
+}
+
+/*-------------------------------*/
+#list-content {
+    position: relative;
+    display: block;
+    top: 100px;
+    width: 100%;
+    margin: auto;
+}
+
+#loadMore {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #5bbf4e; /* 밝은 초록색 */
+    color: white;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+    border-radius: 5px; /* 버튼 모서리를 둥글게 */
+    transition: all 0.3s ease;
+}
+
+/* hover 상태에서의 스타일 */
+#loadMore:hover {
+    background-color: #3e7d3a;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.itemList .card:hover .card-title:not(.text-danger) {
+    color: #3e7d3a !important; /* hover 시 색상 변경 */
+}
+
+/* 사이드바 배경색 (연한 회색) */
+#absolute {
+    width:200px;
+    min-height:90%;
+    max-height:100%;
+    position:absolute;
+    left:20px;
+    top:160px;
+    background-color: #f4f6f7; /* 연한 회색 */
+    color: #2c3e50; /* 텍스트 색상 */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 2px 0 15px rgba(0, 0, 0, 0.1);
+    min-height: 70%;
+    transition: all 0.3s ease;
+}
+
+/* 체크박스 스타일 */
+#tagSelect label {
+    display: block;
+    margin: 10px 0;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+/* 체크박스와 텍스트 사이 간격 */
+#tagSelect input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+#checkResetBtn {
+    background-color: transparent;
+    color: #5bbf4e;
+    border: 2px solid #5bbf4e;
+}
+
+/* 버튼 호버 효과 */
+.itemList button:hover {
+    opacity: 0.8;
+    transform: translateY(-2px); /* 살짝 떠오르는 느낌 */
+}
+
+#searchTagBtn {
+    background-color: #5bbf4e;
+    color: #fff;
+    border: none;
+}
+
+/* 버튼 호버 효과 */
+.itemList button:hover {
+    opacity: 0.8;
+    transform: translateY(-2px);
+}
+
+#tagSelect {
+    position: sticky;
+    top: 50px;
+}
+
+#searchTagBtn,
+#checkResetBtn {
+    margin-top: 15px;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 14px;
+    text-align: center;
+}
+
+#searchTagBtn:hover,
+#checkResetBtn:hover {
+    opacity: 0.9;
+}
+
+#list-content {
+    margin-left: 100px;
+    transition: margin-left 0.3s ease;
+}
+/* 발행일 조절 */
+.itemList .openDate{
+    font-size: 14px;
+}
+.itemList .itemTitle{
+    padding-top: 5px;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+/* 모바일 화면 전용 스타일 */
+#toggleSidebarBtn {
+    display: none;
+}
+@media (max-width: 768px) {
+/* 검색 컨테이너와 리스트 콘텐츠 간 여백 추가 */
+.itemList .search-container {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    z-index: 101; /* navbar 위에 표시되도록 z-index 설정 */
+    min-height: 50px;
+    margin-bottom: 5px;
+}
+.itemList .search-wrapper {
+    width: 100%; /* 화면의 100% 너비 사용 */
+    box-sizing: border-box; /* 패딩 포함해 100% 너비 사용 */
+    padding: 0; /* 필요시 패딩 조정 */
+    margin: 0; /* 필요시 외부 여백 제거 */
+}
+.itemList .desktop-search {
+    width: 100%; /* 현재 화면의 100% 너비 차지 */
+    position: relative;
+    right: auto; /* 기존 위치 제거 */
+    top: 10px; /* 화면 상단에서 약간의 여백 */
+    margin: 5px;
+    padding: 0; /* 필요시 내부 여백 제거 */
+}
+#cateSearch {
+    display: block;
+    width: 100%;
+}
+.itemList .search-set-item {
+    display: flex;
+    align-items: center;
+    gap: 5px; /* 입력칸과 버튼 사이의 간격 */
+    width: 100%;
+    left : 0;
+}
+
+/* 입력칸 스타일 */
+.itemList .search-set-item .form-control {
+    flex: 8;
+    width: 100%;
+}
+
+/* 버튼 스타일 */
+.itemList .search-set-item .btn {
+    flex: 2;
+    padding: 4px 8px; /* 모바일에서 버튼 크기를 더 작게 */
+    font-size: 12px;
+    flex-shrink: 0; /* 버튼 크기가 줄어들지 않도록 고정 */
+    margin-right: 10px;
+}
+#searchIcon {
+    display:none;
+}
+.itemList .order-container {
+    display: flex;
+    position: relative;
+    right: auto;/*기존설정 제거*/
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    top: 10px; /* 화면 상단에서 약간의 여백 */
+    padding: 5px; /* 필요시 패딩 제거 */
+    margin-left: 10px;
+    margin-right: 10px;
+}
+#toggleSidebarBtn {
+    display: block;
+    position: relative;
+/*        z-index: 102; *//* 사이드바 위에 표시되도록 설정 */
+    background-color: #5bbf4e;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    width: 100%;
+    padding: 8px;
+    margin-top: 10px;
+}
+.itemList .orderBy {
+    flex-shrink: 0; /* 선택 요소의 너비가 줄어들지 않도록 설정 */
+    position: relative;
+}
+/* 사이드바 숨기기 및 태그 선택 */
+#absolute {
+    display: none;
+}
+/* 사이드바 배경색 (연한 회색) */
+#absolute {
+    width: 80%;
+    min-height: auto;
+    max-height:40%;
+    position:absolute;
+    left: 20px;
+    top:110px;
+    padding: 20px;
+    margin: 0 auto;
+    border-radius: 8px;
+    box-shadow: 2px 0 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+#tagSelect {
+    position: sticky;
+    display: flex;
+    flex-wrap: wrap; /* 여러 줄로 나열 */
+    gap: 5px;
+    top: 50px;
+}
+
+/* 체크박스 스타일 */
+#tagSelect label {
+    flex: 1 1 23%;
+    margin: 5px 0;
+    font-size: 14px;
+    white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+    text-overflow: ellipsis; /* 텍스트가 길 때 생략 (...) 표시 */
+    text-align: center; /* 텍스트를 가운데 정렬 */
+}
+#tagSelect h4 {
+    display: none;
+}
+
+/* 체크박스와 텍스트 사이 간격 */
+#tagSelect input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+#checkResetBtn {
+    background-color: transparent;
+    color: #5bbf4e;
+    border: 2px solid #5bbf4e;
+}
+
+/* 리스트 콘텐츠와 여백 조정 */
+#list-content {
+    top:auto;
+    margin-top: 0;
+    margin-left: 0;
+    margin-bottom: 100px;
+    padding: 10px;
+}
+
+/* 카드 레이아웃 */
+.itemList .col-md-4 {
+    flex: 0 0 100%; /* 한 줄에 한 카드만 표시 */
+    max-width: 100%;
+}
+
+.itemList .card {
+    margin: 10px auto;
+    width: 100%;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+/* 카드 이미지 크기 조정 */
+.itemList .card-img-top {
+    height: 200px; /* 이미지 높이를 줄여 화면 비율에 맞춤 */
+}
+#tagSelect {
+    position: static;
+    margin: 10px 0;
+    padding: 10px;
+    background-color: #f4f6f9;
+    box-shadow: none;
+    border-radius: 5px;
+}
+
+/* 태그 선택 필터 */
+#tagSelect label {
+    font-size: 14px;
+    margin: 5px 0;
+}
+
+/* 필터 버튼 크기 조정 */
+#searchTagBtn, #checkResetBtn {
+    width: 100%;
+    padding: 8px;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+/* 버튼 크기 조정 */
+.itemList .search-set-item button {
+    width: 100%;
+    font-size: 14px;
+    padding: 8px;
+    margin-top: 10px;
+}
+
+/* 하트 아이콘 크기 조정 */
+.itemList .heart-icon {
+    font-size: 24px;
+    top: 85%;
+    right: 10px;
+}
+
+/* Sold Out 배지 조정 */
+.itemList .sold-out-badge {
+    font-size: 12px;
+    padding: 4px;
+}
+
+/* load more 버튼 */
+#loadMore {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    font-size: 14px;
+    background-color: #5bbf4e;
+    border-radius: 5px;
+    text-align: center;
+    left: 0;
+    position: relative;
+}
+#loadMore:hover {
+    background-color: #5bbf4e; /* 원래 색상으로 유지 */
+}
+}
+        

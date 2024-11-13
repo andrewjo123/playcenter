@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:sec="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{layouts/layout1}" class="mypage">
+<head>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <link th:href="@{/css/member.css}" rel="stylesheet">
+</head>
+
+<div layout:fragment="content">
+    <div class="container mt-5">
+        <div class="row text-center mb-4">
+            <div class="col-md-5 d-flex-column">
+                <div id="getPImg" class="profile-img m-auto"></div>
+                <div id="getPImg2" class="mt-1 w-50 m-auto">아이콘 변경</div>
+                <input type="hidden" value="" id="currentPImg">
+            </div>
+            <div class="col-md-7 userInfo">
+                <h2 th:text="${memberForm.name}" class="member-name"></h2>
+                <div>Email: <span sec:authentication="principal.username"></span></div>
+                <div>Phone: <span th:text="${memberForm.phone}"></span></div>
+                <div class="userModifyDiv"><a class="nav-link" href="/members/modify">회원 정보 수정</a></div>
+            </div>
+        </div>
+
+        <div class="linkList row mb-5">
+            <div class="linkIcon"><a class="dropdown-item iconDibs" href="/dibs">❤</a><div class="showInfo dibsInfo">찜</div></div>
+            <div class="linkIcon"><a class="dropdown-item iconCart" href="/cart">🛒</a><div class="showInfo cartInfo">장바구니</div></div>
+            <div class="linkIcon"><a class="dropdown-item iconOrder" href="/orders">📑</a><div class="showInfo orderInfo">주문내역</div></div>
+        </div>
+
+        <div class="point-management">
+            <h3 style="text-align:center;">포인트관리</h3>
+            <div class="total-points" style="font-size:20px;">
+                보유 포인트: <span th:text="${memberForm.totalPoint}" style="font-size: 2em; font-weight: bold; color: #7ED957;"></span><span> Point</span>
+            </div>
+            <div id="notice" class="tab-pane active notice">
+                <a href="#noticePoint" data-toggle="collapse" class="toggle-points">포인트 사용/적립 내역</a>
+                <select id="pointDuration" class="mt-2">
+                    <option value="1">1개월</option>
+                    <option value="3">3개월</option>
+                    <option value="6" selected>6개월</option>
+                    <option value="12">1년</option>
+                </select>
+                <hr />
+                <div id="noticePoint" class="collapse">
+                    <th:block th:if="${pointList.size() > 0}">
+                        검색결과: [[${pointList.size()}]]건
+                        <th:block th:each="item, status: ${pointList}">
+                            <div class="card mt-2">
+                                <span th:text="${#temporals.format(item.useDate, 'yyyy. MM. dd. HH시 mm분 ss초')}"></span>
+                                <th:block th:if="${item.orderStatus=='challenge'}">
+                                    <p>도전과제 : +[[${item.payPoint}]]</p>
+                                </th:block>
+                                <th:block th:unless="${item.orderStatus=='challenge'}">
+                                    <th:block th:if="${item.payPoint > 0}">
+                                        <th:block th:if="${item.orderStatus=='ORDER'}">
+                                            <p>포인트 적립 : +[[${item.payPoint}]]</p>
+                                        </th:block>
+                                        <th:block th:unless="${item.orderStatus=='ORDER'}">
+                                            <p>구매 취소 : +[[${item.payPoint}]]</p>
+                                        </th:block>
+                                    </th:block>
+                                    <th:block th:if="${item.payPoint < 0}">
+                                        <p>구매 사용 : [[${item.payPoint}]]</p>
+                                    </th:block>
+                                </th:block>
+                            </div>
+                        </th:block>
+                    </th:block>
+                    <th:block th:if="${pointList.size() == 0}">
+                        <div class="col-md-12 text-center">
+                            <h4>결과 없음</h4>
+                        </div>
+                    </th:block>
+                </div>
+            </div>
+        </div>
+
+        <div class="point-management mt-3">
+            <h3 style="text-align:center;">리뷰관리</h3>
+            <div id="notice2" class="tab-pane active notice">
+                <a href="#noticeReview" data-toggle="collapse" class="toggle-points">리뷰 작성 내역</a>
+                <div id="noticeReview" class="collapse">
+                    <th:block th:if="${reviewList.size() > 0}">
+                        검색결과: [[${reviewList.size()}]]건
+                        <th:block th:each="review, status: ${reviewList}">
+                            <div class="card mt-2 reviews">
+                                <span th:text="${#temporals.format(review.updateTime, 'yyyy. MM. dd. HH시 mm분')}"></span>
+                                <a class="itemLink" th:href="@{'/item/'+${review.id}}" th:text="${review.itemNm}"></a>
+                                <span>
+                                    <b>평점:</b> <span th:each="i : ${#numbers.sequence(0, 4)}">
+                                        <span class="stars" th:text="${i < review.grade ? '★' : '☆'}"></span>
+                                    </span>
+                                    <b class="ml-3">추천수:</b> <span th:text="${review.rCnt}"></span>
+                                </span>
+                                <span><b>댓글:</b> <span th:text="${review.text}"></span></span>
+                                <button class="deleteReview" th:data-review="${review.reviewnum}">❌</button>
+                            </div>
+                        </th:block>
+                    </th:block>
+                    <th:block th:if="${reviewList.size() == 0}">
+                        <div class="col-md-12 text-center">
+                            <h4>결과 없음</h4>
+                        </div>
+                    </th:block>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <div class="container mt-5">
+        <h3 class="text-center mb-4">도전과제</h3>
+
+        <div class="accordion" id="achievementsAccordion">
+
+            <div class="card mb-3">
+                <div class="card-header" id="challenge1">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseC1" aria-expanded="false" aria-controls="collapseC1" style="color:#63BBE1;">
+                            도전과제 / 결제
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapseC1" class="collapse" aria-labelledby="challenge1" data-parent="#achievementsAccordion">
+                    <div class="card-body">
+                        <p th:if="${challenge.usedTotalMoney < 100000}" class="text-warning">10만원 이상 결제하세요</p>
+                        <p th:if="${challenge.usedTotalMoney >= 100000 && challenge.achievementForMoney == 0}">
+                            도전과제 1 보상을 받을 수 있습니다!
+                            <button class="btn btn-primary chal" data-challenge="pay10">1000P + 프로필 아이콘 받기</button>
+                        </p>
+                        <p th:if="${challenge.achievementForMoney >= 1}" class="text-success">✅ 10만원 이상 결제 달성 및 보상 받기 완료!</p>
+
+                        <p th:if="${challenge.usedTotalMoney < 400000 || challenge.achievementForMoney == 0}" class="text-warning">40만원 이상 결제하세요</p>
+                        <p th:if="${challenge.usedTotalMoney >= 400000 && challenge.achievementForMoney == 1}">
+                            도전과제 2 보상을 받을 수 있습니다!
+                            <button class="btn btn-primary chal" data-challenge="pay40">5000P + 프로필 아이콘 받기</button>
+                        </p>
+                        <p th:if="${challenge.achievementForMoney >= 2}" class="text-success">✅ 40만원 이상 결제 달성 및 보상 받기 완료!</p>
+
+                        <p th:if="${challenge.usedTotalMoney < 1000000 || challenge.achievementForMoney <= 1}" class="text-warning">100만원 이상 결제하세요</p>
+                        <p th:if="${challenge.usedTotalMoney >= 1000000 && challenge.achievementForMoney == 2}">
+                            도전과제 3 보상을 받을 수 있습니다!
+                            <button class="btn btn-primary chal" data-challenge="pay100">15000P + 프로필 아이콘 받기</button>
+                        </p>
+                        <p th:if="${challenge.achievementForMoney == 3}" class="text-success">✅ 100만원 이상 결제 달성 및 보상 받기 완료!</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-3">
+                <div class="card-header" id="challenge2">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseC2" aria-expanded="false" aria-controls="collapseC2" style="color:#1B2839;">
+                            도전과제 / 스팀
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapseC2" class="collapse" aria-labelledby="challenge2" data-parent="#achievementsAccordion">
+                    <div class="card-body">
+                        <p th:if="${challenge.countForSteam < 10}" class="text-warning">스팀 게임을 10개 이상 구매하세요</p>
+                        <p th:if="${challenge.countForSteam >= 10 && challenge.achievementForSteam == 0}">
+                            보상을 받을 수 있습니다!
+                            <button class="btn btn-primary chal" data-challenge="steam">2000P + 프로필 아이콘 받기</button>
+                        </p>
+                        <p th:if="${challenge.achievementForSteam == 1}" class="text-success">✅ 스팀 게임 10개 이상 구매 및 보상 받기 완료!</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-3">
+                <div class="card-header" id="challenge3">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseC3" aria-expanded="false" aria-controls="collapseC3" style="color:#D11927;">
+                            도전과제 / 닌텐도
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapseC3" class="collapse" aria-labelledby="challenge3" data-parent="#achievementsAccordion">
+                    <div class="card-body">
+                        <p th:if="${challenge.countForNintendo < 10}" class="text-warning">닌텐도 게임을 10개 이상 구매하세요</p>
+                        <p th:if="${challenge.countForNintendo >= 10 && challenge.achievementForNintendo == 0}">
+                            보상을 받을 수 있습니다!
+                            <button class="btn btn-primary chal" data-challenge="nintendo">2000P + 프로필 아이콘 받기</button>
+                        </p>
+                        <p th:if="${challenge.achievementForNintendo == 1}" class="text-success">✅ 닌텐도 게임 10개 이상 구매 및 보상 받기 완료!</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-3">
+                <div class="card-header" id="challenge4">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseC4" aria-expanded="false" aria-controls="collapseC4" style="color:#005499;">
+                            도전과제 / 플레이스테이션
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapseC4" class="collapse" aria-labelledby="challenge4" data-parent="#achievementsAccordion">
+                    <div class="card-body">
+                        <p th:if="${challenge.countForPs < 10}" class="text-warning">플레이스테이션 게임을 10개 이상 구매하세요</p>
+                        <p th:if="${challenge.countForPs >= 10 && challenge.achievementForPs == 0}">
+                            보상을 받을 수 있습니다!
+                            <button class="btn btn-primary chal" data-challenge="ps">2000P + 프로필 아이콘 받기</button>
+                        </p>
+                        <p th:if="${challenge.achievementForPs == 1}" class="text-success">✅ 플레이스테이션 게임 10개 이상 구매 및 보상 받기 완료!</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="modal fade" id="profileImgList" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    이미지를 클릭하면 프로필 사진이 변경됩니다.
+                </div>
+                <div class="modal-body">
+                    <img th:src="@{icon/icon_playGround.svg}" class="imgCandidate pImgAvailable" title="회원가입 보상" alt="icon" data-pimg="playGround">
+                    <img th:src="@{icon/icon_elf.svg}" class="imgCandidate pImgAvailable" title="기본 제공 아이콘" data-pimg="elf">
+                    <img th:src="@{icon/icon_mage.svg}" class="imgCandidate pImgAvailable" title="기본 제공 아이콘" data-pimg="mage">
+                    <img th:src="@{icon/icon_peasant.svg}" class="imgCandidate pImgAvailable" title="기본 제공 아이콘" data-pimg="peasant">
+                    <img th:src="@{icon/icon_reaper.svg}" class="imgCandidate pImgAvailable" title="기본 제공 아이콘" data-pimg="reaper">
+                    <img th:src="@{icon/icon_treant.svg}" class="imgCandidate pImgAvailable" title="기본 제공 아이콘" data-pimg="treant">
+                    <img th:src="@{icon/icon_wolf.svg}" class="imgCandidate pImgAvailable" title="기본 제공 아이콘" data-pimg="wolf">
+
+                    <!-- 도전과제용 아이콘-->
+                    <th:block th:if="${challenge.achievementForMoney>=3}"><img th:src="@{icon/icon_gold.svg}" class="imgCandidate pImgAvailable" title="도전과제 달성 보상" data-pimg="gold"></th:block>
+                    <th:block th:if="${challenge.achievementForMoney>=2}"><img th:src="@{icon/icon_silver.svg}" class="imgCandidate pImgAvailable" title="도전과제 달성 보상" data-pimg="silver"></th:block></th:block>
+                    <th:block th:if="${challenge.achievementForMoney>=1}"><img th:src="@{icon/icon_bronze.svg}" class="imgCandidate pImgAvailable" title="도전과제 달성 보상" data-pimg="bronze"></th:block></th:block>
+                    <th:block th:if="${challenge.achievementForSteam>0}"><img th:src="@{icon/icon_steam.svg}" class="imgCandidate pImgAvailable" title="도전과제 달성 보상" data-pimg="steam"></th:block>
+                    <th:block th:if="${challenge.achievementForNintendo>0}"><img th:src="@{icon/icon_nintendo.svg}" class="imgCandidate pImgAvailable" title="도전과제 달성 보상" data-pimg="nintendo"></th:block>
+                    <th:block th:if="${challenge.achievementForPs>0}"><img th:src="@{icon/icon_ps.svg}" class="imgCandidate pImgAvailable" title="도전과제 달성 보상" data-pimg="ps"></th:block>
+
+                    <th:block th:unless="${challenge.achievementForMoney>=3}"><img th:src="@{icon/icon_gold.svg}" class="imgCandidate pImgNot" title="도전과제 달성시 해금됩니다"></th:block>
+                    <th:block th:unless="${challenge.achievementForMoney>=2}"><img th:src="@{icon/icon_silver.svg}" class="imgCandidate pImgNot" title="도전과제 달성시 해금됩니다"></th:block>
+                    <th:block th:unless="${challenge.achievementForMoney>=1}"><img th:src="@{icon/icon_bronze.svg}" class="imgCandidate pImgNot" title="도전과제 달성시 해금됩니다"></th:block>
+                    <th:block th:unless="${challenge.achievementForSteam>0}"><img th:src="@{icon/icon_steam.svg}" class="imgCandidate pImgNot" title="도전과제 달성시 해금됩니다"></th:block>
+                    <th:block th:unless="${challenge.achievementForNintendo>0}"><img th:src="@{icon/icon_nintendo.svg}" class="imgCandidate pImgNot" title="도전과제 달성시 해금됩니다"></th:block>
+                    <th:block th:unless="${challenge.achievementForPs>0}"><img th:src="@{icon/icon_ps.svg}" class="imgCandidate pImgNot" title="도전과제 달성시 해금됩니다"></th:block>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showProfileImg(pImg){
+            $("#getPImg").empty();
+            var str='<img src="icon/icon_'+pImg+'.svg" class="user-image" style="width: 100px; height: 100px; margin:0;"/>';
+            $("#getPImg").append(str);
+            $("#currentPImg").val(pImg);
+        }
+
+        $(document).ready(function() {
+            let token = $("meta[name='_csrf']").attr("content");
+            let header = $("meta[name='_csrf_header']").attr("content");
+
+            var pImg="[[${memberForm.profileImg}]]";
+            showProfileImg(pImg);
+            $('#pointDuration').on('change',function() {
+                var selectedValue = $(this).val(); // 선택된 값 가져오기
+                $.ajax({
+                    url: '/pointDuration', // 요청할 URL
+                    method: 'GET',
+                    data: { date: selectedValue }, // 서버에 보낼 데이터
+                    success: function(pointList) {
+                        $('#noticePoint').empty();
+                        if (pointList && pointList.length > 0) {
+                            $('#noticePoint').append(`<div>검색결과: ${pointList.length}건</div>`);
+
+                            pointList.forEach(item => {
+                                let card = `<div class="card">
+                                                <span>${new Date(item.useDate).toLocaleString('ko-KR', { hour12: false })}</span>`;
+
+                                if(item.orderStatus=='challenge'){
+                                    card+=`<div>도전과제 : +${item.payPoint}</div>`;
+                                } else {
+                                    if (item.payPoint > 0) {
+                                        if (item.orderStatus === 'ORDER') {
+                                            card += `<div>포인트 적립 : +${item.payPoint}</div>`;
+                                        } else {
+                                            card += `<div>구매 취소 : +${item.payPoint}</div>`;
+                                        }
+                                    } else if (item.payPoint < 0) {
+                                        card += `<div>구매 사용 : ${item.payPoint}</div>`;
+                                    }
+                                }
+                                card += `</div>`;
+                                $('#noticePoint').append(card);
+                            });
+                        } else {
+                            $('#noticePoint').append(`
+                                <div class="col-md-12 text-center">
+                                    <h4>결과 없음</h4>
+                                </div>
+                            `);
+                        }
+
+                    },
+                    error: function(xhr, status, error) {
+                        alert("잠시 후 실행해주세요");
+                    }
+                });
+            });
+
+            $(".chal").on('click',function(e){
+
+                var challenge = $(this).data('challenge');
+
+                $.ajax({
+                    url: "/acceptChallenge",
+                    method: "post",
+                    data:{challenge:challenge},
+                    dataType:"text",
+                    beforeSend : function(xhr){
+                        xhr.setRequestHeader(header, token);
+                    },success(result){
+                        if(result!='notValid'){
+                            var msg=""
+                            switch (result) {
+                                case "10": msg="10만원 결제";
+                                    break;
+                                case "40": msg="40만원 결제";
+                                    break;
+                                case "100": msg="100만원 결제";
+                                    break;
+                                case "steam": msg="스팀 10개주문";
+                                    break;
+                                case "nintendo": msg="닌텐도 10개주문";
+                                    break;
+                                case "ps": msg="플레이스테이션 10개주문";
+                                    break;
+                            }
+                            alert(msg+" 도전과제 달성!");
+                            location.reload();
+                        }else{
+                            alert("정보가 유효하지 않습니다. 관리자에게 문의해주세요.");
+                        }
+                    },error(){
+                        alert("잠시 후 다시시도해주세요.");
+                    }
+                });
+
+            });
+
+            $("#getPImg,#getPImg2").on('click',function(){
+                $("#profileImgList").modal('show');
+            })
+
+            $(".pImgAvailable").on('click',function(){
+                var profileImg=$(this).data('pimg');
+
+                if($("#currentPImg").val()==profileImg){
+                    $("#profileImgList").modal('hide');
+                    return;
+                }
+                $.ajax({
+                    url: '/changeProfileImg',
+                    type: 'GET',
+                    data:{profileImg:profileImg},
+                    success: function(result) {
+                        showProfileImg(result);
+                        $("#profileImgList").modal('hide');
+                    },
+                    error: function(xhr, status, error) {
+                        alert("잠시 후 다시 시도해주세요");
+                    }
+                });
+            })
+
+            $(".iconDibs").mousemove(function(e){
+                var divOffset = $(this).offset(); //div의 좌표
+                var mouseX = e.pageX-divOffset.left;
+                var mouseY = e.pageY-divOffset.top;
+                $(".dibsInfo").css({"left":mouseX+5+"px","top":mouseY+5+"px"}).show();
+            });
+
+            $(".iconCart").mousemove(function(e){
+                var divOffset = $(this).offset(); //div의 좌표
+                var mouseX = e.pageX-divOffset.left;
+                var mouseY = e.pageY-divOffset.top;
+                $(".cartInfo").css({"left":mouseX+10+"px","top":mouseY+10+"px"}).show();
+            });
+
+            $(".iconOrder").mousemove(function(e){
+                var divOffset = $(this).offset(); //div의 좌표
+                var mouseX = e.pageX-divOffset.left;
+                var mouseY = e.pageY-divOffset.top;
+                $(".orderInfo").css({"left":mouseX+10+"px","top":mouseY+10+"px"}).show();
+            });
+
+            $(".iconDibs, iconCart, iconOrder").mouseleave(function(){
+                $(".dibsInfo").hide();
+            });
+            $(".iconCart").mouseleave(function(){
+                $(".cartInfo").hide();
+            });
+            $(".iconOrder").mouseleave(function(){
+                $(".orderInfo").hide();
+            });
+
+            // 리뷰 삭제
+            $('#noticeReview').on('click','.deleteReview',function () {
+
+                if(!confirm("삭제하시겠습니까?")){
+                    return;
+                }
+
+                var reviewNum = $(this).data("review");
+
+                $.ajax({
+                    url: '/reviews/deleteFromMyPage',
+                    type: "DELETE",
+                    data:{reviewNum:reviewNum},
+                    beforeSend : function(xhr){
+                        xhr.setRequestHeader(header, token);
+                    },
+                    success: function (result) {
+                        $("#noticeReview").empty();
+
+                        if (result&&result.length > 0) {
+                            let reviewsHtml = `<div>검색결과: ${result.length}건</div>`;
+
+                            result.forEach(function (review) {
+                                reviewsHtml += `
+                                    <div class="card mt-2 reviews">
+                                        <span>${new Date(review.updateTime).toLocaleString('ko-KR', { hour12: false })}</span>
+                                        <a class="itemLink" href="/item/${review.id}">${review.itemNm}</a>
+                                        <span>
+                                            <b>평점:</b>
+                                            ${Array.from({ length: 5 }, (_, i) =>
+                                                `<span class="stars">${i < review.grade ? '★' : '☆'}</span>`).join('')}
+                                            <b class="ml-3">추천수:</b> ${review.rcnt}
+                                        </span>
+                                        <span><b>댓글:</b> ${review.text}</span>
+                                        <button class="deleteReview" data-review="${review.reviewnum}">❌</button>
+                                    </div>
+                                `;
+                            });
+
+                            $("#noticeReview").html(reviewsHtml);
+                        } else {
+                            $("#noticeReview").html('<div class="col-md-12 text-center"><h4>결과 없음</h4></div>');
+                        }
+
+                        alert("해당 리뷰가 삭제되었습니다");
+                    },
+                    error: function (xhr, status, error) {
+                        alert('잠시 후 다시 시도해주세요');
+                    }
+                });
+            });
+
+
+        });
+
+    </script>
+
+</div>

@@ -1,32 +1,173 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-
+    <link rel="icon" type="image/svg+xml" th:href="@{/icon/icon_playGround.svg}">
     <!-- CSS only -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link th:href="@{/css/layout1.css}" rel="stylesheet">
-
+    <link th:href="@{/css/fragments.css}" rel="stylesheet">
     <!-- JS, Popper.js, and jQuery -->
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <script>
+        function cartCount(){
+            var exist=$("#ppEmail").text();
+            if(exist!=""&&exist!=null){
+                $.ajax({
+                    url:'/cartCount',
+                    type:"GET",
+                    data:{email:exist},
+                    dataType:"text",
+                    success:function(result){
+                        if(result>0){
+                            $(".getCount").text(`(${result})`).show();
+                        } else {
+                            $(".getCount").hide();
+                        }
+                    }
+                });
+            }
+        }
+
+        function dibsCount(){
+            var exist=$("#ppEmail").text();
+            if(exist!=""&&exist!=null){
+                $.ajax({
+                    url:'/dibsCount',
+                    type:"GET",
+                    data:{email:exist},
+                    dataType:"text",
+                    success:function(result){
+                        if(result>0){
+                            $(".getCountDibs").text(`(${result})`).show();
+                        } else {
+                            $(".getCountDibs").hide();
+                        }
+                    }
+                });
+            }
+        }
+
+
+        $(document).ready(function(){
+            cartCount();
+            dibsCount();
+            const currentUrl = window.location.pathname;
+            const navLinks = document.querySelectorAll('.nav-link,.btn.company');
+
+            navLinks.forEach(link => {
+                const linkUrl = link.getAttribute('href');
+
+                // 현재 URL이 링크 URL로 시작하는지 확인
+                if (currentUrl === linkUrl || currentUrl.startsWith(linkUrl)) {
+                    link.classList.add('active');
+                }
+            });
+
+            $(window).scroll(function() {
+                var scrollPosition = $(window).scrollTop();
+                if (scrollPosition >= 1200) {
+                    $('#pageIndicators').fadeIn();
+                } else {
+                    $('#pageIndicators').fadeOut();
+                }
+            });
+
+            $("#pageIndicators #indicatorBtn").on('click',function(){
+                // 회전 애니메이션
+                var rotationAmount = $(this).data("clockwise");
+                $(this).animate({
+                    deg: rotationAmount
+                }, {
+                    duration: 300, // 회전 애니메이션의 지속 시간 (ms)
+                    step: function (now) {
+                        $(this).css({
+                            transform: 'rotate(' + now + 'deg)'
+                        });
+                    },
+                    complete: function() {
+                        $(this).data("clockwise", rotationAmount==45?0:45);
+                    }
+                });
+                $("#goBottom").stop(true, true).fadeToggle(300);
+                $("#goTop").stop(true, true).fadeToggle(300);
+            });
+
+            $("#pageIndicators #goTop").on('click',function(){
+                $('html, body').animate({
+                    scrollTop: $(".hd1").offset().top
+                }, 500);
+            });
+
+            $("#pageIndicators #goBottom").on('click',function(){
+                $('html, body').animate({
+                    scrollTop: $(".footer").offset().top
+                }, 500);
+            });
+
+            $(".company").on('click', function() {
+                var company = $(this).data('company');
+            });
+
+        });
+
+
+    </script>
 
     <th:block layout:fragment="script"></th:block>
     <th:block layout:fragment="css"></th:block>
+    <th:block layout:fragment="img"></th:block>
 
 </head>
+
 <body>
+<div th:replace="~{fragments/header1::header1}"></div>
 
-    <div th:replace="~{fragments/header::header}"></div>
 
-    <div layout:fragment="content" class="content">
 
+<div class="container-fluid">
+    <div class="row layout-row">
+        <div class="col-12 col-md-11">
+            <div layout:fragment="content" class="content"></div>
+        </div>
+        <div class="col-12 col-md-1">
+        </div>
     </div>
+</div>
 
-    <div th:replace="~{fragments/footer::footer}"></div>
+<div id="pageIndicators">
+    <div id="goTop"><i class="fa-solid fa-chevron-up"></i></div>
+    <div id="goBottom"><i class="fa-solid fa-chevron-down"></i></div>
+    <div id="indicatorBtn" data-clockwise="45">
+        <div id="horizonLine"></div>
+        <div id="verticalLine"></div>
+    </div>
+</div>
 
+<div id="kakao-talk-channel-chat-button">
+    <img th:src="@{/icon/kakaochat_pc.png}" class="icon-pc">
+    <img th:src="@{/icon/kakaochat_mobile.png}" class="icon-mobile">
+</div>
+<script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
+<script type='text/javascript'>
+    // 사용할 앱의 JavaScript 키를 설정해 주세요.
+   Kakao.init('4b0f7e8130382c0a80263997720a0ce8');
+   document.getElementById('kakao-talk-channel-chat-button').addEventListener('click', function () {
+       Kakao.Channel.chat({
+           channelPublicId: '_xmUaEn' // 카카오톡 채널 홈 URL에 명시된 ID
+       });
+   });
+</script>
+
+<div th:replace="~{fragments/footer::footer}"></div>
 </body>
+
 </html>

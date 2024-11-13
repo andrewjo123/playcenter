@@ -30,4 +30,11 @@ public class MemberFormDto {
     private String address;
 
     private String addressDetail;
+
+    private boolean fromSocial;
+
+    private int totalPoint;
+
+    private String profileImg;
+
 }

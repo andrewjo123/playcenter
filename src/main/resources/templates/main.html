@@ -1,97 +1,486 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layouts/layout1}">
-
-<!-- 사용자 CSS 추가 -->
-<th:block layout:fragment="css">
-    <style>
-        .carousel-inner > .item {
-            height: 350px;
-        }
-        .margin{
-            margin-bottom:30px;
-        }
-        .banner{
-            height: 300px;
-            position: absolute; top:0; left: 0;
-            width: 100%;
-            height: 100%;
-        }
-        .card-text{
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            overflow: hidden;
-        }
-        a:hover{
-            text-decoration:none;
-        }
-        .center{
-            text-align:center;
-        }
-    </style>
-</th:block>
+      layout:decorate="~{layouts/layout1}" class="main">
+<head>
+    <link th:href="@{/css/main.css}" rel="stylesheet">
+</head>
 
 <div layout:fragment="content">
-
-    <div id="carouselControls" class="carousel slide margin" data-ride="carousel">
-        <div class="carousel-inner">
-            <div class="carousel-item active item">
-                <img class="d-block w-100 banner" src="https://user-images.githubusercontent.com/13268420/112147492-1ab76200-8c20-11eb-8649-3d2f282c3c02.png" alt="First slide">
+    <div class="w3-content" id="adslide">
+        <!-- 왼쪽/오른쪽 화살표 추가 -->
+        <a class="prev" onclick="moveSlide(-1)">&#10094;</a>
+        <a class="next" onclick="moveSlide(1)">&#10095;</a>
+        <!-- 슬라이드 1 -->
+        <div class="w3-content mySlides" id="slideShow1">
+            <img class="m-0 p-0 w-100" src="/img/main/playground.png" />
+        </div>
+        <!-- 슬라이드 2 -->
+        <div class="w3-content mySlides" id="slideShow2">
+            <div class="large-img" id="largeImg1" onclick="window.location.href='/item/39'">
+                <img src="/img/main/psn/01.png" class="mySlidesImage"/>
+                <img src="/img/main/psn/02.png" class="mySlidesImage hide"/>
+                <img src="/img/main/psn/03.png" class="mySlidesImage hide"/>
+                <img src="/img/main/psn/04.png" class="mySlidesImage hide"/>
             </div>
+
+            <!-- 작은 이미지들 (오른쪽) -->
+            <div class="small-images">
+                <div class="slide-title" onclick="window.location.href='/item/39'">
+                    <img src="icon/icon_ps.svg" class="user-image" style="width:10%; height: 10%;"/>호그와트 레거시 PS5 버전
+                </div>
+                <div>
+                    <img class="demo w3-opacity w3-hover-opacity-off"
+                         src="/img/main/psn/01.png"
+                         onclick="currentDiv(1, 'slideShow2')"/>
+                </div>
+                <div>
+                    <img class="demo w3-opacity w3-hover-opacity-off"
+                         src="/img/main/psn/02.png"
+                         onclick="currentDiv(2, 'slideShow2')"/>
+                </div>
+                <div>
+                    <img class="demo w3-opacity w3-hover-opacity-off"
+                         src="/img/main/psn/03.png"
+                         onclick="currentDiv(3, 'slideShow2')"/>
+                </div>
+                <div>
+                    <img class="demo w3-opacity w3-hover-opacity-off"
+                         src="/img/main/psn/04.png"
+                         onclick="currentDiv(4, 'slideShow2')"/>
+                </div>
+                <div class="slide-content">
+                    <div class="availability-info">
+                        <span class="status-text">Now Available</span>
+                        <span class="top-seller">Top Seller</span>
+                    </div>
+                    <div class="discount-info">
+                        <div class="discount-rate">-20%</div>
+                        <div class="original-price">
+                            <del>₩108,375</del>
+                        </div>
+                        <div class="discounted-price">₩86,700</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 슬라이드 3 -->
+        <div class="w3-content mySlides hide" id="slideShow3">
+
+            <div class="large-img" id="largeImg2" onclick="window.location.href='/item/26'">
+                <img src="/img/main/nin/01.jpg" class="mySlidesImage"/>
+                <img src="/img/main/nin/02.jpg" class="mySlidesImage hide"/>
+                <img src="/img/main/nin/03.jpg" class="mySlidesImage hide"/>
+                <img src="/img/main/nin/04.jpg" class="mySlidesImage hide"/>
+            </div>
+
+            <!-- 작은 이미지들 (오른쪽) -->
+            <div class="small-images">
+                <div class="slide-title" onclick="window.location.href='/item/26'">
+                    <img src="icon/icon_nintendo.svg" class="user-image" style="width:10%; height: 10%;"/>젤다의 전설 티어스 오브 더 킹덤
+                </div>
+                <div>
+                    <img class="demo w3-opacity w3-hover-opacity-off"
+                        src="/img/main/nin/01.jpg"
+                        onclick="currentDiv(1, 'slideShow3')"/>
+                </div>
+                <div>
+                    <img class="demo w3-opacity w3-hover-opacity-off"
+                        src="/img/main/nin/02.jpg"
+                        onclick="currentDiv(2, 'slideShow3')"/>
+                </div>
+                <div>
+                    <img class="demo w3-opacity w3-hover-opacity-off"
+                        src="/img/main/nin/03.jpg"
+                        onclick="currentDiv(3, 'slideShow3')"/>
+                </div>
+                <div>
+                    <img class="demo w3-opacity w3-hover-opacity-off"
+                        src="/img/main/nin/04.jpg"
+                        onclick="currentDiv(4, 'slideShow3')"/>
+                </div>
+                <div class="slide-content">
+                    <div class="availability-info">
+                        <span class="status-text">Now Available</span>
+                        <span class="top-seller">Top Seller</span>
+                    </div>
+                    <div class="discount-info">
+                        <div class="discount-rate">-20%</div>
+                        <div class="original-price">
+                            <del>₩74,800</del>
+                        </div>
+                        <div class="discounted-price">₩93,500</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 슬라이드 4 -->
+        <div class="w3-content mySlides hide" id="slideShow4">
+            <div class="large-img" id="largeImg3" onclick="window.location.href='/item/34'">
+                <img src="/img/main/steam/01.jpg" class="mySlidesImage"/>
+                <img src="/img/main/steam/02.jpg" class="mySlidesImage hide"/>
+                <img src="/img/main/steam/03.jpg" class="mySlidesImage hide"/>
+                <img src="/img/main/steam/04.jpg" class="mySlidesImage hide"/>
+            </div>
+
+            <!-- 작은 이미지들 (오른쪽) -->
+            <div class="small-images">
+                <div class="slide-title" onclick="window.location.href='/item/34'">
+                    <img src="icon/icon_steam.svg" class="user-image" style="width:10%; height: 10%;"/>검은 신화 오공
+                </div>
+                <div>
+                    <img class="demo w3-opacity w3-hover-opacity-off"
+                        src="/img/main/steam/01.jpg"
+                        onclick="currentDiv(1, 'slideShow4')"/>
+                </div>
+                <div>
+                    <img class="demo w3-opacity w3-hover-opacity-off"
+                        src="/img/main/steam/02.jpg"
+                        onclick="currentDiv(2, 'slideShow4')"/>
+                </div>
+                <div>
+                    <img class="demo w3-opacity w3-hover-opacity-off"
+                        src="/img/main/steam/03.jpg"
+                        onclick="currentDiv(3, 'slideShow4')"/>
+                </div>
+                <div>
+                    <img class="demo w3-opacity w3-hover-opacity-off"
+                        src="/img/main/steam/04.jpg"
+                        onclick="currentDiv(4, 'slideShow4')"/>
+                </div>
+                <div class="slide-content">
+                    <div class="availability-info">
+                        <span class="status-text">Now Available</span>
+                        <span class="top-seller">Top Seller</span>
+                    </div>
+                    <div class="discount-info">
+                        <div class="discount-rate">-20%</div>
+                        <div class="original-price">
+                            <del>₩81,000</del>
+                        </div>
+                        <div class="discounted-price">₩64,800</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="slidelink">
+        <!-- 이동할 수 있는 닻 (링크) 추가 -->
+        <div class="navigate-links">
+            <a href="javascript:void(0);" class="navigate-link" onclick="showSlide(1)">
+                <div class="dat"></div>
+            </a>
+            <a href="javascript:void(0);" class="navigate-link" onclick="showSlide(2)">
+                <div class="dat"></div>
+            </a>
+            <a href="javascript:void(0);" class="navigate-link" onclick="showSlide(3)">
+                <div class="dat"></div>
+            </a>
+            <a href="javascript:void(0);" class="navigate-link" onclick="showSlide(4)">
+                <div class="dat"></div>
+            </a>
         </div>
     </div>
 
-    <input type="hidden" name="searchQuery" th:value="${itemSearchDto.searchQuery}">
-    <div th:if="${not #strings.isEmpty(itemSearchDto.searchQuery)}" class="center">
-        <p class="h3 font-weight-bold" th:text="${itemSearchDto.searchQuery} + '검색 결과'"></p>
-    </div>
+    <div th:unless="${isMobile}">
+        <div th:each="company : ${result}" class="company-items">
+            <h2 th:if="${company.key=='all'}"><a href="/list" class="text-dark">추천컨텐츠 <span class="arrow"> &gt; </span></a>
+            </h2>
+            <h2 th:if="${company.key=='steam'}"><a href="/steam" class="text-dark">Steam <span
+                    class="arrow"> &gt; </span></a></h2>
+            <h2 th:if="${company.key=='nintendo'}"><a href="/nintendo" class="text-dark">Nintendo <span
+                    class="arrow"> &gt; </span></a></h2>
+            <h2 th:if="${company.key=='ps'}"><a href="/ps" class="text-dark">PS<span class="arrow"> &gt; </span></a>
+            </h2>
 
-    <div class="row">
-        <th:block th:each="item, status: ${items.getContent()}">
-            <div class="col-md-4 margin">
-                <div class="card">
-                    <a th:href="'/item/' +${item.id}" class="text-dark">
-                        <img th:src="${item.imgUrl}" class="card-img-top" th:alt="${item.itemNm}" height="400">
-                        <div class="card-body">
-                            <h4 class="card-title">[[${item.itemNm}]]</h4>
-                            <p class="card-text">[[${item.itemDetail}]]</p>
-                            <h3 class="card-title text-danger">[[${item.price}]]원</h3>
+
+            <!-- 고유한 carousel 아이디 설정 -->
+            <div id="carouselControls_[[${index}]]" class="carousel slide margin carousel-custom" data-ride="carousel">
+
+                <ul class="carousel-indicators">
+                    <li th:each="i : ${#numbers.sequence(0, 2)}"
+                        th:data-target="'#carouselControls_' + ${index}"
+                        th:data-slide-to="${i}"
+                        th:class="${i == 0 ? 'active' : ''}">
+                    </li>
+                </ul>
+
+                <div class="carousel-inner">
+
+                    <div class="carousel-item active carousel-item-custom">
+                        <div class="horizontal-scroll-container">
+                            <th:block th:each="item : ${company.value}">
+                                <div class="col-12 col-md-2 margin">
+                                    <div class="card">
+                                        <a th:href="'/item/' + ${item.id}" class="text-dark">
+                                            <img th:src="${item.imgUrl}" class="card-img-top" th:alt="${item.itemNm}"
+                                                 height="400">
+                                            <div class="card-body">
+                                                <h4 class="card-title">[[${item.itemNm}]]</h4>
+                                                <th:block th:if="${item.stockNumber<=0}">
+                                                    <h3 class="card-title text-danger">품절</h3>
+                                                </th:block>
+                                                <th:block th:unless="${item.stockNumber<=0}">
+                                                    <h3 class="card-title text-danger">[[${#numbers.formatInteger(item.price, 1,'COMMA')}]]원</h3>
+                                                </th:block>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </th:block>
                         </div>
-                    </a>
+
+                    </div>
                 </div>
+                <!-- 좌측, 우측 스크롤 버튼 -->
+                <a class="carousel-control-prev" href="#carouselControls_[[${index}]]" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#carouselControls_[[${index}]]" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+
             </div>
-        </th:block>
+        </div>
+        <script>
+            var currentSlide = 1;
+
+           // 슬라이드 변경 함수
+           function currentDiv(n, slideId) {
+               var slides = document.getElementById(slideId).getElementsByClassName("mySlidesImage");
+               var dots = document.getElementById(slideId).getElementsByClassName("demo");
+
+               for (var i = 0; i < slides.length; i++) {
+                   slides[i].classList.add("hide");
+               }
+               for (var i = 0; i < dots.length; i++) {
+                   dots[i].classList.remove("w3-opacity-off");
+               }
+
+               slides[n - 1].classList.remove("hide");
+               dots[n - 1].classList.add("w3-opacity-off");
+           }
+
+           // 자동 슬라이드
+           function autoSlide() {
+               var slides = document.getElementsByClassName("mySlides");
+               for (var i = 0; i < slides.length; i++) {
+                   slides[i].classList.add("hide");
+               }
+
+               var currentSlideShow = document.getElementById("slideShow" + currentSlide);
+               currentSlideShow.classList.remove("hide");
+
+               currentSlide++;
+               if (currentSlide > 4) currentSlide = 1;
+
+               setTimeout(autoSlide, 10000); // 10초마다 자동으로 슬라이드 변경
+           }
+           // 이전/다음 버튼 클릭 시 슬라이드 전환
+           function moveSlide(n) {
+               currentSlide += n;
+               if (currentSlide > 4) currentSlide = 1;  
+               if (currentSlide < 1) currentSlide = 4;
+               showSlide(currentSlide);
+           }
+
+           // 특정 슬라이드로 직접 이동
+           function showSlide(n) {
+               var slides = document.getElementsByClassName("mySlides");
+               for (var i = 0; i < slides.length; i++) {
+                   slides[i].classList.add("hide");  // 모든 슬라이드를 숨김
+               }
+
+               var currentSlideShow = document.getElementById("slideShow" + n);
+               currentSlideShow.classList.remove("hide");  // 현재 슬라이드를 보이도록 설정
+           }
+
+           // 특정 이미지 클릭 시 슬라이드 이동
+           function currentDiv(n, slideId) {
+               var slideShow = document.getElementById(slideId);
+               var images = slideShow.getElementsByClassName("mySlidesImage");
+
+               // 이미지 숨기기
+               for (var i = 0; i < images.length; i++) {
+                   images[i].classList.add("hide");
+               }
+
+               // 클릭한 이미지 보여주기
+               images[n - 1].classList.remove("hide");
+           }
+           window.onload = function () {
+               autoSlide(); // 자동 슬라이드 시작
+           };
+
+           document.addEventListener("DOMContentLoaded", function() {
+               document.querySelectorAll('.carousel-control-prev').forEach((prevButton, index) => {
+                   const nextButton = document.querySelectorAll('.carousel-control-next')[index];
+                   const scrollContainer = document.querySelectorAll('.horizontal-scroll-container')[index];
+
+                   // 카드 너비와 갭
+                   const cardWidth = 340; // 카드 너비
+                   const gap = 90;        // 카드 간 간격
+                   const visibleCards = 4; // 한 번에 보여지는 카드 개수 (4개로 설정)
+
+                   // 이동할 거리 (4개 카드 만큼 이동)
+                   const scrollDistance = (cardWidth + gap) * visibleCards - gap;
+
+                   const updateButtonsVisibility = () => {
+                       const maxScrollLeft = scrollContainer.scrollWidth - scrollContainer.clientWidth; // 최대 스크롤 거리
+                       const currentScroll = scrollContainer.scrollLeft;
+
+                       // **끝에 약간의 여유를 두고** 버튼의 가시성 업데이트
+                       const scrollThreshold = 10;  // 끝과의 여유 값 (10px 정도)
+
+                       // 현재 스크롤이 맨 왼쪽일 때
+                       if (currentScroll <= 0 + scrollThreshold) {
+                           prevButton.style.visibility = "hidden"; // 이전 버튼 숨김
+                           nextButton.style.visibility = "visible"; // 다음 버튼 보이기
+                       }
+                       // 현재 스크롤이 맨 오른쪽일 때
+                       else if (currentScroll >= maxScrollLeft - scrollThreshold) {
+                           prevButton.style.visibility = "visible"; // 이전 버튼 보이기
+                           nextButton.style.visibility = "hidden";  // 다음 버튼 숨김
+                       }
+                       // 중간에 있을 때
+                       else {
+                           prevButton.style.visibility = "visible"; // 이전 버튼 보이기
+                           nextButton.style.visibility = "visible"; // 다음 버튼 보이기
+                       }
+                   };
+
+                   updateButtonsVisibility(); // 처음 버튼 상태 업데이트
+
+                   // 이전 버튼 클릭 시
+                   prevButton.addEventListener('click', (event) => {
+                       event.preventDefault();
+                       scrollContainer.scrollBy({
+                           left: -scrollDistance,  // 왼쪽으로 4개 카드 만큼 이동
+                           behavior: 'smooth'
+                       });
+                       updateButtonsVisibility();  // 버튼 상태 업데이트
+                   });
+
+                   // 다음 버튼 클릭 시
+                   nextButton.addEventListener('click', (event) => {
+                       event.preventDefault();
+                       const maxScrollLeft = scrollContainer.scrollWidth - scrollContainer.clientWidth;
+
+                       // 이동하려는 거리만큼 이동 (끝까지 가지 않도록)
+                       if (scrollContainer.scrollLeft + scrollDistance <= maxScrollLeft) {
+                           scrollContainer.scrollBy({
+                               left: scrollDistance,  // 오른쪽으로 4개 카드 만큼 이동
+                               behavior: 'smooth'
+                           });
+                       } else {
+                           // 오른쪽 끝으로 스크롤 (끝까지 갔을 때)
+                           scrollContainer.scrollTo({
+                               left: maxScrollLeft,
+                               behavior: 'smooth'
+                           });
+                       }
+                       updateButtonsVisibility();  // 버튼 상태 업데이트
+                   });
+
+                   // 스크롤 중 버튼 상태 업데이트
+                   scrollContainer.addEventListener('scroll', updateButtonsVisibility);
+               });
+           });
+
+        </script>
     </div>
+    <div th:if="${isMobile}">
+        <div th:each="company, indexStat : ${result}" class="company-items">
+            <h2 th:if="${company.key=='all'}"><a href="/list" class="text-dark">추천 컨텐츠 <span class="arrow"> &gt; </span></a>
+            </h2>
+            <h2 th:if="${company.key=='steam'}"><a href="/steam" class="text-dark">Steam <span
+                    class="arrow"> &gt; </span></a></h2>
+            <h2 th:if="${company.key=='nintendo'}"><a href="/nintendo" class="text-dark">Nintendo <span class="arrow"> &gt; </span></a>
+            </h2>
+            <h2 th:if="${company.key=='ps'}"><a href="/ps" class="text-dark">PS<span class="arrow"> &gt; </span></a>
+            </h2>
 
-    <div th:with="start=${(items.number/maxPage)*maxPage + 1}, end=(${(items.totalPages == 0) ? 1 : (start + (maxPage - 1) < items.totalPages ? start + (maxPage - 1) : items.totalPages)})" >
-        <ul class="pagination justify-content-center">
+            <!-- Carousel마다 고유한 ID 설정 -->
+            <div id="carousel_${company.key}" class="mobile-carousel">
+                <div class="mobile-carousel-inner">
+                    <th:block th:each="item : ${company.value}">
+                        <div class="mobile-carousel-item">
+                            <a th:href="'/item/' + ${item.id}" class="text-dark">
+                                <img th:src="${item.imgUrl}" class="card-img-top" th:alt="${item.itemNm}">
+                                <div class="card-body">
+                                    <h4 class="card-title">[[${item.itemNm}]]</h4>
+                                    <th:block th:if="${item.stockNumber <= 0}">
+                                        <h3 class="card-title text-danger">품절</h3>
+                                    </th:block>
+                                    <th:block th:unless="${item.stockNumber <= 0}">
+                                        <h3 class="card-title text-danger">[[${#numbers.formatInteger(item.price, 1,'COMMA')}]]원</h3>
+                                    </th:block>
+                                </div>
+                            </a>
+                        </div>
+                    </th:block>
+                </div>
 
-            <li class="page-item" th:classappend="${items.number eq 0}?'disabled':''">
-                <a th:href="@{'/' + '?searchQuery=' + ${itemSearchDto.searchQuery} + '&page=' + ${items.number-1}}" aria-label='Previous' class="page-link">
-                    <span aria-hidden='true'>Previous</span>
+                <!-- 네비게이션 버튼 -->
+                <a class="mobile-carousel-control-prev" href="#" role="button"
+                   data-carousel-id="carousel_${company.key}">
+                    <span>&lt;</span>
                 </a>
-            </li>
-
-            <li class="page-item" th:each="page: ${#numbers.sequence(start, end)}" th:classappend="${items.number eq page-1}?'active':''">
-                <a th:href="@{'/' +'?searchQuery=' + ${itemSearchDto.searchQuery} + '&page=' + ${page-1}}" th:inline="text" class="page-link">[[${page}]]</a>
-            </li>
-
-            <li class="page-item" th:classappend="${items.number+1 ge items.totalPages}?'disabled':''">
-                <a th:href="@{'/' +'?searchQuery=' + ${itemSearchDto.searchQuery} + '&page=' + ${items.number+1}}" aria-label='Next' class="page-link">
-                    <span aria-hidden='true'>Next</span>
+                <a class="mobile-carousel-control-next" href="#" role="button"
+                   data-carousel-id="carousel_${company.key}">
+                    <span>&gt;</span>
                 </a>
-            </li>
+            </div>
+        </div>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                const carousels = document.querySelectorAll(".mobile-carousel");
 
-        </ul>
-    </div>
+                carousels.forEach((carouselContainer) => {
+                    const carouselInner = carouselContainer.querySelector(".mobile-carousel-inner");
+                    const items = carouselInner.querySelectorAll(".mobile-carousel-item");
+                    const prevButton = carouselContainer.querySelector(".mobile-carousel-control-prev");
+                    const nextButton = carouselContainer.querySelector(".mobile-carousel-control-next");
 
-    <!--나중에 제거-->
-    <div>
-        <span>테스트용: </span>
-        <a th:href="@{/test/payment}">결제</a>
+                    let currentIndex = 0;
+                    const maxIndex = Math.min(items.length - 1, 7); // 최대 8개의 아이템까지만 이동
+
+                    function updateCarousel() {
+                        carouselInner.style.transform = `translateX(-${currentIndex * 100}%)`;
+                        updateButtonsVisibility();
+                    }
+
+                    function updateButtonsVisibility() {
+                        prevButton.style.display = currentIndex === 0 ? "none" : "block";
+                        nextButton.style.display = currentIndex >= maxIndex ? "none" : "block";
+                    }
+
+                    prevButton.addEventListener("click", function(event) {
+                        event.preventDefault();
+                        if (currentIndex > 0) {
+                            currentIndex--;
+                            updateCarousel();
+                        }
+                    });
+
+                    nextButton.addEventListener("click", function(event) {
+                        event.preventDefault();
+                        if (currentIndex < maxIndex) {
+                            currentIndex++;
+                            updateCarousel();
+                        }
+                    });
+
+                    updateButtonsVisibility();
+                });
+            });
+
+        </script>
     </div>
-    <!--여기까지-->
 
 
 </div>

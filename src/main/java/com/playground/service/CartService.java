@@ -18,4 +18,10 @@ public interface CartService {
     void deleteCartItem(Long cartItemId);
 
     Long orderCartItem(List<CartOrderDto> cartOrderDtoList, String email);
+
+    //1024추가
+    int getCartCount(String email);
+
+    // 1111추가
+    List<String> checkBeforeOrder(List<CartOrderDto> cartOrderDtoList);
 }

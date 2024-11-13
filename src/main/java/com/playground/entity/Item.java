@@ -30,7 +30,7 @@ public class Item extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;       //상품 코드
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = 300)
     private String itemNm; //상품명
 
     @Column(name="price", nullable = false)
@@ -40,7 +40,7 @@ public class Item extends BaseEntity {
     private int stockNumber; //재고수량
 
     @Lob
-    @Column(nullable = false)
+    @Column(length = 10000)
     private String itemDetail; //상품 상세 설명
 
     @Enumerated(EnumType.STRING)

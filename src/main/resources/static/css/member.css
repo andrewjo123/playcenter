@@ -2,7 +2,470 @@
 .memberForm.fieldError {
     color: #bd2130;
 }
+.memberForm .memberFormDiv{
+    display:flex;
+    justify-content: center;
+}
+.memberForm #submitForm, .memberForm #registBtn{
+    width:50%;
+    min-width:600px;
+}
+.memberForm #getAddressNum{
+    display:block;
+}
+.memberForm .btnDiv{
+    position:relative;
+}
+.memberForm .addrbtn{
+    width:150px;
+    position:absolute;
+    right:0.1vw;
+    top:1vh;
+}
+.memberForm .setEmailDiv{
+    display:flex;
+}
+.memberForm .setEmailDiv #inputEmail{
+    min-width:200px;
+}
+.memberForm #getAddressNum{
+    width: 200px;
+}
+
+/* memberModify ------------------------------------------------------*/
+.memberModify .memberModifyDiv{
+    display:flex;
+    justify-content: center;
+}
+.memberModify #submitForm{
+    width:50%;
+    min-width:600px;
+}
+.memberModify #getAddressNum{
+    display:block;
+}
+.memberModify .btnDiv{
+    position:relative;
+}
+.memberModify .addrbtn{
+    width:150px;
+    position:absolute;
+    right:0.1vw;
+    top:1vh;
+}
+.memberModify #getAddressNum{
+    width: 200px;
+}
+.memberModify .resignBtnDiv{
+    position:relative;
+}
+.memberModify .resignBtnDiv #goResign{
+    position:absolute;
+    right:0;
+}
+
+/* 소셜 회원가입 ------------------------------------------------- */
+.socialRegist .memberSocialDiv{
+    display:flex;
+    justify-content: center;
+}
+.socialRegist #submitForm{
+    width:50%;
+    min-width:600px;
+}
+.socialRegist #getAddressNum{
+    display:block;
+}
+.socialRegist .btnDiv{
+    position:relative;
+}
+.socialRegist .addrbtn{
+    width:150px;
+    position:absolute;
+    right:0.1vw;
+    top:1vh;
+}
+.socialRegist #getAddressNum{
+    width: 200px;
+}
+
 /* memberLoginForm--------------------------------------------------------*/
 .memberLoginForm-.error {
     color: #bd2130;
+}
+.memberLoginForm .loginInput{
+    display:flex; justify-content:center;
+}
+.memberLoginForm .login_btns{
+    display:flex; justify-content:center;
+}
+.memberLoginForm .social_btns{
+    display:flex; flex-direction: column;
+    margin-top:30px;
+}
+.memberLoginForm .social_btns img{
+    width:200px; height:50px;
+    border:1px solid #ccc;
+    border-radius:7px;
+}
+.memberLoginForm .loginBtn{
+    width:95%;
+}
+.memberLoginForm .another_btns{
+    display:flex; justify-content:center;
+}
+.memberLoginForm .loginForm{
+    max-width:500px;
+    min-width:400px;
+}
+
+/* findEmail--------------------------------------------------------*/
+.findEmail .another_btns{
+    display:flex; justify-content:center;
+}
+.findEmail .findIdDiv{
+    display:flex; align-items: center; flex-direction: column; width:100%;
+}
+.findEmail .findIdDiv > *{
+    width:50%;
+}
+.findEmail .showEmail{
+    display:none;
+}
+
+/* findPw--------------------------------------------------------*/
+.findPw .another_btns{
+    display:flex; justify-content:center;
+}
+.findPw .findPwDiv, .findPw #submitForm{
+    display:flex; align-items: center; flex-direction: column; width:100%;
+}
+.findPw .findPwDiv > *, .findPw #submitForm div, .findPw .info{
+    width:50%;
+    min-width:300px;
+}
+
+/* 마이페이지 ------------------------------*/
+.mypage .imgCandidate{
+    width:80px; height:80px;
+    border: 2px solid #aaa;
+}
+.mypage .pImgAvailable{
+    cursor:pointer;
+}
+.mypage .pImgAvailable:hover{
+    border: 2px solid #7FDA56;
+}
+.mypage .pImgNot{
+    opacity: 0.5;
+    filter: grayscale(100%);
+}
+.mypage #getPImg{
+    width:100px; height:100px;
+    cursor:pointer;
+}
+.mypage #getPImg2{
+    cursor:pointer;
+    color:gray;
+}
+.mypage #getPImg2:hover{
+    text-decoration: underline;
+}
+.mypage .member-name {
+    font-weight: bold;
+    font-size: 1.5em;
+}
+.mypage .notice{
+    max-height:40vh;
+    overflow:auto;
+}
+.mypage .profile-img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background-color: #f0f0f0; /* Placeholder color */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.mypage .userModifyDiv{
+    border:1px solid #7FDA56;
+    display:inline-block;
+    border-radius:7px;
+}
+.mypage .userModifyDiv a{
+    color:green;
+}
+.mypage .userModifyDiv:hover{
+    opacity:0.5;
+    background-color:#eee;
+}
+.mypage .linkIcon{
+    position:relative;
+}
+.mypage .dibsInfo, .mypage .cartInfo, .mypage .orderInfo{
+    font-size:1.5rem;
+    position:absolute;
+    display:none;
+    z-index:10;
+    white-space: nowrap;
+}
+.mypage .point-management {
+    background: #f9f9f9;
+    border-radius: 5px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+.mypage .card {
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    padding: 10px;
+    background: #fff;
+    transition: box-shadow 0.3s;
+}
+.mypage .card:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+.mypage .card-header {
+    background-color: #f7f7f7;
+    border-bottom: 1px solid #e0e0e0;
+    text-align:center;
+}
+.mypage .btn-link {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+}
+.mypage .btn-link:hover {
+    text-decoration: underline;
+}
+.mypage .text-warning {
+    color: #856404;
+}
+.mypage .text-success {
+    color: #155724;
+}
+.mypage .linkList{
+    font-size: clamp(80px, 5vw, 200px);
+    text-align: center;
+    display:flex;
+    flex-direction:row;
+    justify-content:center;
+}
+.mypage .linkList div{
+    width:30%;
+}
+
+.mypage .reviews{
+    position:relative;
+}
+.mypage .deleteReview{
+    position:absolute; top:1vh; right:2vw; font-size:1.3rem;
+    outline:none;
+    border:none;
+    background-color:white;
+}
+.mypage .stars{
+    color:#FFD700;
+}
+.mypage .itemLink{
+    color:#7FDA56;
+    font-weight:600;
+    font-size:1.2rem;
+}
+
+/* 비밀번호 변경 -------------------------------*/
+.resetPw .resetPwDiv{
+    width:100%;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+}
+.resetPwDiv > *{
+    max-width:780px;
+    min-width:400px;
+}
+
+/* memberMng 회원관리창*/
+.memberMng .select {
+margin-right: 10px;
+width: auto;
+}
+.memberMng .table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+    background-color: #f9f9f9; /* 테이블 배경을 밝은 회색으로 */
+    color: #333;
+}
+
+.memberMng .table th,
+.memberMng .table td {
+    padding: 12px 15px; /* 셀 내부 여백 */
+    text-align: center;
+    border: 1px solid #ddd; /* 셀 테두리 색상 */
+}
+
+.memberMng .table th {
+    background-color: #7FDA56; /* 트레이드 마크 색상으로 헤더 배경 */
+    color: #ffffff; /* 헤더 글씨를 흰색으로 */
+    font-weight: bold;
+}
+
+.memberMng .table tbody tr:nth-child(even) {
+    background-color: #ffffff; /* 짝수 행에 흰색 배경 */
+}
+
+.memberMng .btn-primary {
+    padding: 6px 12px;
+    color: #fff;
+    background-color: #7FDA56;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+.memberMng .btn-primary:hover {
+    background-color: #6bbf49;
+    transform: scale(1.05);
+}
+.memberMng .pagination {
+    display: flex;
+    justify-content: center;
+    padding: 10px 0;
+    list-style: none;
+}
+.memberMng .pagination .page-item {
+    margin: 0 5px;
+}
+.memberMng .pagination .page-link {
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    color: #7FDA56; /* 페이지 링크 트레이드 마크 색상 */
+    background-color: #f9f9f9;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.memberMng .pagination .page-link:hover {
+    background-color: #7FDA56; /* 호버 시 배경색 */
+    color: #ffffff; /* 호버 시 글씨 색상 */
+}
+.memberMng .pagination .active .page-link {
+    background-color: #7FDA56; /* 현재 페이지 색상 강조 */
+    color: #fff;
+    border: 1px solid #7FDA56;
+}
+/*검색 부분 옵션 간격*/
+.memberMng .form-inline {
+    margin: 20px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+/* 활성화 상태 버튼 스타일 */
+.memberMng .active-btn {
+    padding: 6px 12px;
+    border: none;
+    background-color: #7FDA56; /* 트레이드 마크 색상 */
+    color: #ffffff;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.memberMng .active-btn:hover {
+    background-color: #6bbf49; /* 활성화 버튼 호버 시 어두운 녹색 */
+    transform: scale(1.05);
+}
+
+/* 비활성화 상태 버튼 스타일 */
+.memberMng .inactive-btn {
+    padding: 6px 12px;
+    border: none;
+    background-color: #cccccc; /* 회색 배경 */
+    color: #666666;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    opacity: 0.7;
+}
+
+/*모바일 반응형*/
+@media (max-width: 768px) {
+    /* 로그인 --------------------------------- */
+    .memberLoginForm .loginInput{
+        display:block;
+    }
+    .memberLoginForm .social_btns{
+        flex-direction:row; justify-content:center;
+        align-items:center;
+    }
+    .memberLoginForm .social_btns a{
+        width:30%;
+        display:flex;
+        flex-direction:row; justify-content:center;
+    }
+    .memberLoginForm .social_btns a img{
+        width:100%;
+        max-width:150px;
+        min-width:120px;
+        height:40px;
+    }
+    .memberLoginForm .loginForm{
+        max-width:768px;
+        min-width:400px;
+    }
+    /* 회원가입 ------------------------------------ */
+    .memberForm #submitForm{
+        width:90%;
+        min-width:300px;
+    }
+    /* 소셜 회원가입 ------------------------------- */
+    .socialRegist #submitForm{
+        width:90%;
+        min-width:300px;
+    }
+    /* 회원정보수정 --------------------------------- */
+    .memberModify #submitForm{
+        width:90%;
+        min-width:300px;
+    }
+    .memberModify .resignBtnDiv #goResign{
+        left:0;
+    }
+
+    /* 마이페이지 --------------------------------- */
+    .mypage .imgCandidate{
+        width:100px; height:100px;
+    }
+    .mypage .userInfo{
+        margin-top:3.5vh;
+    }
+
+    /* 이메일 찾기 --------------------------------- */
+    .findEmail .findIdDiv > *{
+        width:90%;
+    }
+    /* 비밀번호 찾기 ------------------------------- */
+    .findPw .findPwDiv > *, .findPw #submitForm div{
+        width:90%;
+    }
+    .findPw .info{
+        width:90%;
+    }
+    /* 비밀번호 변경 -------------------------------- */
+    .resetPwDiv > *{
+        width:90%;
+    }
+    /*memberMng 회원관리 페이지 시작*/
+    .memberMng .pc-table {
+        display: none !important; /* 모바일 화면에서 테이블 숨기기 */
+    }
+    /*memberMng 끝*/
 }

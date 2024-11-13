@@ -1,0 +1,855 @@
+/* 기존 css------------------------------------------------- */
+
+.itemDtl .mgb-15 {
+    margin-bottom: 15px;
+}
+
+.itemDtl .mgt-30 {
+    margin-top: 30px;
+}
+
+.itemDtl .mgt-50 {
+    margin-top: 50px;
+}
+
+.itemDtl .repImgDiv {
+margin-right: 15px;
+height: auto;
+width: 50%;
+margin: auto 2%;
+}
+
+.itemDtl .repImg {
+width: 100%;
+height: 500px;
+box-shadow: -5px 5px 20px 0px  rgba(0, 0, 0, 0.616);
+}
+
+
+.itemDtl .wd50 {
+    height: auto;
+    width: 50%;
+}
+
+.itemDtl .itemdtl {
+    margin-left: 20%;
+    margin-right: 20%;
+}
+
+.itemDtl .dtlinfo {
+    padding-left: 10px;
+    font-weight: bolder;
+    font-size: 18px;
+}
+
+.itemDtl .lead {
+    padding: 10px;
+}
+
+.itemDtl .no-cursor {
+    cursor: default;
+}
+
+.itemDtl .carousel-indicators {
+    position: relative;
+    bottom: 0px; 
+}
+
+.itemDtl .carousel-indicators li {
+    background-color: gray;
+}
+
+.fa-chevron-left,
+.fa-chevron-right {
+    color: gray;
+    font-size: 50px;
+    margin: 10px 0px;
+}
+
+
+.itemDtl .d-block {
+    margin: auto;
+}
+#carouselControls{
+    margin: 25px;
+}
+
+
+
+.itemDtl .carousel-inner {
+            height: 500px; 
+            max-height: 100%;
+            overflow: hidden;
+            position: relative;
+            text-align: center;
+            margin: auto;
+}
+        
+.itemDtl .carousel-item {
+    height: 100%;
+}
+
+.itemDtl .carousel-item img {
+    width: auto;
+    height: 100%;
+    object-fit: scale-down;
+    margin: auto;
+}
+
+
+.itemDtl .responsive-img {
+    width: 800px;
+    /* 기본 화면에서의 너비 */
+    max-width: 100%;
+    /* 기본 너비보다 커지지 않도록 제한 */
+    height: auto;
+    /* 비율 유지 */
+
+}
+
+.itemDtl .instructions {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+}
+
+.itemDtl .instructions h2 {
+    color: #333;
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+.itemDtl .instructions ol {
+    list-style-type: decimal;
+    padding-left: 20px;
+}
+
+.itemDtl .instructions li {
+    margin-bottom: 10px;
+}
+
+.itemDtl .instructions strong {
+    color: #0073e6;
+    /* 강조할 부분에 색상 추가 */
+}
+
+/* 기존 css------------------------------------------------- */
+/* review List 수정 - 신영 *************************************/
+.itemDtl .custom-dropdown-menu {
+    position: absolute;
+    top: 100px;
+    /* 상단에서 100px의 위치 */
+    right: 50px;
+    /* 오른쪽에서 50px의 위치 */
+}
+
+/* 리뷰 정렬버튼 */
+.itemDtl #currentSortMethod {
+    font-size: 17px;
+    height: 20px;
+    margin-bottom: 10px;
+    bottom: 10px;
+}
+.fa-lines-leaning {
+    font-size: 20px; /* 아이콘 크기 조정 */
+}
+
+/* 리스트 테두리제거 - 신영 */
+.itemDtl .review-item {
+    border: none;
+    /* 테두리 제거 */
+    border-bottom: 0.2px solid #a1a3a5;
+    /* 아래쪽 테두리만 추가 */
+}
+
+/* 페이지네이션 -신영*/
+.itemDtl .pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    /* 버튼 사이 간격 */
+    margin-top: 20px;
+}
+
+.itemDtl .pagination button,
+.pagination .page-number {
+    background-color: #f1f1f1;
+    /* 버튼 배경색 */
+    border: 1px solid #ddd;
+    /* 버튼 테두리 */
+    color: #333;
+    /* 텍스트 색상 */
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    min-width: 32px;
+    /* 버튼 크기 균일하게 설정 */
+    text-align: center;
+}
+
+.itemDtl .pagination button:hover,
+.pagination .page-number:hover {
+    background-color: #e0e0e0;
+    /* 호버 시 배경색 */
+}
+
+.itemDtl .pagination .page-number.active {
+    background-color: #d3d3d3;
+    /* 현재 페이지 색상 */
+    font-weight: bold;
+    color: #000;
+    /* 현재 페이지 텍스트 색상 */
+    pointer-events: none;
+    /* 클릭 불가 */
+}
+
+/* 별 색 바꾸기 */
+/* 채워진 별 */
+.itemDtl .starrr .fa-star {
+    color: #FFD700;
+    /* 채워진 별 색상 (노란색) */
+}
+
+/* 빈 별 */
+.itemDtl .starrr .fa-star-o {
+    color: #d3d3d3;
+    /* 빈 별 색상 (회색) */
+}
+
+/* 추천아이콘 */
+.itemDtl .btn-outline-primary {
+    background-color: transparent;
+    border-color: transparent;
+    color: #808080;
+    /* 글자 색상을 #808080으로 설정 */
+    font-size: 18px;
+}
+
+.itemDtl .btn-outline-primary:hover,
+.btn-outline-primary:focus,
+.btn-outline-primary:active {
+    background-color: #808080;
+    /* 마우스 오버, 포커스, 활성 상태에서 배경 색상을 #808080으로 설정 */
+    color: white;
+    /* 마우스 오버, 포커스, 활성 상태에서 글자 색상을 흰색으로 설정 */
+    border-color: #808080;
+    /* 마우스 오버, 포커스, 활성 상태에서 테두리 색상을 #808080으로 설정 */
+}
+
+/* 추천된 버튼 스타일 */
+.itemDtl .btn-primary {
+    background-color: transparent;
+    border-color: transparent;
+    color: #808080;
+    /* 글자 색상을 흰색으로 설정 */
+    font-size: 18px;
+
+}
+
+.itemDtl .btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active {
+    background-color: #666666;
+    /* 마우스 오버, 포커스, 활성 상태에서 조금 더 어두운 회색으로 변경 */
+    color: white;
+    border-color: #666666;
+    /* 마우스 오버, 포커스, 활성 상태에서 테두리 색상을 조금 더 어두운 회색으로 변경 */
+}
+
+/* 등록버튼 -신영 */
+/* 게임 평가하기 버튼의 기본 스타일 */
+.itemDtl .addReviewBtn {
+    background-color: #5bbf4e;
+    /* 배경색을 하얀색으로 설정 */
+    color: black;
+    /* 글자색을 검정색으로 설정 */
+    border: 1px solid black;
+    /* 테두리를 검정색으로 설정 */
+    
+}
+
+/* 게임 평가하기 버튼의 hover 상태 스타일 */
+.itemDtl .addReviewBtn:hover {
+    background-color: #3E7D3A;
+    /* 마우스 오버 시 배경색을 #808080(회색)으로 변경 */
+    color: white;
+    /* 마우스 오버 시 글자색을 흰색으로 변경 */
+    border-color: #808080;
+    /* 마우스 오버 시 테두리 색상을 #808080로 변경 */
+}
+
+/* 리뷰별점-신영 */
+.itemDtl .rating-value {
+    text-align: center;
+    /* 내용을 중앙으로 정렬 */
+    font-family: Arial, sans-serif;
+    /* 폰트 스타일 설정 */
+}
+
+.itemDtl .rating-count {
+    text-align: center;
+    /* 내용을 중앙으로 정렬 */
+    font-family: Arial, sans-serif;
+    /* 폰트 스타일 설정 */
+}
+
+.itemDtl .rating-value>span {
+    font-size: 40px;
+    /* 평점 폰트 크기 설정 */
+    font-weight: bold;
+    /* 폰트 굵기 */
+    display: block;
+    /* 요소를 블록 레벨로 표시 */
+    margin-bottom: 5px;
+    /* 아래쪽 여백 설정 */
+    font-family: Arial, sans-serif;
+    /* 폰트 스타일 설정 */
+}
+
+.itemDtl i.fa-star {
+    color: #FFD700;
+    /* 별 색상 설정 */
+    margin-right: 3px;
+    /* 별 오른쪽 여백 설정 */
+}
+
+.itemDtl i.far.fa-star {
+    /* 빈 별 스타일 */
+    color: #ccc;
+    /* 빈 별 색상 설정 */
+}
+
+
+/* 리뷰 부분 끝 *******************************************************/
+/* 상세보기 시작**************************************************** */
+.itemDtl .totalPrice {
+    font-size: 20px;
+    font-family: Arial, sans-serif;
+    text-align: right;
+    margin-top: 10px;
+
+}
+
+.itemDtl #totalPrice {
+    text-align: right;
+    /* 오른쪽으로 텍스트 정렬 */
+    font-size: 20px;
+    /* 글자 크기 */
+    font-family: Arial, sans-serif;
+}
+
+.itemDtl .firstPrice{
+    margin-bottom: 10px;
+}
+/* 선들*********************** */
+.itemDtl .my-4-4 {
+    border-top: 2px solid rgb(158, 158, 158);
+    /* 선의 두께를 3px, 색상을 빨간색으로 설정 */
+    margin-top: 1rem;
+    /* 위 마진 */
+    margin-bottom: 1.5rem;
+    /* 아래 마진 */
+}
+
+.itemDtl .my-4-2{
+    margin-top: 7rem;
+    /* 위 마진 */
+    margin-bottom: 3rem;
+    /* 아래 마진 */
+}
+
+.itemDtl .input-group.w-50 {
+    width: 100%;
+    /* 너비를 50%로 설정 */
+    margin-left: auto;
+    /*오른 정렬*/
+    font-family: Arial, sans-serif;
+    /* 폰트 스타일 설정 */
+    font-weight: bold;
+    /* 폰트 굵기 */
+}
+
+/* 안내바 css */
+.itemDtl {
+    scroll-behavior: smooth;
+    /* 스무스 스크롤 */
+}
+
+.itemDtl .sticky-nav {
+    border-top: 1px solid #ccc;
+    margin-top: 50px;
+    display: flex;
+    /* Flexbox 레이아웃 적용 */
+    justify-content: space-around;
+    /* 요소들을 공간을 균등하게 나눠서 배치 */
+    /* Safari 브라우저 지원 */
+    position: sticky;
+    top: 0;
+    /* 상단 고정 */
+    background-color: #fff;
+    border-bottom: 1px solid #ccc;
+    z-index: 1000;
+    /* 다른 요소 위에 위치 */
+    padding: 10px 0;
+}
+
+.itemDtl .info-item a {
+    color: black;
+    text-decoration: none;
+    font-size: 16px;
+    padding: 8px 100px;
+    display: block;
+}
+
+.itemDtl .info-item a:hover {
+    background-color: #e9ecef;
+    border-radius: 5px;
+}
+.itemDtl .priceform{
+    display: flex;
+    justify-content: flex-start; /* 왼쪽 정렬 */
+}
+/* 최상단 안내 nav */
+.itemDtl .breadcrumb {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    background: transparent;
+}
+
+.itemDtl .breadcrumb-link {
+    color: red;  /* 링크는 빨간색 */
+    text-decoration: none;
+    font-weight: bold;
+}
+.itemDtl .breadcrumb-link:hover {
+    color: #3E7D3A; /* 마우스 오버 시 #7FDA56 색상으로 변경 */
+}
+
+.itemDtl .breadcrumb-separator {
+    margin: 0 5px;
+    color: gray;
+}
+
+.itemDtl .breadcrumb-current {
+    color: black; /* 현재 위치는 회색 */
+}
+/* 구매 가이드 문구 */
+.itemDtl .guide{
+    display: block; /* span을 블록 요소로 만들어 줍니다. */
+    margin-top: 50px; /* 위쪽으로 20px의 여백을 추가합니다. */
+    font-weight: bold;
+    font-size: 25px;
+    color: red;
+}
+/* 리뷰 모달 시작 *****************************************/
+/* 리뷰제목 중앙정렬 하고 싶은데 안된 */
+.itemDtl .review-current{
+    text-align: center; /* 가로 중앙 정렬 */
+}
+/* 리뷰모달창 별모양 */
+.itemDtl .starrr.reviewmodalstarrr a {
+    font-size: 50px; /* 별 크기를 원하는 크기로 키웁니다 */            
+}
+.itemDtl .starrr.reviewmodalstarrr {
+    display: flex;
+    justify-content: center; /* 가로 중앙 정렬 */
+    align-items: flex-start; /* 세로 정렬을 위쪽으로 고정 */
+}
+.itemDtl #divGrade {
+    text-align: center; /* 가로 중앙 정렬 */
+}
+.itemDtl #label-container {
+    text-align: center; /* 텍스트를 중앙 정렬 */
+    font-weight: bold;
+}
+.itemDtl .reviewment{
+    font-weight: bold;
+}
+/*리뷰모달창 버튼 */
+.itemDtl .modal-footer button {
+    width: 50%; /* 각 버튼이 50%의 폭을 가짐 */
+    flex: 1 1 0; /* Flexbox를 사용하여 각 버튼이 유연하게 늘어나거나 줄어들 수 있게 함 */
+}
+.itemDtl .closeModal:hover {
+    background-color: #a9a9aa; /* 진회색으로 변경 */
+    border-color: #a9a9aa; /* 테두리도 진회색으로 변경 */
+    color: white;
+}
+.itemDtl .closeModal {
+    background-color: white; /* 진회색으로 변경 */
+    border-color: #a9a9aa; /* 테두리도 진회색으로 변경 */
+    color : #a9a9aa;
+}
+.itemDtl .saveModal:hover {
+    background-color: #3E7D3A !important; /* 진회색으로 변경 */
+    border-color: #3E7D3A !important; /* 테두리도 진회색으로 변경 */
+    color : white !important;
+}
+.itemDtl .saveModal{
+    background-color: #a9a9aa !important; /* 연한 회색, 필요에 따라 색상 코드 변경 가능 */
+    border-color: #f8f9fa !important; /* 테두리 색상도 맞춤 */
+}
+.itemDtl .modalRemove{
+    display: none;
+}
+/* 장바구니버튼들 */
+.custombar{
+    width: 50%;
+    left: 51%;
+    position: relative;
+}
+.text-right{
+    display: flex;
+    justify-content: space-between; /* 버튼들 사이의 공간을 균등하게 배분 */
+    align-items: center; /* 세로 중심으로 정렬 */
+    background-color: transparent; /* 배경색 설정 */
+    padding: 5px 10px; /* 패딩으로 버튼 사이의 간격 조절 */
+}
+/* 장바구니 버튼 */
+.itemDtl .btn-custom{
+    background-color: transparent; /* 장바구니 버튼 색상 */
+    color: black; /* 텍스트 색상 */
+    font-size: 16px; /* 폰트 크기 */
+    border: 1px solid black; /* 테두리 제거 */
+    border-radius: 10px; /* 양쪽 끝을 둥글게 처리 */
+    /* padding: 10px 1px; 상하, 좌우 패딩 */
+    flex-grow: 1; /* 가용 공간을 모두 차지하도록 설정 */
+    margin-right: 10px; /* 우측 버튼과의 간격 */
+    height: 50px; /* 버튼 높이 설정 */
+    font-weight: bold;
+}
+
+.itemDtl .btn-order {
+    background-color: #5bbf4e; /* 주문하기 버튼 색상 */
+    color: black; /* 텍스트 색상 */
+    font-size: 16px; /* 폰트 크기 */
+    border: 1px solid black; /* 테두리 제거 */
+    border-radius: 10px; /* 양쪽 끝을 둥글게 처리 */
+    /* padding: 10px 1px; 상하, 좌우 패딩 */
+    flex-grow: 1; /* 가용 공간을 모두 차지하도록 설정 */
+    margin-right: 10px; /* 우측 버튼과의 간격 */
+    height: 50px; /* 버튼 높이 설정 */
+    font-weight: bold;
+}
+
+.itemDtl .btn-custom:hover,
+.btn-order:hover {
+    background-color: #3E7D3A;
+    /* 마우스 오버 시 배경 색상 */
+    color: white;
+    /* 마우스 오버 시 글자 색상 */
+    font-weight: bold;
+    
+}
+
+/* dibs 버튼 */
+.itemDtl .wish-button {
+    display: flex;
+    justify-content: flex-end; /* 자식 요소를 오른쪽으로 정렬 */
+    background-color: transparent; /* 검은색 배경 */
+    color: rgb(88, 88, 88); /* 흰색 아이콘 */
+    border: 1px solid black; /* 원형 검정색 테두리 */
+    border-radius: 10px; /* 원형 버튼 */
+    width: 56px; /* 버튼 너비 */
+    height: 56px; /* 버튼 높이 */
+    display: flex;
+    align-items: center; /* 수직 정렬 */
+    justify-content: center; /* 수평 정렬 */
+    font-size: 24px; /* 아이콘 크기 */
+    transition: background-color 0.3s, color 0.3s; /* 부드러운 색상 변화 */
+
+}
+
+.itemDtl .wish-button:hover {
+    background-color: #DC3545; 
+    color: white;
+    border: 2px solid #DC3545; 
+    cursor: pointer; /* 호버 시 커서 변경 */
+}
+
+.itemDtl .wish-button.active::before,
+.itemDtl .wish-button.active::after,
+.itemDtl .wish-button.active{
+    background-color: white; 
+    color: white;
+    border: 1px solid black; 
+}
+
+/* 품절버튼 */
+.itemDtl .btn-soldout {
+    background-color: transparent; /* 장바구니 버튼 색상 */
+    color: black; /* 텍스트 색상 */
+    font-size: 30px; /* 폰트 크기 */
+    border: black; /* 테두리 제거 */
+    border-radius: 10px; /* 양쪽 끝을 둥글게 처리 */
+    /* padding: 10px 1px; 상하, 좌우 패딩 */
+    flex-grow: 1; /* 가용 공간을 모두 차지하도록 설정 */
+    margin-right: 10px; /* 우측 버튼과의 간격 */
+    height: 50px; /* 버튼 높이 설정 */
+    font-weight: bold;
+}
+.itemDtl .text-center{
+    margin: 0px;
+    padding: 0px;
+    
+}
+.rCnt .mr-2, .mr-3{
+    font-size: 14px;
+}
+/* 모바일 환경을 위한 데스크탑 */
+.d-flex {
+    display: flex;
+    flex-direction: row; /* 가로 정렬을 기본으로 설정 */
+    align-items: flex-start; /* 아이템을 위쪽 정렬 */
+    gap: 0; /* 아이템 간 여백 제거 */
+    width: 100%; /* 전체 화면 너비 차지 */
+    margin: 0; /* 바깥쪽 여백 제거 */
+}
+/* 상품 제목 */
+.itemDtl .h2{
+    font-weight: bold;
+    /* font-size: 40px; */
+    margin-top: 10px;
+}
+
+/*  상품 상태 */
+.itemDtl .sell, .itemDtl .soldout{
+    font-size: 15px;
+    padding: 5px 10px;
+    border-radius: 10px;
+    font-weight: bold;
+
+}
+.itemDtl .sell{
+    background-color: #5bbf4e;
+    color: white;
+}
+.itemDtl .soldout{
+    background-color: rgba(226, 3, 3, 0.747);
+    color: white;
+}
+
+/* Mobile styling */
+@media (max-width: 768px) {
+.itemDtl .d-flex {
+    flex-direction: column; /* 세로로 정렬하여 사진이 맨 위로 오도록 설정 */
+    align-items: center; /*콘텐츠를 가운데 정렬*/
+    width: 100%; /* 뷰포트 너비를 100%로 설정 */
+    margin: 0; /* 바깥쪽 여백 제거 */
+}
+
+.itemDtl .repImgDiv {
+    width: 100% !important; /* 모바일에서 전체 너비 */
+    margin-right: 0 !important; /* 중앙 정렬을 위해 오른쪽 여백 제거 */
+    margin-bottom: 15px !important; /* 이미지 아래에 간격 추가 */
+    padding-left: 5px;
+    padding-right: 10px;
+}
+
+.itemDtl .repImgDiv img {
+    width: 100%; /* 이미지가 컨테이너의 전체 너비를 차지하도록 설정 */
+    height: auto; /* 이미지 비율을 유지하면서 높이를 자동 조절 */
+}
+
+.itemDtl .wd50 {
+    width: 100% !important; /* 이미지 아래에서 전체 너비 차지 */
+    text-align: center !important; /* 콘텐츠를 중앙 정렬 */
+    margin: 10px auto !important; /*수평 중앙 정렬*/
+    padding: 5px;
+}
+
+.itemDtl .soldout, .sell {
+    display: block; /* 배지를 블록 요소로 변환하여 아래로 배치 */
+    margin: 10px 0; /* 배지 위아래로 여백 추가 */
+}
+
+.itemDtl .h2 {
+    font-size: 1.5rem; /* 모바일에서 제목 글자 크기를 적당히 조정 */
+    margin-top: 10px; /* 제목 위에 약간의 여백 추가 */
+}
+
+.itemDtl .mgb-15 {
+    margin-bottom: 15px; /* 필요한 곳에 하단 여백 추가 */
+}
+
+.itemDtl .my-4 {
+    margin: 20px 0; /* 구분선 위아래 여백을 조절 */
+}
+/* 안내문 */
+.itemDtl .instructions {
+    width: 100%; /* 화면 너비에 맞게 안내문 가득 채우기 */
+    padding: 10px 15px; /* 모바일에서 적당한 여백 */
+    font-size: 0.9rem; /* 폰트 크기를 약간 작게 조정 */
+    text-align: left; /* 모바일에서도 왼쪽 정렬 */
+}
+
+.itemDtl .instructions h2 {
+    font-size: 1.2rem; /* 제목 크기를 줄여 화면에 맞추기 */
+    margin-bottom: 10px; /* 제목과 본문 사이의 여백 조절 */
+}
+
+.itemDtl .instructions ol {
+    padding-left: 20px; /* 리스트의 좌측 여백 추가 */
+}
+
+.itemDtl .instructions ol li {
+    margin-bottom: 8px; /* 리스트 아이템 간격 추가 */
+    line-height: 1.4; /* 줄 간격 조절로 가독성 향상 */
+}
+
+.itemDtl .guide {
+    display: block; /* 전체 너비를 차지하게 하고 */
+    margin-top: 15px; /* 안내사항과 상단 여백 추가 */
+    font-size: 0.9rem; /* 안내사항 폰트 크기 조절 */
+    text-align: center; /* 텍스트 가운데 정렬 */
+    white-space: nowrap; /* 줄바꿈 방지 */
+    font-size: 0.5rem; /* 필요시 글자 크기 조정 */
+}
+
+.itemDtl hr.my-4-4 {
+    margin: 15px 0; /* 구분선의 상하 여백 줄이기 */
+}
+
+/* 주문하기 버튼부터 네비바까지 */
+.itemDtl .custombar {
+    width: 100%; /* 모바일 화면에서 가로로 꽉 차게 설정 */
+    left: 0; /* 화면 왼쪽에 맞추기 */
+    box-sizing: border-box; /* padding이 width에 포함되도록 설정 */
+}
+
+.itemDtl .text-right {
+    display: flex;
+    flex-direction: column; /* 버튼을 세로로 쌓기 */
+    gap: 10px; /* 버튼 간격 */
+    width: 100%; /* 부모 요소의 가로 크기에 맞춤 */
+}
+
+.itemDtl .btn-order,
+.btn-custom {
+    width: 100%; /* 버튼이 가로로 꽉 차게 설정 */
+}
+/* 찜 */
+.itemDtl .wish-button {
+    width: 100% !important; /* 위시 버튼도 가로로 꽉 차게 설정 */
+    height: 40px; /* 버튼 높이 조정 */
+    margin-right: 10px;
+}
+.itemDtl .wish-button:hover {
+    background-color: transparent !important; /* 원래 배경색으로 설정 */
+    color: rgb(88, 88, 88); /* 원래 텍스트 색상으로 설정 */
+    border: 1px solid black; /* 원래 테두리 색상으로 설정 */
+    cursor: default; /* 모바일에서는 기본 커서 사용 */
+}
+
+.itemDtl .info-item a {
+    color: black;
+    text-decoration: none;
+    font-size: 14px; /* 모바일에 맞춰 폰트 크기 조정 */
+    padding: 8px 10px; /* 좌우 여백을 10px로 줄여서 화면에 맞춤 */
+    display: block;
+    text-align: center; /* 텍스트 가운데 정렬 */
+}
+/* 상단 nav바 */
+.itemDtl .sticky-nav{
+    top: 30px !important;
+}
+
+.itemDtl .info-item a:hover {
+    background-color: #e9ecef;
+    border-radius: 5px;
+}
+/* 리뷰 시작 */
+/* 캐러셀 */
+#carouselControls {
+    display: none !important; /* 모바일 화면에서 캐러셀 숨기기 */
+}
+.itemdtl .responsive-img {
+    width: 100%; /* 부모 요소 너비에 맞게 조절 */
+    max-width: 100%; /* 최대 너비 제한 */
+    height: auto; /* 비율 유지 */
+    margin-bottom: 15px; /* 기존 여백 유지 */
+}
+
+/* 리뷰 목록 스타일 */
+.itemdtl .reviewList .card-body {
+    padding: 15px;
+    font-size: 0.9rem;
+}
+.itemdtl .reviewList .btn {
+    font-size: 0.8rem;
+}
+
+/* 페이지 네비게이션 */
+.itemdtl .pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+.itemdtl .pagination button {
+    font-size: 0.9rem;
+    padding: 8px 15px;
+}
+
+/* 리뷰 모달 */
+.itemdtl .reviewModal .modal-dialog, .itemdtl .imageModal .modal-dialog {
+    max-width: 90%;
+    margin: 0 auto;
+}
+.itemdtl .reviewModal .modal-content, .itemdtl .imageModal .modal-content {
+    padding: 10px;
+}
+.itemdtl .reviewModal .modal-body .form-group, .itemdtl .imageModal .modal-body {
+    font-size: 0.9rem;
+}
+/* 리뷰 정렬 */
+.itemDtl .review-item {
+    text-align: left;
+}
+
+/* 프로필 아이콘 */
+.itemDtl .profile-icon {
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+    flex-shrink: 0;
+}
+
+/* 이메일, 날짜, 별점 영역 정렬 */
+.itemDtl .d-flex.align-items-center {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+/* 이메일과 날짜 영역 여백 제거 */
+.itemDtl .ml-3 {
+    margin-left: 0 !important;
+}
+
+/* 유용한 리뷰 카운트와 텍스트를 한 줄로 표시 */
+.itemDtl .rCnt-container {
+    display: flex;
+    align-items: center;
+    white-space: nowrap; /* 줄바꿈 방지 */
+    font-size: 0.9rem; /* 텍스트 크기 조정 */
+}
+
+.itemDtl .rCnt {
+    margin-right: 3px;
+}
+
+/* '이 리뷰가 도움이 되었나요?' 텍스트 스타일 */
+.itemDtl .helpful-text {
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem; /* 크기 조정 */
+}
+
+.itemDtl html, body {
+    overflow-x: visible; /* 가로 스크롤 방지 */
+}
+
+}

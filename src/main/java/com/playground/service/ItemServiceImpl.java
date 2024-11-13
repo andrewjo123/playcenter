@@ -1,15 +1,14 @@
 package com.playground.service;
 
-import com.playground.dto.ItemFormDto;
-import com.playground.dto.ItemImgDto;
-import com.playground.dto.ItemSearchDto;
-import com.playground.dto.MainItemDto;
+import com.playground.constant.ItemSellStatus;
+import com.playground.dto.*;
 import com.playground.entity.Item;
 import com.playground.entity.ItemCategory;
+import com.playground.entity.ItemCode;
 import com.playground.entity.ItemImg;
-import com.playground.repository.ItemCategoryRepository;
-import com.playground.repository.ItemImgRepository;
+import com.playground.repository.*;
 import com.playground.repository.ItemRepository;
+
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -17,11 +16,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.thymeleaf.context.Context;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import javax.print.DocPrintJob;
+import static com.playground.dto.ItemCategoryDto.modelMapper;
 
 @Service
 @Transactional
@@ -32,19 +33,19 @@ public class ItemServiceImpl implements ItemService {
     private final ItemImgService itemImgService;
     private final ItemImgRepository itemImgRepository;
     private final ItemCategoryRepository categoryRepository;
+    private final ItemCodeRepository itemCodeRepository;
+    private final EmailService emailService;
+    private final MemberRepository memberRepository;
 
     @Override
     @Transactional
     public Long saveItem(ItemFormDto itemFormDto, List<MultipartFile> itemImgFileList) throws Exception {
         // Register item
         Item item = itemFormDto.createItem();
+        item.setItemSellStatus(ItemSellStatus.SOLD_OUT);
         itemRepository.save(item);
 
-        // 추가
-        ItemCategory category=new ItemCategory();
-        category.setCompany(itemFormDto.getCompany());
-        category.setTag(itemFormDto.getTag());
-        category.setItem(item);
+        ItemCategory category=itemFormDto.getItemCategoryDto().toEntity(item, itemFormDto.getCompany());
         categoryRepository.save(category);
 
         // Register images
@@ -59,7 +60,6 @@ public class ItemServiceImpl implements ItemService {
 
         return item.getId();
     }
-
   
     @Override
     public ItemFormDto getItemDtl(Long itemId) {
@@ -77,7 +77,8 @@ public class ItemServiceImpl implements ItemService {
         //추가
         ItemCategory categories=categoryRepository.findByItemId(itemId);
         itemFormDto.setCompany(categories.getCompany());
-        itemFormDto.setTag(categories.getTag());
+        ItemCategoryDto itemCategoryDto=ItemCategoryDto.fromEntity(categories);
+        itemFormDto.setItemCategoryDto(itemCategoryDto);
         
         // 리뷰 추가
         List<Object[]>result=itemRepository.getAvgAndCount(itemId);
@@ -108,6 +109,11 @@ public class ItemServiceImpl implements ItemService {
         // Update item
         Item item = itemRepository.findById(itemFormDto.getId())
                 .orElseThrow(EntityNotFoundException::new);
+        if(itemFormDto.getStockNumber()==0){
+            itemFormDto.setItemSellStatus(ItemSellStatus.SOLD_OUT);
+        }else{
+            itemFormDto.setItemSellStatus(ItemSellStatus.SELL);
+        }
         item.updateItem(itemFormDto);
         List<Long> itemImgIds = itemFormDto.getItemImgIds();
 
@@ -118,8 +124,8 @@ public class ItemServiceImpl implements ItemService {
 
         //추가
         ItemCategory category=categoryRepository.findByItemId(item.getId());
+        modelMapper.map(itemFormDto.getItemCategoryDto(),category);
         category.setCompany(itemFormDto.getCompany());
-        category.setTag(itemFormDto.getTag());
         categoryRepository.save(category);
 
         return item.getId();
@@ -133,7 +139,55 @@ public class ItemServiceImpl implements ItemService {
 
     @Transactional(readOnly = true)
     @Override
-    public Page<MainItemDto> getMainItemPage(ItemSearchDto itemSearchDto, Pageable pageable) {
-        return itemRepository.getMainItemPage(itemSearchDto, pageable);
+    public Page<MainItemDto> getMainItemPage(ItemSearchDto itemSearchDto, ItemCategoryDto itemCategoryDto, Pageable pageable) {
+        return itemRepository.getMainItemPage(itemSearchDto, itemCategoryDto, pageable);
+    }
+
+    @Override
+    public Page<MainItemDto> getMainItemPage2(String company, ItemSearchDto itemSearchDto, ItemCategoryDto itemCategoryDto,Pageable pageable) {
+        return itemRepository.getMainItemPage2(company, itemSearchDto, itemCategoryDto, pageable);
+    }
+
+    // 1024추가
+    @Transactional
+    @Override
+    public int saveCodes(Long itemId, List<String> codes) {
+        Item item = itemRepository.findById(itemId).get();
+        int beforeStock=item.getStockNumber();
+        List<ItemCode> itemCodes = new ArrayList<>();
+
+        codes.forEach(code -> {
+            ItemCode itemCode = new ItemCode();
+            itemCode.setItem(item);
+            itemCode.setCodNum(code);
+            itemCodes.add(itemCode);
+        });
+
+        itemCodeRepository.saveAll(itemCodes);
+        item.setStockNumber(item.getStockNumber()+codes.size());
+        item.setItemSellStatus(ItemSellStatus.SELL);
+        itemRepository.save(item);
+
+        if(beforeStock==0){
+            List<Object> getList=memberRepository.findEmailFromItemId(item.getId());
+            if(getList!=null){
+                List<String> emailList = getList.stream().map(obj -> (String) obj).toList();
+                String subject="[놀이마당] "+item.getItemNm()+" 입고되었습니다.";
+                Context context=new Context();
+                context.setVariable("itemId", item.getId());
+                context.setVariable("itemNm",item.getItemNm());
+                context.setVariable("count",codes.size());
+                context.setVariable("itemImgName",itemImgRepository.findByItemId(itemId).get(0).getImgName());
+
+                emailService.sendEmailToMany(emailList, subject, "mailForm/stockNotification",context);
+            }
+        }
+        return codes.size(); // 반복한 횟수 반환
+    }
+
+
+    @Override
+    public List<MainItemDto> getMainItem(String company, ItemCategoryDto itemCategoryDto) {
+        return itemRepository.getMainItem(company, itemCategoryDto); // Repository 메서드 호출
     }
 }

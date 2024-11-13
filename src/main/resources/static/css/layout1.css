@@ -6,18 +6,218 @@ html {
 body {
     min-height: 100%;
 }
-.footer {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    width: 100%;
-    padding: 15px 0;
-    text-align: center;
+.layout-row{
+    min-height: 600px;
 }
 .content{
     margin-bottom:100px;
     margin-top: 50px;
-    margin-left: 200px;
-    margin-right: 200px;
+    margin-left: 175px;
+    margin-right: 175px;
+    min-height: 800px;
+}
+li,ul{
+    text-decoration:none ;
+}
+/* footer */
+.footer {
+    position: relative;
+    padding: 20px 0;
+    background-color: #d9d9d9;
+    color: #6C757D;
+    text-align: left;
+    font-size: 12px;
+    margin-top:20px;
+    width:100%;
+}
+.footer .link {
+    padding: 0 20px;
+}
+.footer a {
+    font-size: 12px
+}
+
+.footer .info {
+    padding: 0 20px;
+}
+/* footer end */
+
+/* 페이지 top, bottom 이동 */
+#pageIndicators{
+    width:100px;
+    height:200px;
+    position:fixed;
+    bottom:20vh;
+    right:6vw;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    font-size:35px;
+    z-index:10;
+    display:none;
+    text-align: center;
+}
+#pageIndicators #goTop{
+    width:50px;
+    height:50px;
+    cursor:pointer;
+    position:absolute;
+    top:30px;
+    display:none;
+    border-radius:50%;
+    border:2px solid #ccc;
+    color:#ccc;
+}
+#pageIndicators #goBottom{
+    width:50px;
+    height:50px;
+    cursor:pointer;
+    position:absolute;
+    top:90px;
+    display:none;
+    border-radius:50%;
+    border:2px solid #ccc;
+    color:#ccc;
+}
+#pageIndicators #indicatorBtn{
+    width:50px;
+    height:50px;
+    cursor:pointer;
+    position:absolute;
+    top:150px;
+    opacity:0.8;
+}
+#pageIndicators #indicatorBtn #horizonLine {
+    position: absolute;
+    background-color: #ccc;
+    width: 100%;
+    height: 10px;
+    top: 20px;
+}
+#pageIndicators #indicatorBtn #verticalLine {
+    position: absolute;
+    background-color: #ccc;
+    width: 10px;
+    height: 100%;
+    left: 20px;
+}
+#pageIndicators i{
+    width:35px !important; 
+}
+
+#kakao-talk-channel-chat-button, #kakao-talk-channel-chat-button img {
+    position: fixed;
+    padding: 0;
+    z-index: 999;
+    width:100px;
+    bottom:12vh;
+    right: calc(6vw + 50px);
+}
+#kakao-talk-channel-chat-button img {
+    border-radius: 15px; /* 모서리를 살짝 둥글게 */
+}
+#kakao-talk-channel-chat-button .icon-pc {
+    display: block;
+}
+
+#kakao-talk-channel-chat-button .icon-mobile {
+    display: none;
+}
+
+/* 모바일 화면 전용 스타일 */
+@media (max-width: 768px) {
+    html, body {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        margin-left: 0;
+        margin-right: 0;
+        overflow-x: hidden; /* 가로 스크롤 방지 */
+    }
+    .container-fluid {
+        padding-left: 0;
+        padding-right: 0;
+    }
+    /* 모든 .content 요소의 마진 제거 */
+    .content {
+        padding-top: 5px;
+        padding-bottom: 5px;
+        padding-left: 0;
+        padding-right: 0;
+        margin: 0; /* 모바일 화면에서 좌우 마진 제거 */
+    }
+    .margin {
+        margin-bottom: 20px;
+    }
+
+    /*캐럿셀 배너 시작*/
+    #carouselControls {
+        width: 100%;          /* 가로를 화면에 맞춤 */
+        max-height: 12vh;    /* 최대 높이를 화면 높이에 맞춤 */
+        overflow: hidden;     /* 화면을 벗어나는 공백을 숨김 */
+    }
+    .carousel-inner, .carousel-item {
+        width: 100%;
+        max-height: 12vh;
+        height: auto;
+    }
+    .carousel-inner .carousel-item img {
+        width: 100%;    /* 가로를 꽉 채움 */
+        height: auto;   /* 세로는 자동으로 비율에 맞춰 조정 */
+        object-fit: cover; /* 이미지를 잘라내지 않고 꽉 채우기 */
+    }
+    .carousel-indicators {
+        display: none;
+    }
+    /*캐럿셀 배너 끝*/
+
+    /*footer 시작*/
+    .footer {
+        text-align: center;
+        padding: 20px 10px; /* 양옆 패딩을 줄여서 화면에 맞추기 */
+        font-size: 10px; /* 글자 크기를 줄여서 모바일에 맞춤 */
+    }
+
+    .footer .row {
+        flex-direction: column; /* 모바일에서 세로 정렬 */
+        align-items: center;
+    }
+
+    .footer .btn, .footer .info {
+        width: 100%; /* 너비 100%로 설정 */
+        padding: 10px;
+    }
+
+    .footer .qr {
+        margin-top: 15px;
+        text-align: center;
+    }
+
+    .footer .qr img {
+        width: 80px; /* 모바일 화면에 맞게 QR 코드 크기 줄임 */
+        height: auto;
+    }
+    /*footer 끝*/
+    /* 페이지 top, bottom 이동  시작*/
+    #pageIndicators {
+        width: 55px;
+        right: 10px;
+        bottom: 65px; /* 화면 아래에서 10px 띄움 */
+    }
+    #pageIndicators #indicatorBtn{
+        opacity:0.9;
+    }
+    /* 페이지 top, bottom 이동  끝*/
+    #kakao-talk-channel-chat-button, #kakao-talk-channel-chat-button img  {
+        position: fixed;
+        z-index: 999;
+        width:55px;
+        right: 10px; /* 화면 오른쪽으로부터의 거리, 숫자만 변경 */
+        bottom: 10px; /* 화면 아래쪽으로부터의 거리, 숫자만 변경 */
+    }
+    #kakao-talk-channel-chat-button .icon-pc {
+        display: none;
+    }
+    #kakao-talk-channel-chat-button .icon-mobile {
+        display: block;
+    }
 }

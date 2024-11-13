@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <link th:href="@{/css/fragments.css}" rel="stylesheet">
+
+</head>
+
+<body>
+
+    <div th:fragment="sidebar" id="sb">
+        
+        <div  sec:authorize="isAuthenticated()">
+            <div class="sb_dibs" onclick="location.href='/dibs'">
+                <div style="font-size: 20px;">나의 찜</div>
+                <div style="font-size: 50px;">
+                    <i class="fa-solid fa-heart"></i>
+                    <span id="sidebarGetCountDibs" style="display: none;"></span>
+                </div>
+            </div>
+        </div>
+
+        <div  sec:authorize="isAuthenticated()">
+
+            <div class="sb_cart" onclick="location.href='/cart'">
+                <div style="font-size: 20px;">장바구니</div>
+                <div style="font-size: 50px;">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <span id="sidebarGetCount" style="display: none;"></span>
+                </div>
+            </div>
+        </div>
+
+        <div  sec:authorize="isAuthenticated()">
+            <div class="sb_dibs" onclick="location.href='/mypage'">
+                <div style="font-size: 20px;">마이페이지</div>
+                <div style="font-size: 50px;">
+                    <i class="fas fa-user"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <span sec:authorize="isAuthenticated()" style="display:none;">
+        <span id="ppEmail" sec:authentication="principal.email"></span>
+    </span>
+
+
+</body>
+
+</html>

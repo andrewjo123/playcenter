@@ -12,14 +12,15 @@
 <div layout:fragment="content">
 
     <form th:action="@{'/admin/items/' + ${items.number}}" role="form" method="get" th:object="${items}">
-        <table class="table">
+        <table class="table pc-table">
             <thead>
             <tr>
                 <td>상품아이디</td>
                 <td>상품명</td>
-                <td>상태</td>
+                <td>재고수</td>
                 <td>등록자</td>
                 <td>등록일</td>
+                <td>코드등록</td>
             </tr>
             </thead>
             <tbody>
@@ -28,12 +29,24 @@
                 <td>
                     <a th:href="'/admin/item/'+${item.id}" th:text="${item.itemNm}"></a>
                 </td>
-                <td th:text="${item.itemSellStatus == T(com.playground.constant.ItemSellStatus).SELL} ? '판매중' : '품절'"></td>
+                <td th:text="${item.stockNumber}"></td>
                 <td th:text="${item.createdBy}"></td>
                 <td th:text="${item.regTime}"></td>
+                <td><a th:href="'/admin/insert/'+${item.id}" class="code-link">코드 입력</a></td>
             </tr>
             </tbody>
         </table>
+        <!-- 모바일용 카드 레이아웃 -->
+        <div class="d-block d-md-none">
+            <div th:each="item : ${items.getContent()}" class="card mb-2 p-2">
+                <div><strong>상품아이디:</strong> <span th:text="${item.id}"></span></div>
+                <div><strong>상품명:</strong> <a th:href="'/admin/item/' + ${item.id}" th:text="${item.itemNm}"></a></div>
+                <div><strong>상태:</strong> <span th:text="${item.stockNumber}"></span></div>
+                <div><strong>등록자:</strong> <span th:text="${item.createdBy}"></span></div>
+                <div><strong>등록일:</strong> <span th:text="${item.regTime}"></span></div>
+                <div><a th:href="'/admin/insert/' + ${item.id}" class="code-link btn btn-link">코드 입력</a></div>
+            </div>
+        </div>
 
         <div th:with="start=${(items.number/maxPage)*maxPage + 1}, end=(${(items.totalPages == 0) ? 1 : (start + (maxPage - 1) < items.totalPages ? start + (maxPage - 1) : items.totalPages)})" >
             <ul class="pagination justify-content-center">

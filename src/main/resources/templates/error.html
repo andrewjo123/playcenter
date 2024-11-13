@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Error - Blue Screen</title>
+  <style>
+    body {
+        background-color: #001F3F; /* 짙은 파란색 */
+        color: #FFFFFF; /* 흰색 텍스트 */
+        font-family: Consolas, monospace;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+
+    h1 {
+        font-size: 2.5em;
+        margin-bottom: 0.5em;
+    }
+
+    .error-details {
+        font-size: 1.2em;
+        margin-bottom: 1em;
+    }
+
+    .error-actions a {
+        color: #FFFFFF;
+        text-decoration: underline;
+        font-size: 1em;
+    }
+
+    .error-actions a:hover {
+        color: #FFD700; /* 황금색으로 변경 */
+    }
+  </style>
+</head>
+<body>
+<h1>:( There's a problem with your access</h1>
+<p class="error-details">
+  We're just collecting some error info, and then you can try again. <br>
+  <span th:text="'Error Code: ' + ${status}">Error Code: 500</span> -
+  <span th:text="${message}">Unexpected Error</span>
+</p>
+
+<p>If you need more information, please contact support.</p>
+
+<div class="error-actions">
+  <a th:href="@{/}">Return to Home</a>
+</div>
+</body>
+</html>

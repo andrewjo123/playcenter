@@ -1,0 +1,382 @@
+/* main */
+.main .carousel-inner > .item {
+height: 350px;
+}
+
+.main .margin {
+margin-bottom: 30px;
+}
+
+.main .banner {
+height: 300px;
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+}
+
+.main .card-text {
+text-overflow: ellipsis;
+white-space: nowrap;
+overflow: hidden;
+}
+
+.main a {
+text-decoration: none;
+}
+
+.main a:hover {
+text-decoration: gray;
+}
+
+.main .center {
+text-align: center;
+}
+
+/* 네비게이션 텍스트 스타일 */
+.main .arrow {
+font-size: 1.2em; /* 화살표 크기 조정 */
+}
+
+/* 그리드 아이템 스타일 */
+.main .company-items h2 {
+font-size: 1.5rem;
+font-weight: 700;
+}
+
+.main .company-items .row {
+display: flex;
+flex-wrap: nowrap;
+justify-content: center;
+position: relative;
+}
+
+.main .company-items .card {
+width: 150%;
+height: 0;
+max-width: 340px;
+border: none;
+box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+transition: transform 0.3s ease, box-shadow 0.3s ease;
+border-radius: 8px;
+min-height: 280px;
+display: flex;
+flex-direction: column;
+justify-content: center;
+}
+
+/* 카드 hover 효과 */
+.main .company-items .card:hover {
+transform: translateY(-5px);
+box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+.main .company-items .card img {
+position: relative;
+width: 100%;
+height: 170px;
+object-fit: cover;
+border-top-left-radius: 8px;
+border-top-right-radius: 8px;
+}
+
+.main .company-items .card-body {
+display: flex;
+justify-content: flex-start;
+height: 40%;
+align-items: center;
+flex-grow: 1;
+padding: 10px;
+text-align: center;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+overflow: hidden;
+}
+
+.main .company-items .card-title {
+font-size: 1.1rem;
+font-weight: 600;
+margin-bottom: 10px;
+text-overflow: ellipsis;
+white-space: nowrap;
+overflow: hidden;
+width: 100%;
+}
+
+.main .company-items .card-price {
+font-size: 1.2rem;
+font-weight: 500;
+color: #28a745;
+}
+
+.main .company-items .card-stock {
+font-size: 1rem;
+color: #e74c3c;
+}
+
+.main h2 {
+padding: 10px;
+border-radius: 10px;
+}
+
+/* 아이템을 수평으로 나열하는 컨테이너 */
+.main .horizontal-scroll-container {
+display: flex;
+overflow-x: auto; /* 수평 스크롤을 추가 */
+overflow-y: hidden;
+gap: 8.8%;
+scroll-behavior: smooth; /* 부드러운 스크롤 애니메이션 */
+flex-wrap: nowrap;
+-webkit-overflow-scrolling: touch;
+position: relative;
+width: 93%;
+height: 300px;
+margin: 30px auto;
+}
+
+.main .horizontal-scroll-container::-webkit-scrollbar {
+display: none;
+}
+
+.main .carousel-control-prev, .main .carousel-control-next {
+position: absolute;
+top: 50%;
+z-index: 2;
+font-size: 50px;
+transform: translateY(-50%);
+transition: background-color 0.5s;
+background-color: rgba(0, 0, 0, 0.692);
+width: 40px;
+height: 80%;
+}
+
+.main.carousel-control-prev {
+margin-left: -43px;
+}
+
+.main.carousel-control-next {
+margin-right: -43px;
+}
+
+.main .w3-content {
+display: flex;
+position: relative;
+justify-content: flex-start;
+gap: 20px;
+align-items: flex-start;
+width: 100%;
+margin: 0 auto;
+}
+
+#adslide {
+background: #F0F0F0;
+padding: 5px 0px;
+margin-bottom: 20px;
+}
+
+.main .large-img {
+width: 65%;
+height: 400px;
+position: relative;
+}
+
+.main .large-img img {
+width: 100%;
+height: 100%;
+object-fit: cover;
+}
+
+.main .small-images {
+display: grid;
+grid-template-columns: repeat(2, 1fr);
+grid-gap: 10px;
+width: 32%;
+height: auto;
+margin-left: 0px;
+margin: auto 0px;
+}
+
+.main .small-images img {
+width: 100%;
+height: 100%;
+object-fit: cover;
+cursor: pointer;
+transition: opacity 0.3s;
+}
+
+.main .small-images img:hover {
+opacity: 0.7;
+}
+
+.main .w3-opacity-off {
+opacity: 0.5;
+}
+
+/* 숨기기 */
+.main .hide {
+display: none;
+}
+
+.main .dat {
+background-color: rgba(0, 0, 0, 0.5);
+height: 7px;
+width: 40px;
+margin: 10px 5px;
+float: left;
+}
+
+.main .slidelink {
+display: flex;
+justify-content: center;
+width: 100%;
+margin-bottom: 10px;
+}
+
+.prev, .next {
+position: absolute; /* 버튼을 절대 위치로 배치 */
+top: 50%; /* 수직 가운데 배치 */
+transform: translateY(-50%); /* 정확한 수직 가운데 정렬 */
+font-size: 60px; /* 화살표 크기 */
+color: rgba(0, 0, 0, 0.5);
+padding: 5px 14px; /* 버튼 크기 조정 */
+text-decoration: none; /* 링크의 기본 스타일 제거 */
+}
+
+.prev {
+left: -60px /* 왼쪽 화살표 버튼 위치 */
+}
+
+.next {
+right: -60px /* 오른쪽 화살표 버튼 위치 */
+}
+
+.prev:hover, .next:hover {
+background-color: #2c2f334d;
+color: #00ff00;
+}
+
+.slide-title {
+grid-column: span 2;
+font-size: 20px;
+text-align: center;
+font-weight: bold;
+align-self: start;
+cursor: pointer;
+}
+
+.main .small-images .slide-title a:hover {
+transform: scale(1.1);
+}
+
+/* 추가 스타일 */
+.main .slide-content {
+grid-column: span 2;
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 10px;
+margin: auto;
+justify-content: center;
+}
+
+.main .availability-info {
+display: flex;
+align-items: center;
+gap: 10px;
+margin-bottom: 10px;
+}
+
+.main .status-text {
+color: #343a40;
+font-size: 18px;
+font-weight: bold;
+}
+
+.main .top-seller {
+background-color: #ff0000;
+color: white;
+font-size: 14px;
+padding: 2px 6px;
+border-radius: 3px;
+font-weight: bold;
+}
+
+.main .discount-info {
+display: flex;
+align-items: center;
+gap: 15px;
+background-color: #5cbf4e; /* 진한 초록색 배경 */
+padding: 5px 10px;
+margin: 0px auto;
+}
+
+.main .discount-rate {
+color: #d1f7c4; /* 밝은 초록색 텍스트 */
+font-weight: bold;
+font-size: 12px;
+border-right: 1px black;
+}
+
+.main .original-price {
+color: #d1d1d1; /* 진한 회색, 취소선 */
+font-size: 10px;
+}
+
+.main .discounted-price {
+color: #d1f7c4; /* 밝은 초록색 텍스트 */
+font-weight: bold;
+font-size: 13px;
+}
+@media (max-width: 768px) {
+    #adslide, .main .slidelink {
+        display: none;
+    }
+    /* 모바일 Carousel 스타일 */
+    .main .mobile-carousel {
+        position: relative;
+        overflow: hidden;
+        width: 100%;
+    }
+
+    .main .mobile-carousel-inner {
+        display: flex;
+        transition: transform 0.5s ease;
+        width: 100%;
+    }
+
+    .main .mobile-carousel-item {
+        min-width: 100%;
+        box-sizing: border-box;
+        padding: 10px;
+        text-align: center;
+    }
+
+    .main .mobile-carousel-control-prev,
+    .main .mobile-carousel-control-next {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 1.5em;
+        background: rgba(0, 0, 0, 0.5);
+        color: #fff;
+        padding: 10px;
+        cursor: pointer;
+        z-index: 10;
+    }
+    .main .mobile-carousel-control-prev {
+        left: 10px;
+    }
+    .main .mobile-carousel-control-next {
+        right: 10px;
+    }
+    .main .card-img-top {
+        width: 100%; /* 가로로 꽉 채움 */
+        height: 200px; /* 세로 길이를 고정 */
+        object-fit: cover; /* 이미지가 잘리더라도 비율을 유지하여 고정 크기로 맞춤 */
+        border-radius: 8px; /* 선택적으로 모서리를 둥글게 */
+    }
+
+}
+

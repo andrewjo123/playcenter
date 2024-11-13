@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}" class="resetPw">
+
+<head>
+  <meta name="_csrf" th:content="${_csrf.token}" />
+  <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+</head>
+
+<div layout:fragment="content">
+  <div class="resetPwDiv mx-1 my-5">
+    <p class="mb-3">❗❗ 변경하실 비밀번호를 입력해주세요</p>
+    <form action="/members/resetPw" method="post" id="resetPwForm" class="form-group">
+      <div class="form-group">
+        <label th:for="password">비밀번호</label>
+        <input id="cdPwd" type="password" th:name="password" class="form-control" placeholder="비밀번호를 입력해주세요"
+               pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,16}$" required
+               title="8~16글자 사이의 영어, 숫자, 특수문자를 모두 사용해서 입력해주세요." autocomplete="new-password">
+      </div>
+      <div class="form-group">
+        <label th:for="checkPassword">비밀번호 재입력</label>
+        <input id="cdPwd2" type="password" class="form-control" placeholder="비밀번호를 다시 입력해주세요"
+               pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,16}$" required
+               title="8~16글자 사이의 영어, 숫자, 특수문자를 모두 사용해서 입력해주세요." autocomplete="new-password">
+      </div>
+      <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+      <input type="hidden" th:name="token" th:value="${token}">
+      <button class="btn btn-success changePwd w-100">변경하기</button>
+    </form>
+  </div>
+  <script th:inline="javascript">
+    $(document).ready(function () {
+        $(".changePwd").on('click', function (e) {
+            e.preventDefault();
+
+            var cdPwd = $("#cdPwd").val();
+            var cdPwd2 = $("#cdPwd2").val();
+
+            if (cdPwd != cdPwd2) {
+                alert("비밀번호가 일치하지 않습니다.");
+                $("#checkPwd").focus();
+                return false;
+            }
+
+          $("#resetPwForm").submit();
+        });
+    });
+  </script>
+
+</div>
+
+
+</html>

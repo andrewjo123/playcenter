@@ -1,5 +1,5 @@
 package com.playground.constant;
 
 public enum Role {
-    USER, ADMIN
+    USER, ADMIN, MANAGER
 }
