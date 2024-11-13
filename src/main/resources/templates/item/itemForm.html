@@ -114,7 +114,12 @@
         <p th:if="${#fields.hasErrors('price')}" th:errors="*{price}" class="fieldError">Incorrect data</p>
 
         <th:block th:if="${itemFormDto.id != null}">
-            <input type="hidden" min="0" th:field="*{stockNumber}" class="form-control" th:value="${itemFormDto.stockNumber}">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">재고</span>
+                </div>
+                <input type="number" min="0" th:field="*{stockNumber}" class="form-control" th:value="${itemFormDto.stockNumber}" readonly>
+            </div>
         </th:block>
         <th:block th:if="${itemFormDto.id == null}">
             <input type="hidden" name="stockNumber" th:value="0">

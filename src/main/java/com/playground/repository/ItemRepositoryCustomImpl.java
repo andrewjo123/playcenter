@@ -129,7 +129,7 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
                 orderClauses.add(item.buyCnt.desc());
             }
         }
-        orderClauses.add(item.id.desc());
+        orderClauses.add(item.openDate.desc());
 
         // ItemCategoryDto의 필드 추가
         if (itemCategoryDto != null) {
@@ -162,7 +162,8 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
                                 itemImg.imgUrl,
                                 item.price,
                                 item.stockNumber,
-                                item.buyCnt)
+                                item.buyCnt,
+                                item.openDate)
                 )
                 .from(itemImg)
                 .join(itemImg.item, item)
@@ -209,7 +210,7 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
                 orderClauses.add(item.buyCnt.desc());
             }
         }
-        orderClauses.add(item.id.desc());
+        orderClauses.add(item.openDate.desc());
 
         // ItemCategoryDto의 필드 추가
         if (itemCategoryDto != null) {
@@ -235,8 +236,6 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
             if (itemCategoryDto.isMmorpg()) whereClause.and(itemCategory.mmorpg.eq(true));
         }
 
-        System.out.println("::::::::::::::::::::::::::::::::::::::");
-        System.out.println(whereClause);
         List<MainItemDto> content = queryFactory
                 .select(
                         new QMainItemDto(
@@ -245,7 +244,8 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
                                 itemImg.imgUrl,
                                 item.price,
                                 item.stockNumber,
-                                item.buyCnt)
+                                item.buyCnt,
+                                item.openDate)
                 )
                 .from(itemImg)
                 .join(itemImg.item, item)
@@ -291,7 +291,8 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
                                 itemImg.imgUrl,
                                 item.price,
                                 item.stockNumber,
-                                item.buyCnt)
+                                item.buyCnt,
+                                item.openDate)
                 )
                 .from(itemImg)
                 .join(itemImg.item, item)

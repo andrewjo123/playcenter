@@ -14,7 +14,7 @@
                 <tr>
                     <td style="width: 50%; background-color: #eaf8e7; padding: 10px; font-size: 1.4rem; border: 1px solid #7ED957; vertical-align: top; text-align: center;">
                         <span th:text="${codeList.key.get(0)}"></span><br/>
-                        <img th:src="'cid:image' + ${status.index}" alt="제품 이미지" style="width: 80%; border-radius: 8px; max-height:150px">
+                        <img th:src="'cid:image' + ${status.index}" alt="제품 이미지" style="border-radius: 8px;">
                     </td>
                     <td style="width: 50%; border: 1px solid #7ED957; vertical-align: top; text-align: left; padding: 10px; background-color: #f9f9f9;">
                         <th:block th:each="code, status: ${codeList.value}">
