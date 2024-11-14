@@ -129,8 +129,6 @@
     <div class="custombar">
         <div th:unless="${item.stockNumber==0}" class="text-right">
             <button type="button" class="btn btn-order" onclick="order()">주문하기</button>
-        </div>
-        <div th:unless="${item.stockNumber==0}" class="text-right">
             <button type="button" class="btn btn-custom" onclick="addCart()">장바구니</button>
             <button type="button" id="wish-button" class="btn wish-button" onclick="addDibs()">
                 <span>🤍</span>
@@ -319,19 +317,19 @@
                     <div class="reviewgrade" data-grade="${review.grade}"></div>
                     
                 </div>
-            </div>
-
-            <!-- 옵션 버튼 -->
-            <div class="dropdown">
-                <button class="btn btn-sm btn-link text-dark toggle" type="button" id="dropdownMenuButton"
-                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="fas fa-ellipsis-v"></i>
-                </button>
-                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                    <button class="dropdown-item modalBtn" type="button">수정</button>
-                    <button class="dropdown-item removeBtn" type="button">삭제</button>
+                <!-- 옵션 버튼 -->
+                <div class="dropdown">
+                    <button class="btn btn-sm btn-link text-dark toggle" type="button" id="dropdownMenuButton"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-ellipsis-v"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                        <button class="dropdown-item modalBtn" type="button">수정</button>
+                        <button class="dropdown-item removeBtn" type="button">삭제</button>
+                    </div>
                 </div>
             </div>
+
 
 
             <div class="mt-2">
@@ -501,13 +499,14 @@
                                     <div class="review-item card p-3 mb-3" data-reviewnum="${review.reviewnum}" data-mid="${review.email}">
                                         <div class="d-flex align-items-center">
                                             <img src="/icon/icon_${review.profileImg}.svg" class="user-image" style="width: 60px; height: 60px;"/>    
-                                            <div class="ml-3">
+                                            <div class="ml-3 mr-3">
                                                 <h6 class="card-subtitle mb-1 text-muted">${review.email}</h6>
                                                 <p class="card-text small">${new Date(review.regTime).toLocaleString()}</p>
                                             </div>
+                                            ${dropdownHtml}
                                         </div>
-                                    ${dropdownHtml}
-                                            <div class="mt-2">
+                                    
+                                        <div class="mt-2">
                                             <div class="reviewgrade" data-grade2="${review.grade}"></div>
                                             <h6 class="card-title mt-2">${review.text}</h6>
                                         </div>
