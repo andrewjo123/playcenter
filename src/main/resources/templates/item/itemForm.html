@@ -3,14 +3,12 @@
       layout:decorate="~{layouts/layout1}" class="itemForm">
 
 <head>
-    <link th:href="@{/css/shop.css}" rel="stylesheet">
+     <link th:href="@{/css/shop.css}" rel="stylesheet">
 </head>
 
 <div layout:fragment="content">
 
-    <form role="form" method="post" enctype="multipart/form-data" th:object="${itemFormDto}">
-
-
+    <form role="form" method="post" enctype="multipart/form-data" th:object="${itemFormDto}" id="inputItemForm">
         <input type="hidden" th:field="*{id}">
 
         <div class="form-group">
@@ -20,18 +18,14 @@
         </div>
 
         <div class="input-group">
-            <div class="input-group-prepend">
-                <span class="input-group-text">상품명</span>
-            </div>
+            <span class="formlabel">상품명</span>
             <input type="text" th:field="*{itemNm}" class="form-control" placeholder="상품명을 입력해주세요">
         </div>
         <p th:if="${#fields.hasErrors('itemNm')}" th:errors="*{itemNm}" class="fieldError">Incorrect data</p>
 
-        <div class="input-group">
-            <div class="input-group-prepend">
-                <span class="input-group-text">플랫폼</span>
-            </div>
-            <select th:field="*{company}" class="custom-select">
+        <div class="input-group">   
+            <span class="formlabel">플랫폼</span>
+            <select th:field="*{company}" class="form-control">
                 <option value="steam">스팀</option>
                 <option value="nintendo">닌텐도</option>
                 <option value="ps">플레이 스테이션</option>
@@ -39,116 +33,136 @@
         </div>
         <p th:if="${#fields.hasErrors('company')}" th:errors="*{company}" class="fieldError">Incorrect data</p>
 
-        <div class="input-group">
-            <span class="input-group-text">장르</span>
-            <div class="label">
-                <label>
-                    <input type="checkbox" th:field="*{itemCategoryDto.action}"> 액션
-                </label>
-                <label>
-                    <input type="checkbox" th:field="*{itemCategoryDto.adventure}"> 모험
-                </label>
-                <label>
-                    <input type="checkbox" th:field="*{itemCategoryDto.rpg}"> RPG
-                </label>
-                <label>
-                    <input type="checkbox" th:field="*{itemCategoryDto.shooter}"> 슈팅
-                </label>
-                <label>
-                    <input type="checkbox" th:field="*{itemCategoryDto.strategy}"> 전략
-                </label>
-                <label>
-                    <input type="checkbox" th:field="*{itemCategoryDto.simulation}"> 시뮬레이션
-                </label>
-                <label>
-                    <input type="checkbox" th:field="*{itemCategoryDto.puzzle}"> 퍼즐
-                </label>
-                <label>
-                    <input type="checkbox" th:field="*{itemCategoryDto.sports}"> 스포츠
-                </label>
-                <label>
-                    <input type="checkbox" th:field="*{itemCategoryDto.racing}"> 레이싱
-                </label>
-                <label>
-                    <input type="checkbox" th:field="*{itemCategoryDto.fighting}"> 격투
-                </label>
-                <label>
-                    <input type="checkbox" th:field="*{itemCategoryDto.survival}"> 생존
-                </label>
-                <label>
-                    <input type="checkbox" th:field="*{itemCategoryDto.rhythm}"> 리듬게임
-                </label>
-                <label>
-                    <input type="checkbox" th:field="*{itemCategoryDto.sandbox}"> 샌드박스
-                </label>
-                <label>
-                    <input type="checkbox" th:field="*{itemCategoryDto.battleRoyale}"> 대전
-                </label>
-                <label>
-                    <input type="checkbox" th:field="*{itemCategoryDto.card}"> 카드
-                </label>
-                <label>
-                    <input type="checkbox" th:field="*{itemCategoryDto.boardGame}"> 보드게임
-                </label>
-                <label>
-                    <input type="checkbox" th:field="*{itemCategoryDto.horror}"> 공포
-                </label>
-                <label>
-                    <input type="checkbox" th:field="*{itemCategoryDto.platformer}"> 플랫포머
-                </label>
-                <label>
-                    <input type="checkbox" th:field="*{itemCategoryDto.moba}"> MOBA
-                </label>
-                <label>
-                    <input type="checkbox" th:field="*{itemCategoryDto.mmorpg}"> MMORPG
-                </label>
+        <div class="form-row row">
+            <!-- 왼쪽 영역 -->
+            <div class="form-left col-md-9">
+                <div class="input-group genre">
+                    <span class="formlabel mb-2">장르</span>
+                    <div class="label">
+                        <label>
+                            <input type="checkbox" th:field="*{itemCategoryDto.action}"> 액션
+                        </label>
+                        <label>
+                            <input type="checkbox" th:field="*{itemCategoryDto.adventure}"> 모험
+                        </label>
+                        <label>
+                            <input type="checkbox" th:field="*{itemCategoryDto.rpg}"> RPG
+                        </label>
+                        <label>
+                            <input type="checkbox" th:field="*{itemCategoryDto.shooter}"> 슈팅
+                        </label>
+                        <label>
+                            <input type="checkbox" th:field="*{itemCategoryDto.strategy}"> 전략
+                        </label>
+                        <label>
+                            <input type="checkbox" th:field="*{itemCategoryDto.simulation}"> 시뮬레이션
+                        </label>
+                        <label>
+                            <input type="checkbox" th:field="*{itemCategoryDto.puzzle}"> 퍼즐
+                        </label>
+                        <label>
+                            <input type="checkbox" th:field="*{itemCategoryDto.sports}"> 스포츠
+                        </label>
+                        <label>
+                            <input type="checkbox" th:field="*{itemCategoryDto.racing}"> 레이싱
+                        </label>
+                        <label>
+                            <input type="checkbox" th:field="*{itemCategoryDto.fighting}"> 격투
+                        </label>
+                        <label>
+                            <input type="checkbox" th:field="*{itemCategoryDto.survival}"> 생존
+                        </label>
+                        <label>
+                            <input type="checkbox" th:field="*{itemCategoryDto.rhythm}"> 리듬게임
+                        </label>
+                        <label>
+                            <input type="checkbox" th:field="*{itemCategoryDto.sandbox}"> 샌드박스
+                        </label>
+                        <label>
+                            <input type="checkbox" th:field="*{itemCategoryDto.battleRoyale}"> 대전
+                        </label>
+                        <label>
+                            <input type="checkbox" th:field="*{itemCategoryDto.card}"> 카드
+                        </label>
+                        <label>
+                            <input type="checkbox" th:field="*{itemCategoryDto.boardGame}"> 보드게임
+                        </label>
+                        <label>
+                            <input type="checkbox" th:field="*{itemCategoryDto.horror}"> 공포
+                        </label>
+                        <label>
+                            <input type="checkbox" th:field="*{itemCategoryDto.platformer}"> 플랫포머
+                        </label>
+                        <label>
+                            <input type="checkbox" th:field="*{itemCategoryDto.moba}"> MOBA
+                        </label>
+                        <label>
+                            <input type="checkbox" th:field="*{itemCategoryDto.mmorpg}"> MMORPG
+                        </label>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <span class="formlabel">가격</span>
+                    <input type="number" min="0" th:field="*{price}" class="form-control" placeholder="상품의 가격을 입력해주세요">
+                </div>
+                <p th:if="${#fields.hasErrors('price')}" th:errors="*{price}" class="fieldError">Incorrect data</p>
+
+                <th:block th:if="${itemFormDto.id != null}">
+                    <input type="hidden" min="0" th:field="*{stockNumber}" class="form-control" th:value="${itemFormDto.stockNumber}">
+                </th:block>
+                <th:block th:if="${itemFormDto.id == null}">
+                    <input type="hidden" name="stockNumber" th:value="0">
+                </th:block>
+
+                <div class="input-group">
+                    <span class="formlabel">발매일</span>
+                    <input type="date" th:field="*{openDate}" class="form-control">
+                </div>
+                <p th:if="${#fields.hasErrors('openDate')}" th:errors="*{openDate}" class="fieldError">Incorrect data</p>
+
+            </div>
+
+            <div class="form-right col-md-3">
+                <div class="form-group">
+                    <th:block th:if="${#lists.isEmpty(itemFormDto.itemImgDtoList)}">
+                        <label for="itemImgFile1" class="label1">대표사진</label>
+                        <img id="preview1" src="/img/xbox.png" alt="미리보기">
+                        <input type="file" class="form-control" id="itemImgFile1"  name="itemImgFile" accept="image/*" onchange="previewImage(this, 'preview1')">
+                    </th:block>
+                    <th:block th:unless="${#lists.isEmpty(itemFormDto.itemImgDtoList)}">
+                        <label for="itemImgFile2" class="label1">대표사진</label>
+                        <img id="preview2" th:src="${itemFormDto.itemImgDtoList[0].imgUrl}" alt="미리보기">
+                        <div id="defaultFirstImg" class="m-0 p-0">[[${itemFormDto.itemImgDtoList[0].oriImgName}]]</div>
+                        <input type="hidden" name="itemImgIds" th:value="${itemFormDto.itemImgDtoList[0].id}">
+                        <input type="file" class="form-control" id="itemImgFile2"  name="itemImgFile" accept="image/*" onchange="previewImage(this, 'preview2')">
+                    </th:block>
+                </div>
             </div>
         </div>
-
-        <div class="input-group">
-            <div class="input-group-prepend">
-                <span class="input-group-text">가격</span>
-            </div>
-            <input type="number" min="0" th:field="*{price}" class="form-control" placeholder="상품의 가격을 입력해주세요">
-        </div>
-        <p th:if="${#fields.hasErrors('price')}" th:errors="*{price}" class="fieldError">Incorrect data</p>
-
-        <th:block th:if="${itemFormDto.id != null}">
-            <input type="hidden" min="0" th:field="*{stockNumber}" class="form-control" th:value="${itemFormDto.stockNumber}">
-        </th:block>
-        <th:block th:if="${itemFormDto.id == null}">
-            <input type="hidden" name="stockNumber" th:value="0">
-        </th:block>
-
-        <div class="input-group">
-            <div class="input-group-prepend">
-                <span class="input-group-text">발매일</span>
-            </div>
-            <input type="date" th:field="*{openDate}" class="form-control">
-        </div>
-        <p th:if="${#fields.hasErrors('openDate')}" th:errors="*{openDate}" class="fieldError">Incorrect data</p>
-
-        <p th:if="${#fields.hasErrors('itemDetail')}" th:errors="*{itemDetail}" class="fieldError">Incorrect data</p>
 
         <div th:if="${#lists.isEmpty(itemFormDto.itemImgDtoList)}">
-            <div class="form-group" th:each="num: ${#numbers.sequence(1,5)}">
+            <div class="form-group" th:each="num: ${#numbers.sequence(2,5)}">
                 <div class="custom-file img-div">
                     <input type="file" class="custom-file-input" name="itemImgFile">
-                    <label class="custom-file-label" th:text="상품이미지 + ${num}"></label>
+                    <label class="custom-file-label" th:text="'상품이미지 ' + ${num}"></label>
                 </div>
             </div>
         </div>
 
         <div th:if="${not #lists.isEmpty(itemFormDto.itemImgDtoList)}">
             <div class="form-group" th:each="itemImgDto, status: ${itemFormDto.itemImgDtoList}">
-                <div class="custom-file img-div">
-                    <input type="file" class="custom-file-input" name="itemImgFile">
-                    <input type="hidden" name="itemImgIds" th:value="${itemImgDto.id}">
-                    <label class="custom-file-label"
-                           th:text="${not #strings.isEmpty(itemImgDto.oriImgName)} ? ${itemImgDto.oriImgName} : '상품이미지' + ${status.index+1}"></label>
-                </div>
+                <th:block th:if="${status.index >= 1 and status.index <= 4}">
+                    <div class="custom-file img-div">
+                        <input type="file" class="custom-file-input" name="itemImgFile">
+                        <input type="hidden" name="itemImgIds" th:value="${itemImgDto.id}">
+                        <label class="custom-file-label"
+                               th:text="${not #strings.isEmpty(itemImgDto.oriImgName)} ? ${itemImgDto.oriImgName} : '상품이미지' + ${status.index+1}"></label>
+                    </div>
+                </th:block>
             </div>
         </div>
+        
 
         <div th:if="${#strings.isEmpty(itemFormDto.id)}" class="itemformbtn">
             <button th:formaction="@{/admin/item/new}" type="submit" class="btn btn-primary">저장</button>
@@ -198,7 +212,29 @@
                 $(this).siblings(".custom-file-label").html(fileName);
             });
         }
+        function previewImage(input, previewId) {
+            const file = input.files[0];
+            const previewElement = document.getElementById(previewId);
 
+            const firstImgName=document.getElementById("defaultFirstImg");
+            if(firstImgName){
+                firstImgName.remove();
+            }
+
+            // 파일이 선택되었을 때
+            if (file) {
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    previewElement.src = e.target.result; // 미리보기 이미지 설정
+                }
+
+                reader.readAsDataURL(file);
+            } else {
+                // 파일이 선택되지 않았을 경우 기본 이미지 설정
+                previewElement.src = "/img/xbox.png"; // 기본 이미지 경로
+            }
+        }
     </script>
 
 </th:block>

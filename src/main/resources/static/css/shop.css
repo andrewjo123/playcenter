@@ -27,10 +27,7 @@
 
 .cartList .cartItem {
     margin: 0;
-    background-color: #d9d9d9;
-}
-.cartList .close {
-    margin-right: 10px;
+    background-color: white;
 }
 
 .cartList .table {
@@ -56,10 +53,52 @@
 .cartList .itemLink{
     color:#7FDA56;
 }
+/* 삭제버튼 */
+.cartList .deleteBtn{
+    font-size: 17px;
+    color:black;
+    cursor:pointer;
+    width: 100px; /* 장바구니 버튼의 너비 고정 */
+    border: 2px solid gray;
+
+    background-color: white;
+}
+.cartList .deleteBtn:hover{
+    color: white;
+    background-color: #3e7d3a;
+    border: 2px solid #3e7d3a;
+    font-weight: bold;
+}
+/* 버튼 */
+.cartList .close{
+    display: flex;
+    align-items: center;
+    gap: 10px; /* 버튼 사이 간격 설정 */
+    padding: 5px 5px; /* 버튼 크기 조정 */
+    border: none; /* 필요 시 추가 */
+    cursor: pointer;
+    /* 버튼 스타일에 필요한 다른 CSS 속성 추가 */
+    width: 50px;
+    border-radius: 10%;
+}
+/* 목록 제목 */
+.cartList .mb-4{
+    font-weight: bold;
+}
+/* 소제목 폰트 디자인 */
+.cartList .subtitle{
+    font-weight: bold;
+    color: rgb(58, 57, 57);
+}
 
 /* itemForm--------------------------------------------------------*/
 
 /* 입력 그룹 스타일 */
+.itemForm .formlabel{
+    padding: 0px 20px;
+    font: 17px bold;
+    color: #4d4d4d;
+}
 .itemForm .input-group {
     margin-bottom: 15px;
     display: flex;
@@ -149,6 +188,70 @@
 .itemForm .btn:hover {
     background-color: #6bbf49;
     transform: scale(1.05);
+}
+.itemForm #itemImgFile1, .itemForm #itemImgFile2 {
+    display: block; /* 파일 input 요소를 블록 형태로 만들어서 세로로 정렬되게 함 */
+    margin-top: 10px; /* 이미지와 파일 input 사이의 여백을 줌 */
+    background-color: rgba(128, 128, 128, 0.171);
+}
+
+.itemForm .label1{
+    padding: 10px;
+    margin: auto;
+}
+.itemForm #preview1, .itemForm #preview2 {
+        display: block; /* 블록 형태로 변경 */
+        margin: 10px auto; /* 위 아래 여백과 가로 가운데 정렬 */
+        height: 130px;
+}
+.itemForm .formlabel {
+    padding: 0px 20px;
+    font: 17px bold;
+    color: #4d4d4d;
+    text-align: center;
+    width: 100px;
+}
+
+.itemForm .input-group {
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+}
+
+/* 대표사진, 미리보기 사진, 첫 번째사진 첨부 스타일 */
+.itemForm .img-div {
+    margin-bottom: 10px;
+}
+
+.itemForm .custom-file-label {
+    cursor: pointer;
+    color: #555;
+}
+
+.itemForm .custom-file-input:hover {
+    background-color: #f1f3f5;
+}
+.itemForm .genre {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: gray;
+    border: 1px solid #ccc;
+    border-radius: 1px;
+}
+
+.itemForm .label {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 0px 10px;
+}
+.itemForm .genre> .formlabel{
+    background-color: rgba(128, 128, 128, 0.116);
+    width: 100%;
+}
+.itemForm #defaultFirstImg{
+    text-align:center;
 }
 
 /* itemMng--------------------------------------------------------*/
@@ -619,6 +722,14 @@ width: auto;
     }
     /* 아이템 관리페이지 끝 */
 
+    /* 아이템 등록, 수정 시작 */
+    .itemForm #inputItemForm{
+        width:100%;
+        padding-left:2.5vw;
+        padding-right:2.5vw;
+    }
+    /* 아이템 등록, 수정 끝 */
+
     /*아이템 코드 입력 페이지 시작*/
     .insertCode {
         padding: 10px;
@@ -749,23 +860,35 @@ width: auto;
 
     .cartList .table td, .cartList .table th {
         padding-left: 0;
-        padding-right: 0;
+        padding-right: 20px;
     }
 
     .cartList .content-mg {
         padding: 0; /* 테이블 주변에 있는 다른 요소 여백 제거 */
         margin: 0;
+        width: 100%;
     }
     .cartList h2 {
         text-align: center;
         margin-top: 20px;
     }
     .cartList .repImgDiv {
-        margin: 0;
+        margin-right: 15px;
+        margin-left: 15px;
         height: auto;
     }
-    .cartList h4{
+    .cartList h4 {
         margin-top: 10px;
+    }
+    .cartList .fs24 {
+        font-size: clamp(16px, 2vw, 20px);
+    }
+    .cartList .close .deleteBtn {
+        padding: 5px 10px; /* 패딩 줄임 */
+        font-size: 14px; /* 폰트 사이즈 줄임 */
+        width: auto; /* 자동으로 너비 조정 */
+        min-width: 50px; /* 최소 너비 설정 */
+        margin: 2px; /* 버튼 간의 마진 조정 */
     }
     /* cartList 장바구니 끝---------------------------------------------- */
 }

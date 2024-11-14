@@ -26,11 +26,11 @@
             </colgroup>
             <thead>
             <tr class="text-center">
-                <td>
+                <td class="subtitle">
                     <input type="checkbox" id="checkall" onclick="checkAll()">
                 </td>
-                <td>상품정보</td>
-                <td>금액</td>
+                <td class="subtitle">상품정보</td>
+                <td class="subtitle">금액</td>
             </tr>
             </thead>
             <tbody>
@@ -67,7 +67,7 @@
                           name="totalPrice" th:text="${#numbers.formatInteger(cartItem.price * cartItem.count, 1,'COMMA')} + '원'">
                     </span>
                     <button type="button" class="close" aria-label="Close">
-                        <span aria-hidden="true" th:data-id="${cartItem.cartItemId}" onclick="deleteCartItem(this)">&times;</span>
+                        <span aria-hidden="true" th:data-id="${cartItem.cartItemId}" onclick="deleteCartItem(this)" class="deleteBtn">&times;</span>
                     </button>
                 </td>
                 <td>

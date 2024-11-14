@@ -1,5 +1,6 @@
 package com.playground.service;
 
+import com.playground.constant.ItemSellStatus;
 import com.playground.dto.*;
 import com.playground.entity.Item;
 import com.playground.entity.ItemCategory;
@@ -41,6 +42,7 @@ public class ItemServiceImpl implements ItemService {
     public Long saveItem(ItemFormDto itemFormDto, List<MultipartFile> itemImgFileList) throws Exception {
         // Register item
         Item item = itemFormDto.createItem();
+        item.setItemSellStatus(ItemSellStatus.SOLD_OUT);
         itemRepository.save(item);
 
         ItemCategory category=itemFormDto.getItemCategoryDto().toEntity(item, itemFormDto.getCompany());
@@ -107,6 +109,11 @@ public class ItemServiceImpl implements ItemService {
         // Update item
         Item item = itemRepository.findById(itemFormDto.getId())
                 .orElseThrow(EntityNotFoundException::new);
+        if(itemFormDto.getStockNumber()==0){
+            itemFormDto.setItemSellStatus(ItemSellStatus.SOLD_OUT);
+        }else{
+            itemFormDto.setItemSellStatus(ItemSellStatus.SELL);
+        }
         item.updateItem(itemFormDto);
         List<Long> itemImgIds = itemFormDto.getItemImgIds();
 
@@ -158,6 +165,7 @@ public class ItemServiceImpl implements ItemService {
 
         itemCodeRepository.saveAll(itemCodes);
         item.setStockNumber(item.getStockNumber()+codes.size());
+        item.setItemSellStatus(ItemSellStatus.SELL);
         itemRepository.save(item);
 
         if(beforeStock==0){

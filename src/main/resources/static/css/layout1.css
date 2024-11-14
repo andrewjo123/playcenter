@@ -55,6 +55,7 @@ li,ul{
     font-size:35px;
     z-index:10;
     display:none;
+    text-align: center;
 }
 #pageIndicators #goTop{
     width:50px;
@@ -66,7 +67,6 @@ li,ul{
     border-radius:50%;
     border:2px solid #ccc;
     color:#ccc;
-    padding-left:6px;
 }
 #pageIndicators #goBottom{
     width:50px;
@@ -78,8 +78,6 @@ li,ul{
     border-radius:50%;
     border:2px solid #ccc;
     color:#ccc;
-    padding-left:6px;
-    padding-bottom:10px;
 }
 #pageIndicators #indicatorBtn{
     width:50px;
@@ -89,7 +87,6 @@ li,ul{
     top:150px;
     opacity:0.8;
 }
-
 #pageIndicators #indicatorBtn #horizonLine {
     position: absolute;
     background-color: #ccc;
@@ -97,7 +94,6 @@ li,ul{
     height: 10px;
     top: 20px;
 }
-
 #pageIndicators #indicatorBtn #verticalLine {
     position: absolute;
     background-color: #ccc;
@@ -105,6 +101,10 @@ li,ul{
     height: 100%;
     left: 20px;
 }
+#pageIndicators i{
+    width:35px !important; 
+}
+
 #kakao-talk-channel-chat-button, #kakao-talk-channel-chat-button img {
     position: fixed;
     padding: 0;

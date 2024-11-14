@@ -16,4 +16,7 @@ public interface MemberPointRepository extends JpaRepository<MemberPoint, Long> 
 
     @Query(value="SELECT mp.reg_time, mp.pay_point, o.order_status FROM member_point mp LEFT JOIN orders o ON o.order_id=mp.order_id WHERE mp.point_email=:email AND mp.reg_time >= NOW() - INTERVAL :date MONTH AND mp.pay_point != 0 ORDER BY mp.reg_time DESC", nativeQuery = true)
     List<Object[]> getPointHistory(@Param("email") String email, @Param("date") int date);
+
+    // Task, 탈퇴한 유저의 포인트 기록 찾기
+    List<MemberPoint> findByEmail(String email);
 }

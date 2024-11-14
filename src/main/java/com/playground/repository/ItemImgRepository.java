@@ -21,4 +21,8 @@ public interface ItemImgRepository extends JpaRepository<ItemImg, Long> {
 
     // itemId에 해당하는 모든 이미지 조회
     List<ItemImg> findByItemId(Long itemId);
+
+    //Task, 모든 이미지 조회
+    @Query("select i from ItemImg i")
+    List<ItemImg> getImgList();
 }

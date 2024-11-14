@@ -18,6 +18,8 @@ import com.playground.entity.Review;
 import com.playground.repository.MemberRepository;
 import com.playground.repository.ReviewRepository;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -100,12 +102,31 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public String validRegist(Long itemId, String email) {
         Long memberId = memberRepository.findByEmail(email).getId();
-        Optional<ItemCode> itemCode =codeRepository.findByItemAndMember(itemId,memberId);
-        if(itemCode.isPresent()){
-            return "valid";
-        }else{
+        List<ItemCode> itemCode =codeRepository.findByItemIdAndMemberId(itemId,memberId);
+        if(itemCode.isEmpty()){
             return "invalid";
+        }else{
+            List<Review> reviews=reviewRepository.findByItemAndMember(itemId, memberId);
+            if(reviews.isEmpty()){
+                return "valid";
+            } else{
+                return "already";
+            }
         }
+    }
+
+    @Override
+    public List<ReviewDto> getReviewList(String email) {
+        List<Review> reviews = reviewRepository.findByMemberEmail(email);
+        List<ReviewDto> reviewDtos= new ArrayList<>();
+        if(!reviews.isEmpty()){
+            reviews.forEach(review -> {
+                ReviewDto dto=entityToDto(review, email);
+                dto.setItemNm(review.getItem().getItemNm());
+                reviewDtos.add(dto);
+            });
+        }
+        return reviewDtos;
     }
 }
 

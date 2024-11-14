@@ -7,6 +7,9 @@ import com.playground.dto.ReviewDto;
 import com.playground.entity.Item;
 import com.playground.entity.Member;
 import com.playground.entity.Review;
+import org.springframework.web.util.HtmlUtils;
+
+import java.util.List;
 
 public interface ReviewService {
 
@@ -26,8 +29,10 @@ public interface ReviewService {
     //  void reviewRecommend(Long reviewnum); // 추천 증가 메서드
     String toggleRecommend(Long reviewnum, String email);
 
-    // 게임 산 사람만 리뷰가능
+    // 게임 산 사람만 리뷰가능, 한게임당 한개만 리뷰작성 가능
     String validRegist(Long id, String email);
+
+    List<ReviewDto> getReviewList(String email);
 
     default Review dtoToEntity(ReviewDto itemReviewDto){
 
@@ -36,7 +41,7 @@ public interface ReviewService {
                 .item(Item.builder().id(itemReviewDto.getId()).build())
                 .member(Member.builder().id(itemReviewDto.getMember_id()).build())
                 .grade(itemReviewDto.getGrade())
-                .text(itemReviewDto.getText())
+                .text(HtmlUtils.htmlEscape(itemReviewDto.getText()))
                 .build();
 
         return itemReview;
