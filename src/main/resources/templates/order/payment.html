@@ -49,7 +49,7 @@
                     <span th:data-price="${orderItem.orderPrice}" th:text="${#numbers.formatDecimal(orderItem.orderPrice/0.8,1,0)} + '원'" style="text-decoration: line-through red; display: block;">
                         할인 전
                     </span>
-                    <span th:text="${orderItem.orderPrice} + '원'" class="text-primary">
+                    <span th:text="${#numbers.formatInteger(orderItem.orderPrice, 1,'COMMA')} + '원'" class="text-primary">
                         할인 후
                     </span>
                 </td>
@@ -61,7 +61,7 @@
 
                 <!-- 최종 금액 -->
                 <td class="text-center align-middle">
-                    <span th:text="${orderItem.orderPrice * orderItem.count} + '원'" name="totalPrice">
+                    <span th:text="${#numbers.formatInteger((orderItem.orderPrice * orderItem.count), 1, 'COMMA')} + '원'" name="totalPrice">
                         최종 금액
                     </span>
                 </td>
@@ -87,17 +87,17 @@
                     <span th:data-price="${orderItem.orderPrice}" th:text="${#numbers.formatDecimal(orderItem.orderPrice/0.8,1,0)} + '원'" style="text-decoration: line-through red;">
                         할인 전
                     </span>
-                        <span th:text="${orderItem.orderPrice} + '원'" class="text-primary">
+                        <span th:text="${orderItem.orderPrice} + '원'" class="text-primary price">
                         할인 후
                     </span>
                     </div>
                     <div>
                         <span>수량: </span>
-                        <span th:text="${orderItem.count}" class="text-center"></span>
+                        <span th:text="${orderItem.count}" class="text-center count"></span>
                     </div>
                     <div>
                         <span>총 금액: </span>
-                        <span th:text="${orderItem.orderPrice * orderItem.count} + '원'" name="totalPrice" class="text-danger"></span>
+                        <span th:text="${orderItem.orderPrice * orderItem.count} + '원'" name="totalPrice"  class="text-danger itemTotalPrice"></span>
                     </div>
                 </div>
             </div>
@@ -110,7 +110,7 @@
         <h2>주문정보</h2>
         <p>이름: <span th:text="${buyer}" id="orderBuyer"></span></p>
         <p>이메일: <span th:text="${email}" id="orderEmail"></span></p>
-        <p>보유포인트: <span id="totalPoint">[[${point}]]</span></p>
+        <p>보유포인트: <span id="totalPoint">[[${#numbers.formatInteger(point, 1,'COMMA')}]]</span></p>
         <p>사용할 포인트:
             <input type="number" id="usePoint" value="0" min="0">
             <div class="point-button-container">
@@ -209,7 +209,7 @@
             } else{
                 $("#orderTotalPrice").html(totalP.toLocaleString()+'원');
             }
-            $("#stackPoint").html(Math.floor(totalP* 0.01)+' Point');
+            $("#stackPoint").html(Math.floor(totalP* 0.01).toLocaleString()+' Point');
         }
 
         function impPay(){

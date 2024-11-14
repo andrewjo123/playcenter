@@ -46,7 +46,7 @@
                             <span class="highlightName" th:text="${orderItem.itemNm}"></span>
                         </a>
                         <div class="fs18 font-weight-light">
-                            <strong class="highlightPrice"><span th:text="${orderItem.orderPrice}"></span></strong>원 /
+                            <strong class="highlightPrice"><span th:text="${#numbers.formatInteger(orderItem.orderPrice, 1,'COMMA')}"></span></strong>원 /
                             <span th:text="${orderItem.count} +'개'"></span><br>
                         </div>
                     </div>
