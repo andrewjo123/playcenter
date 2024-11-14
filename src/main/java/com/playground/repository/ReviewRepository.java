@@ -25,7 +25,7 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     @Query("select r from Review r where r.item.id=:itemId and r.member.id=:memberId")
     List<Review> findByItemAndMember(@Param("itemId") Long itemId, @Param("memberId") Long memberId);
 
-    @Query(value = "select r.* from Review r join member m on m.member_id=r.member_id where m.email=:email order by r.update_time desc", nativeQuery = true)
+    @Query(value = "select r.* from review r join member m on m.member_id=r.member_id where m.email=:email order by r.update_time desc", nativeQuery = true)
     List<Review> findByMemberEmail(@Param("email") String email);
 
     // Task, 탈퇴한 유저의 리뷰기록 찾기

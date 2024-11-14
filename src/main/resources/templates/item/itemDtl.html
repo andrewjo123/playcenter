@@ -541,6 +541,9 @@
                             rating: $(this).data("grade2"),
                             readOnly: true
                         });
+                        //a 비활성화
+                        $(this).find('a').css('pointer-events', 'none');
+
                         // 채워진 별과 빈 별 스타일 적용
                         $(this).find(".fa-star").css("color", "#FFD700");  // 채워진 별 노란색
                         $(this).find(".fa-star-o").css("color", "#d3d3d3"); // 빈 별 회색
@@ -669,6 +672,10 @@
 
                 // 리뷰 저장 버튼
                 $('.reviewSaveBtn').click(function () {
+                    if(grade==0){
+                        alert("별을 눌러 평점을 매겨주세요");
+                        return;
+                    }
                     var data = { id: id, grade: grade, text: inputText.val(), email: inputMid.val() };
                     $.ajax({
                         url: '/reviews/' + id,
