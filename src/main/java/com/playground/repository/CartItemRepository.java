@@ -22,4 +22,8 @@ public interface CartItemRepository extends JpaRepository<CartItem, Long> {
     List<CartDetailDto> findCartDetailDtoList(Long cartId);
 
     long countByCartId(Long cartId);
+
+    // Task, 탈퇴한 유저의 장바구니 아이템 찾기
+    @Query("select ci from CartItem ci where ci.cart.id=:cartId")
+    List<CartItem> findCartItemForDelete(Long cartId);
 }

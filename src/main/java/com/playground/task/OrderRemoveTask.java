@@ -28,29 +28,13 @@ public class OrderRemoveTask {
     // 매일 아침 7시 정각에 실행
     @Scheduled(cron = "0 0 07 * * *")
     @Transactional
-    public void checkNotPayed() throws Exception { // 결제페이지에서 비정상적 종료가 된 경우 db에 정보가남고 재고수도 -된 상태, 정상화
+    public void checkNotPayed() throws Exception { // 결제페이지에서 비정상적 종료가 된 경우 db에 정보가 남음, 정상화
 
         LocalDateTime baseDate = LocalDateTime.now().minusDays(1).withHour(0).withMinute(0).withSecond(0).withNano(0);
         List<Order> orderList = orderRepository.getNotPayedOrder(baseDate);
 
         System.out.println("Start deleting unpaid orders...");
         if (!orderList.isEmpty()) {
-            List<OrderItem> orderItemsToDelete = new ArrayList<>();
-
-            for (Order order : orderList) {
-                orderItemsToDelete.addAll(order.getOrderItems());
-            }
-
-            if (!orderItemsToDelete.isEmpty()) {
-                orderItemsToDelete.forEach(oItem->{
-                    Item item=itemRepository.findById(oItem.getItem().getId()).get();
-                    item.setStockNumber(item.getStockNumber()+oItem.getCount());
-                    itemRepository.save(item);
-                });
-                orderItemRepository.deleteAll(orderItemsToDelete);
-                System.out.println("Deleted order items: " + orderItemsToDelete);
-            }
-
             orderRepository.deleteAll(orderList);
             System.out.println("Deleted orders: " + orderList);
             System.out.println("Delete operation completed.");
