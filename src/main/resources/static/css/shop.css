@@ -94,6 +94,11 @@
 /* itemForm--------------------------------------------------------*/
 
 /* 입력 그룹 스타일 */
+.itemForm .formlabel{
+    padding: 0px 20px;
+    font: 17px bold;
+    color: #4d4d4d;
+}
 .itemForm .input-group {
     margin-bottom: 15px;
     display: flex;
@@ -183,6 +188,70 @@
 .itemForm .btn:hover {
     background-color: #6bbf49;
     transform: scale(1.05);
+}
+.itemForm #itemImgFile1, .itemForm #itemImgFile2 {
+    display: block; /* 파일 input 요소를 블록 형태로 만들어서 세로로 정렬되게 함 */
+    margin-top: 10px; /* 이미지와 파일 input 사이의 여백을 줌 */
+    background-color: rgba(128, 128, 128, 0.171);
+}
+
+.itemForm .label1{
+    padding: 10px;
+    margin: auto;
+}
+.itemForm #preview1, .itemForm #preview2 {
+        display: block; /* 블록 형태로 변경 */
+        margin: 10px auto; /* 위 아래 여백과 가로 가운데 정렬 */
+        height: 130px;
+}
+.itemForm .formlabel {
+    padding: 0px 20px;
+    font: 17px bold;
+    color: #4d4d4d;
+    text-align: center;
+    width: 100px;
+}
+
+.itemForm .input-group {
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+}
+
+/* 대표사진, 미리보기 사진, 첫 번째사진 첨부 스타일 */
+.itemForm .img-div {
+    margin-bottom: 10px;
+}
+
+.itemForm .custom-file-label {
+    cursor: pointer;
+    color: #555;
+}
+
+.itemForm .custom-file-input:hover {
+    background-color: #f1f3f5;
+}
+.itemForm .genre {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: gray;
+    border: 1px solid #ccc;
+    border-radius: 1px;
+}
+
+.itemForm .label {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 0px 10px;
+}
+.itemForm .genre> .formlabel{
+    background-color: rgba(128, 128, 128, 0.116);
+    width: 100%;
+}
+.itemForm #defaultFirstImg{
+    text-align:center;
 }
 
 /* itemMng--------------------------------------------------------*/
@@ -652,6 +721,14 @@ width: auto;
         padding: 8px;
     }
     /* 아이템 관리페이지 끝 */
+
+    /* 아이템 등록, 수정 시작 */
+    .itemForm #inputItemForm{
+        width:100%;
+        padding-left:2.5vw;
+        padding-right:2.5vw;
+    }
+    /* 아이템 등록, 수정 끝 */
 
     /*아이템 코드 입력 페이지 시작*/
     .insertCode {

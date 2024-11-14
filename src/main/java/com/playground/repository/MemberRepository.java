@@ -5,6 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
+
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.List;
 
@@ -24,4 +26,9 @@ public interface MemberRepository extends JpaRepository<Member, Long> , Querydsl
 
     @Query(value="SELECT m.email FROM member m JOIN dibs d ON m.member_id=d.member_id JOIN dibs_item di ON di.dibs_id=d.dibs_id WHERE di.item_id=:itemId", nativeQuery = true)
     List<Object> findEmailFromItemId(Long itemId);
+
+    // Task, 5년전 회원탈퇴한 멤버 찾기
+    @Query("select m from Member m " +
+            "where m.resign=true and m.updateTime <= :baseDate ")
+    List<Member> getResignMemberForDelete(@Param("baseDate") LocalDateTime baseDate);
 }

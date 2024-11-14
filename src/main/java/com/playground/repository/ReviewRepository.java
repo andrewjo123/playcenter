@@ -1,5 +1,6 @@
 package com.playground.repository;
 
+import jakarta.validation.constraints.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -17,22 +18,8 @@ import java.util.List;
 
 public interface ReviewRepository extends JpaRepository<Review, Long> {
 
-    @EntityGraph(attributePaths = {"member"}, type = EntityGraph.EntityGraphType.FETCH)
+    @EntityGraph(attributePaths = {"recommendedMembers","member"})
     Page<Review> findByItem(Item item, Pageable pageable);  // 페이징 적용
-
-
-    @Modifying
-    @Query("delete from Review mr where mr.member = :member")
-    void deleteByMember(Member member);
-
-    @EntityGraph(attributePaths = {"member"}, type = EntityGraph.EntityGraphType.FETCH)
-    Page<Review> findAll(Pageable pageable);
-
-    // 특정 아이템에 연관된 모든 리뷰 삭제
-    @Modifying
-    @Transactional
-    @Query("delete from Review r where r.item.id = :itemId")
-    void deleteByItemId(Long itemId);
 
     // 리뷰등록은 한게임당 한번만
     @Query("select r from Review r where r.item.id=:itemId and r.member.id=:memberId")
@@ -40,4 +27,8 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     @Query(value = "select r.* from Review r join member m on m.member_id=r.member_id where m.email=:email order by r.update_time desc", nativeQuery = true)
     List<Review> findByMemberEmail(@Param("email") String email);
+
+    // Task, 탈퇴한 유저의 리뷰기록 찾기
+    @Query("select r from Review r where r.member.email=:email")
+    List<Review> findByEmail(String email);
 }

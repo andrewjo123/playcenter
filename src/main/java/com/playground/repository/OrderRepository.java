@@ -2,6 +2,7 @@ package com.playground.repository;
 
 import com.playground.entity.Order;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -37,4 +38,8 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             "where o.orderStatus='ORDER' and o.sendCode=false and o.orderDate <= :baseDate "
     )
     List<Order> getNotConfirmLongTime(@Param("baseDate") LocalDateTime baseDate);
+
+    // Task, 탈퇴한 유저의 주문정보 찾기
+    @EntityGraph(attributePaths = {"orderItems", "memberPoints"})
+    List<Order> findByMember_Id(Long id);
 }
