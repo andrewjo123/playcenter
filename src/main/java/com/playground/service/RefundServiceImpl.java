@@ -83,7 +83,6 @@ public class RefundServiceImpl implements RefundService {
         BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
         br.close();
         conn.disconnect();
-        System.out.println("환불 성공???????????");
     }
 }
 

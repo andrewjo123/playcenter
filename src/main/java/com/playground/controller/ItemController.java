@@ -3,7 +3,6 @@ package com.playground.controller;
 import com.playground.dto.ItemFormDto;
 import com.playground.dto.ItemSearchDto;
 import com.playground.entity.Item;
-import com.playground.security.service.PlayUserDetailsService;
 import com.playground.service.DibsService;
 import com.playground.service.ItemService;
 import jakarta.persistence.EntityNotFoundException;
@@ -17,7 +16,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -74,7 +72,6 @@ public class ItemController {
 
         try {
             ItemFormDto itemFormDto = itemService.getItemDtl(itemId);
-            System.out.println(itemFormDto.getOpenDate());
             model.addAttribute("itemFormDto", itemFormDto);
         } catch(EntityNotFoundException e){
             model.addAttribute("errorMessage", "존재하지 않는 상품 입니다.");

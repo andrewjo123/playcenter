@@ -1,7 +1,5 @@
 package com.playground.service;
 
-import com.playground.dto.CartDetailDto;
-import com.playground.dto.CartItemDto;
 import com.playground.dto.DibsDto;
 
 import java.util.List;

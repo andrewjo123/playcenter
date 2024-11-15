@@ -1,10 +1,8 @@
 package com.playground.dto;
 
-import com.playground.entity.Item;
 import com.playground.entity.MemberChallenge;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
 import org.modelmapper.ModelMapper;
 
 @Getter

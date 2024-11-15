@@ -1,6 +1,5 @@
 package com.playground.dto;
 
-
 import lombok.Getter;
 import lombok.Setter;
 

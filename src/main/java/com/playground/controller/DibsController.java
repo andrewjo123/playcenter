@@ -1,19 +1,15 @@
 package com.playground.controller;
 
-import com.playground.dto.CartDetailDto;
 import com.playground.dto.CartItemDto;
 import com.playground.dto.DibsDto;
 import com.playground.service.CartService;
 import com.playground.service.DibsService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;

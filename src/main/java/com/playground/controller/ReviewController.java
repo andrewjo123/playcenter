@@ -1,7 +1,6 @@
 package com.playground.controller;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 
 import java.security.Principal;
 import java.util.List;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 @RestController
 @RequestMapping("/reviews")
-@Log4j2
 @RequiredArgsConstructor
 public class ReviewController {
 
@@ -35,9 +33,6 @@ public class ReviewController {
           @RequestParam(defaultValue = "5") int size,
           @RequestParam(defaultValue = "regTime") String sort,
           Principal principal) {
-      
-      log.info("리뷰 리스트 요청 - id: {}, page: {}, size: {}", id, page, size, sort);
-
       String currentUserEmail = (principal != null) ? principal.getName() : null; //로그인 안한 사용자는 댓글 볼 수 있음
       
       // 페이지 요청 객체 생성
@@ -49,21 +44,13 @@ public class ReviewController {
       
       // 리뷰 목록을 서비스에서 받아옴
       Page<ReviewDto> reviewDTOPage = reviewService.getListOfItem(id, pageable, currentUserEmail);
-      
-      if (!reviewDTOPage.getContent().isEmpty() && reviewDTOPage != null) {
-        System.out.println(reviewDTOPage.getContent().get(0).isRecommended()+"[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]");
-    }
-    
+
       return new ResponseEntity<>(reviewDTOPage, HttpStatus.OK);
     }
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/{id}")
     public ResponseEntity<Long> addReview(@RequestBody ReviewDto itemReviewDto){
-        log.info("--------------add Review---------------");
-        log.info("ReviewDto: " + itemReviewDto.getId());
-        System.out.println("###################################");
-
         Long reviewnum = reviewService.register(itemReviewDto);
         
         return new ResponseEntity<>( reviewnum, HttpStatus.OK);
@@ -75,8 +62,7 @@ public class ReviewController {
     public ResponseEntity<String> toggleRecommend(
         @PathVariable Long reviewnum, 
         @RequestParam("email") String email) {
-        
-        log.info("---------------toggle recommend Review--------------" + reviewnum);
+
         String result = reviewService.toggleRecommend(reviewnum, email);
         
         return new ResponseEntity<>(result, HttpStatus.OK);
@@ -86,9 +72,6 @@ public class ReviewController {
     @PutMapping("/{id}/{reviewnum}")
     public ResponseEntity<Long> modifyReview(@PathVariable Long reviewnum,
                                              @RequestBody ReviewDto itemReviewDto){
-        log.info("---------------modify MovieReview--------------" + reviewnum);
-        log.info("ReviewDto: " + itemReviewDto);
-
         reviewService.modify(itemReviewDto);
 
         return new ResponseEntity<>( reviewnum, HttpStatus.OK);
@@ -97,8 +80,6 @@ public class ReviewController {
     @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/{id}/{reviewnum}")
     public ResponseEntity<Long> removeReview( @PathVariable Long reviewnum){
-        log.info("---------------modify removeReview--------------");
-        log.info("reviewnum: " + reviewnum);
 
         reviewService.remove(reviewnum);
 

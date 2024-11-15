@@ -2,12 +2,10 @@ package com.playground.security.service;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.playground.entity.Member;
 import com.playground.repository.MemberRepository;
@@ -17,11 +15,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
-
 
 @Service
-@Log4j2
 @RequiredArgsConstructor
 public class PlayUserDetailsService implements UserDetailsService {
 

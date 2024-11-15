@@ -1,6 +1,5 @@
 package com.playground.service;
 
-import lombok.extern.java.Log;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -8,7 +7,6 @@ import java.io.FileOutputStream;
 import java.util.UUID;
 
 @Service
-@Log
 public class FileServiceImpl implements FileService {
 
     @Override
@@ -28,9 +26,6 @@ public class FileServiceImpl implements FileService {
         File deleteFile = new File(filePath);
         if (deleteFile.exists()) {
             deleteFile.delete();
-            log.info("파일을 삭제하였습니다.");
-        } else {
-            log.info("파일이 존재하지 않습니다.");
         }
     }
 }

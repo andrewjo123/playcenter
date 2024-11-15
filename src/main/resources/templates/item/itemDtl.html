@@ -60,9 +60,9 @@
                 <span th:if="${item.avg == 0}">평점 없음</span>
                 <span th:if="${item.avg > 0}">
                     <span th:text="${#numbers.formatDecimal(item.avg, 1, 1)}"></span>
-                    <span th:each="i : ${#numbers.sequence(1, item.avg)}"><i class="fas fa-star"></i></span>
-                    <th:block th:unless="${item.avg==5}">
-                        <span th:each="i : ${#numbers.sequence(item.avg + 1, 5)}"><i class="far fa-star"></i></span>
+                    <span th:each="i : ${#numbers.sequence(1, item.avg)}"><i class="fas fa-star"></i></span><!--
+                 --><th:block th:unless="${item.avg==5}"><!--
+                     --><span th:each="i : ${#numbers.sequence(item.avg + 1, 5)}"><i class="far fa-star"></i></span>
                     </th:block>
                 </span>
                 (<span th:text="${item.allReview}"></span>건)
@@ -272,7 +272,7 @@
                 <div>
                     <span th:text="${#numbers.formatDecimal(item.avg, 1, 1)}"></span>점
                 </div>
-                <span th:each="i : ${#numbers.sequence(1, item.avg)}"><i class="fas fa-star"></i></span>
+                <span th:each="i : ${#numbers.sequence(1, item.avg)}"><i class="fas fa-star"></i> </span>
                 <th:block th:unless="${item.avg==5}">
                     <span th:each="i : ${#numbers.sequence(item.avg + 1, 5)}"><i class="far fa-star"></i></span>
                 </th:block>
@@ -481,7 +481,6 @@
 
                             data.content.forEach(function (review) {
                                 let dropdownHtml = '';
-                                console.log(review.profileImg);
                                 if (review.email === loggedInEmail) {
                                     dropdownHtml = `
                                         <div class="dropdown">
@@ -600,7 +599,6 @@
                             type: "POST",
                             data: { email: email },
                             success: function (response) {
-                                console.log(response + "!@#!@#");
                                 const icon = $(this).find('i');
                                 if (response == "추천 완료") {
                                     icon.removeClass('far fa-regular').addClass('fas fa-solid');
@@ -621,7 +619,6 @@
                     var selectedSortMethod = $(this).text();
                     $('#currentSortMethod').text(selectedSortMethod); // 선택된 정렬 방식 표시 업데이트
                     const sortType = $(this).attr('class').split(' ')[1];
-                    console.log(sortType);
                     loadReviews(0, sortType); // 첫 페이지부터 새로운 정렬 방식으로 로드
                 });
 
@@ -873,7 +870,6 @@
                     },
                     error: function (jqXHR, status, error) {
                         alert('로그인 후 이용해주세요');
-                        console.log(jqXHR);
                         location.href = '/members/login';
                     }
                 });
@@ -918,7 +914,6 @@
                     },
                     error: function (jqXHR, status, error) {
                         alert('로그인 후 이용해주세요');
-                        console.log(jqXHR);
                         location.href = '/members/login';
                     }
                 });

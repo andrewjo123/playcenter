@@ -25,7 +25,6 @@
       let token = $("meta[name='_csrf']").attr("content");
       let header = $("meta[name='_csrf_header']").attr("content");
       pgName=this.id;
-      console.log(this.id);
       //주문번호 겹치면 결제안됨, 임시로 난수 생성
       var orderNumber=Math.floor(1000000000 + Math.random() * 9000000000).toString();
 
@@ -42,15 +41,6 @@
           buyer_addr : "경기도 판교" // 구매자 주소
       }, function(res) {
           if (res.success) {
-<!--              axios({-->
-<!--                  method: "post",-->
-<!--                  url: `/payment/validation/${rsp.imp_uid}`-->
-<!--              })-->
-              // 응답 데이터의 정보들
-              console.log("Payment success!");
-              console.log("Payment ID : " + res.imp_uid);
-              console.log("Order ID : " + res.merchant_uid);
-              console.log("Payment Amount : " + res.paid_amount);
               alert("결제성공");
           } else {
               console.error("에러");

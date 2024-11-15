@@ -146,9 +146,6 @@
                 },
                 dataType : "json",
                 cache   : false,
-                success  : function(result, status){
-                    console.log("cartItem count update success");
-                },
                 error : function(jqXHR, status, error){
                     alert('잠시 후 다시 시도해주세요');
                 }
@@ -214,7 +211,6 @@
                 },
                 cache   : false,
                 success  : function(result){
-                    console.log(result);
                     if(result=='["conTinueForPay"]'){
                         $.ajax({
                             url      : "/cart/orders",

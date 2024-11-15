@@ -1,6 +1,5 @@
 package com.playground.repository;
 
-
 import com.playground.constant.Role;
 import com.playground.dto.MemberSearchDto;
 import com.playground.entity.Member;
@@ -15,8 +14,6 @@ import org.springframework.data.domain.Pageable;
 import org.thymeleaf.util.StringUtils;
 
 import java.util.List;
-
-import static com.playground.entity.QMember.member;
 
 public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
 

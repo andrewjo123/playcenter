@@ -1,7 +1,6 @@
 package com.playground.service;
 
 import com.playground.dto.*;
-import com.playground.entity.Item;
 import com.playground.entity.Member;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

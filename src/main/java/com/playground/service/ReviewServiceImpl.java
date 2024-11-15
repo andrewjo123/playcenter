@@ -1,11 +1,8 @@
 package com.playground.service;
 
-
 import com.playground.entity.ItemCode;
 import com.playground.repository.ItemCodeRepository;
-import com.playground.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,7 +20,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@Log4j2
 @RequiredArgsConstructor
 public class ReviewServiceImpl implements ReviewService {
 
@@ -35,7 +31,6 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public Page<ReviewDto> getListOfItem(Long id, Pageable pageable, String currentUserEmail) {
         Item item = Item.builder().id(id).build();
-        log.info("Fetching reviews for item: {}", id);
 
         // 페이징을 적용하여 리뷰 리스트를 반환
         Page<Review> result = reviewRepository.findByItem(item, pageable);

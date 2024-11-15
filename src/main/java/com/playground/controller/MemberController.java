@@ -20,7 +20,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +27,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.thymeleaf.context.Context;
 
 import java.security.Principal;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -76,10 +74,7 @@ public class MemberController {
         // 로그인 상태 확인 (인증 정보 존재 확인, 사용자가 인증된 상태인지 확인, 인증되지않은 사용자가 아니라는 것을 확인
         //AnonymousAuthenticationToken: 인증되지 않은 사용자를 나타내기 위해 사용
         if (authentication != null && authentication.isAuthenticated() && !(authentication instanceof AnonymousAuthenticationToken)) {
-            // 이전 페이지로 리다이렉션
-//            String previousPage = request.getHeader("Referer");
-//            System.out.println("asdasdasdnsdcbvfskjdbvjskdnbvjks"+previousPage);
-            return "redirect:/"; // 이전 페이지로 리다이렉션
+            return "redirect:/";
         }
 
         // 로그인하지 않은 사용자라면 로그인 폼을 보여줍니다.
@@ -318,8 +313,6 @@ public class MemberController {
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/toggleStatus")
     public ResponseEntity<Void> toggleStatus(@RequestBody MemberDetailDto memberDetailDto) {
-        System.out.println("Received Member ID: {}" + memberDetailDto.getMemberId());
-        System.out.println("Received Resign Status: {}" + memberDetailDto.isResign());
         memberService.toggleStatus(memberDetailDto.getMemberId(), memberDetailDto.isResign());
         return ResponseEntity.ok().build();
     }

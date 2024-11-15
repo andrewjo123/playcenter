@@ -1,6 +1,5 @@
 package com.playground.controller;
 
-import com.playground.dto.CartItemDto;
 import com.playground.dto.OrderDto;
 import com.playground.dto.OrderHistDto;
 import com.playground.service.CartService;
@@ -11,7 +10,6 @@ import com.siot.IamportRestClient.exception.IamportResponseException;
 import com.siot.IamportRestClient.response.IamportResponse;
 import com.siot.IamportRestClient.response.Payment;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -112,7 +110,6 @@ public class OrderController {
         model.addAttribute("point",members[1]);
         model.addAttribute("email",principal.getName());
         model.addAttribute("cartId",params);
-        System.out.println(params);
         /*창 정보 가져오기*/
         String userAgent = request.getHeader("User-Agent");
         boolean isMobile = userAgent.toLowerCase().contains("mobile");
@@ -166,7 +163,6 @@ public class OrderController {
             }
             return new ResponseEntity<>(result, HttpStatus.OK);
         } else{
-            System.out.println("자동환불");
             String token=refundService.getToken(restApiKey,restApiSecret);
             refundService.refundWithToken(token,orderId);
             return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);

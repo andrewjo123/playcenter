@@ -32,7 +32,7 @@
       <a href="/oauth2/authorization/kakao" class="my-1"><img th:src="@{/icon/kakao.png}"></a>
     </div>
   </div>
-  <div class="another_btns mt-5 mb-2">
+  <div class="another_btns mb-2">
     <button type="button" class="btn btn-info mx-2" onClick="location.href='/members/new'">회원가입</button>
     <button type="button" class="btn btn-success mx-2" onClick="location.href='/members/findEmail'">아이디 찾기</button>
     <button type="button" class="btn btn-warning mx-2" onClick="location.href='/members/findPw'">비밀번호 찾기</button>
@@ -41,7 +41,6 @@
   <script th:inline="javascript">
     $(document).ready(function(){
       var msg=[[${message}]];
-      console.log(msg)
       if(msg!==null){
         alert(msg);
       }

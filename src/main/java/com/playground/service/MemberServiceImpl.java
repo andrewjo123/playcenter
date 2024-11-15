@@ -1,6 +1,5 @@
 package com.playground.service;
 
-import com.playground.constant.OrderStatus;
 import com.playground.constant.Role;
 import com.playground.dto.ChallengeDto;
 import com.playground.dto.MemberFormDto;
@@ -140,10 +139,6 @@ public class MemberServiceImpl implements MemberService {
     public String compareCode(String email, String code) {
         String result = "";
         Email getInfo = emailRepository.findByEmail(email);
-        System.out.println(getInfo.getAuthCode());
-        System.out.println(email);
-        System.out.println(code);
-        System.out.println("---------------------------");
         if (getInfo.getAuthCode().equals(code)) {
             result = "ok";
         } else {

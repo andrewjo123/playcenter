@@ -113,6 +113,7 @@
 }
 .memberLoginForm .another_btns{
     display:flex; justify-content:center;
+    margin-top:25px;
 }
 .memberLoginForm .loginForm{
     max-width:500px;
@@ -414,12 +415,22 @@ width: auto;
     .memberLoginForm .social_btns a img{
         width:100%;
         max-width:150px;
-        min-width:120px;
+        min-width:100px;
         height:40px;
     }
     .memberLoginForm .loginForm{
         max-width:768px;
-        min-width:400px;
+        min-width:300px;
+    }
+    .memberLoginForm .another_btns{
+        margin-top:15px;
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+    }
+    .memberLoginForm .another_btns button{
+        width:90%;
+        margin-bottom:0.5vh;
     }
     /* 회원가입 ------------------------------------ */
     .memberForm #submitForm{
@@ -447,10 +458,19 @@ width: auto;
     .mypage .userInfo{
         margin-top:3.5vh;
     }
-
     /* 이메일 찾기 --------------------------------- */
     .findEmail .findIdDiv > *{
         width:90%;
+    }
+    .findEmail .another_btns{
+        margin-top:15px;
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+    }
+    .findEmail .another_btns button{
+        width:100%;
+        margin-bottom:0.5vh;
     }
     /* 비밀번호 찾기 ------------------------------- */
     .findPw .findPwDiv > *, .findPw #submitForm div{
@@ -458,6 +478,16 @@ width: auto;
     }
     .findPw .info{
         width:90%;
+    }
+    .findPw .another_btns{
+        margin-top:15px;
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+    }
+    .findPw .another_btns button{
+        width:100%;
+        margin-bottom:0.5vh;
     }
     /* 비밀번호 변경 -------------------------------- */
     .resetPwDiv > *{

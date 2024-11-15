@@ -20,7 +20,6 @@ import org.thymeleaf.context.Context;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.playground.dto.ItemCategoryDto.modelMapper;
 
@@ -86,15 +85,11 @@ public class ItemServiceImpl implements ItemService {
         if (result != null && result.get(0).length == 2) {
             Double avg = (Double) result.get(0)[0]; // Average grade
             Long allReview = (Long) result.get(0)[1];   // Count of reviews
-            
-            System.out.println("Average: " + avg);
-            System.out.println("Count: " + allReview);
 
             itemFormDto.setAvg(avg);
             itemFormDto.setAllReview(allReview);
         } else {
             // Handle cases where there are no reviews or the item does not exist
-            System.out.println("No reviews found or item does not exist.");
             itemFormDto.setAvg(0D);
             itemFormDto.setAllReview(0L);
         }

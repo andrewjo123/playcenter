@@ -809,7 +809,7 @@ width: auto;
     .payment .payBtn, .payment .button-group .cancel-btn, .payment .kakao-btn {
         font-size: 1.5rem; /* 글자 크기 줄이기 */
         padding: 4px 8px; /* 버튼 내부 여백 조정 */
-        width: auto; /* 버튼 너비를 자동으로 설정 */
+        width: 90%; /* 버튼 너비를 자동으로 설정 */
         flex: 1; /* 각 버튼이 동일한 너비를 차지하도록 설정 */
         margin: 0 5px; /* 버튼 간격 조정 */
     }
@@ -820,10 +820,10 @@ width: auto;
     }
     /* 버튼 그룹이 일렬로 나타나도록 설정 */
     .payment .button-group {
-        flex-direction: flex; /* 가로 정렬로 변환 */
-        flex-wrap: nowrap; /* 줄바꿈 방지 */
-        gap: 1px; /* 버튼 간격 조정 */
-        justify-content: center; /* 중앙 정렬 */
+        flex-direction: column; /* 가로 정렬로 변환 */
+        gap: 5px; /* 버튼 간격 조정 */
+        justify-content: center;
+        padding-left:5%;
     }
     /* 결제 약관 확인, 포인트 사용 및 관련 요소들 간격 조정 */
     #use, #useAll, #useNot {

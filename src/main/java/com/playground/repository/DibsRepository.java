@@ -1,6 +1,5 @@
 package com.playground.repository;
 
-import com.playground.entity.Cart;
 import com.playground.entity.Dibs;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
