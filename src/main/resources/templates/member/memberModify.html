@@ -35,8 +35,8 @@
             </div>
             <div class="form-group">
                 <label th:for="phone">전화번호</label>
-                <input type="tel" th:field="*{phone}" class="form-control" placeholder="전화번호를 입력해주세요"
-                    pattern="\d{2,3}-\d{3,4}-\d{4}" required title="000-0000-0000 형식으로 입력해주세요.">
+                <input id="phone" type="tel" th:field="*{phone}" class="form-control" placeholder="전화번호를 입력해주세요"
+                    pattern="\d{2,3}-\d{3,4}-\d{4}" required title="000-0000-0000 형식 또는 숫자 9~11자리를 입력해주세요">
             </div>
             <div class="form-group btnDiv">
                 <label th:for="address">주소</label>
@@ -189,7 +189,21 @@
                         alert("통신에러. 잠시 후 다시 시도해주세요");
                      }
                 });
-            })
+            });
+
+            $("#phone").on('blur', function() {
+                var phone = $(this).val().replace(/[^0-9]/g, ''); // 숫자만 추출
+
+                if (phone.length === 9) {
+                    phone = phone.replace(/(\d{2})(\d{3})(\d{4})/, '$1-$2-$3');
+                } else if (phone.length === 10) {
+                    phone = phone.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3');
+                } else if (phone.length === 11) {
+                    phone = phone.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
+                }
+
+                $(this).val(phone);
+            });
 
         });
     </script>

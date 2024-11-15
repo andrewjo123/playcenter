@@ -274,7 +274,7 @@
                 </div>
                 <span th:each="i : ${#numbers.sequence(1, item.avg)}"><i class="fas fa-star"></i> </span>
                 <th:block th:unless="${item.avg==5}">
-                    <span th:each="i : ${#numbers.sequence(item.avg + 1, 5)}"><i class="far fa-star"></i></span>
+                    <span th:each="i : ${#numbers.sequence(item.avg + 1, 5)}"><i class="far fa-star"></i> </span>
                 </th:block>
             </span>
         </div>

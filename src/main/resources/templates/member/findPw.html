@@ -54,7 +54,7 @@
                 var email = $("#email").val();
 
                 const nameRegex = /^[가-힣]{2,}$/;
-                const phoneRegex = /^(01[016789])-(\d{3,4})-(\d{4})$/;
+                const phoneRegex = /^(\d{2,3})-(\d{3,4})-(\d{4})$/;
                 const emailRegex = /^[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$/;
 
                 $("#errorMessages").empty();
@@ -76,7 +76,7 @@
                     return;
                 }
                 if (!phoneRegex.test(phone)) {
-                    alert("전화번호를 형식에 맞게 입력해주세요. ex)000-0000-0000");
+                    alert("전화번호를 형식에 맞게 입력해주세요. ex)000-0000-0000 또는 숫자 9~11자리");
                     return;
                 }
                 if (!emailRegex.test(email)) {
@@ -104,6 +104,20 @@
                         alert("잠시 후 다시시도해주세요.");
                     }
                 })
+            });
+
+            $("#phone").on('blur', function() {
+                var phone = $(this).val().replace(/[^0-9]/g, ''); // 숫자만 추출
+
+                if (phone.length === 9) {
+                    phone = phone.replace(/(\d{2})(\d{3})(\d{4})/, '$1-$2-$3');
+                } else if (phone.length === 10) {
+                    phone = phone.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3');
+                } else if (phone.length === 11) {
+                    phone = phone.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
+                }
+
+                $(this).val(phone);
             });
         });
     </script>
